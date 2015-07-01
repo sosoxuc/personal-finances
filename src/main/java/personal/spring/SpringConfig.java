@@ -2,6 +2,8 @@ package personal.spring;
 
 import static personal.spring.ConfigUtil.getConfig;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.springframework.cache.CacheManager;
@@ -36,91 +38,94 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureContentNegotiation(
-	    ContentNegotiationConfigurer configurer) {
+            ContentNegotiationConfigurer configurer) {
 
-	configurer.favorPathExtension(Boolean.TRUE)
-		.ignoreAcceptHeader(Boolean.TRUE).useJaf(Boolean.FALSE)
-		.defaultContentType(MediaType.APPLICATION_JSON);
+        configurer.favorPathExtension(Boolean.TRUE)
+                .ignoreAcceptHeader(Boolean.TRUE).useJaf(Boolean.FALSE)
+                .defaultContentType(MediaType.APPLICATION_JSON);
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-	registry.addInterceptor(new SecurityInterceptor());
+        registry.addInterceptor(new SecurityInterceptor());
     }
 
     @Override
     public void configureDefaultServletHandling(
-	    DefaultServletHandlerConfigurer configurer) {
-	super.configureDefaultServletHandling(configurer);
+            DefaultServletHandlerConfigurer configurer) {
+        super.configureDefaultServletHandling(configurer);
     }
 
     @Bean
     public CacheManager cacheManager() {
-	return new ConcurrentMapCacheManager();
+        return new ConcurrentMapCacheManager();
     }
 
     @Bean
     public CommonsMultipartResolver multipartResolver() {
-	return new CommonsMultipartResolver();
+        return new CommonsMultipartResolver();
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean() {
 
-	LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-	em.setDataSource(this.restDataSource());
-	em.setPackagesToScan(new String[] { "personal" });
+        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+        em.setDataSource(this.restDataSource());
+        em.setPackagesToScan(new String[] { "personal" });
+        Properties jpaProperties = new Properties();
+        jpaProperties.put("hibernate.ejb.naming_strategy",
+                "org.hibernate.cfg.ImprovedNamingStrategy");
+        jpaProperties.put("hibernate.id.new_generator_mappings", "true");
+        em.setJpaProperties(jpaProperties);
+        JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter() {
+            {
+                String dialect = getConfig("spring.jpa.database-platform");
+                this.setDatabasePlatform(dialect);
 
-	JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter() {
-	    {
-		String dialect = getConfig("spring.jpa.database-platform");
-		this.setDatabasePlatform(dialect);
+                String showSql = getConfig("spring.jpa.show-sql");
+                if (showSql != null) {
+                    this.setShowSql(showSql.equals("true"));
+                }
 
-		String showSql = getConfig("spring.jpa.show-sql");
-		if (showSql != null) {
-		    this.setShowSql(showSql.equals("true"));
-		}
+                String generateDdl = getConfig("spring.jpa.hibernate.ddl-auto");
+                if (showSql != null) {
+                    this.setGenerateDdl(generateDdl.equals("update"));
+                }
+            }
+        };
 
-		String generateDdl = getConfig("spring.jpa.hibernate.ddl-auto");
-		if (showSql != null) {
-		    this.setGenerateDdl(generateDdl.equals("update"));
-		}
-	    }
-	};
-
-	em.setJpaVendorAdapter(vendorAdapter);
-	return em;
+        em.setJpaVendorAdapter(vendorAdapter);
+        return em;
     }
 
     @Bean
     public DataSource restDataSource() {
 
-	DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-	String driver = getConfig("spring.datasource.driverClassName");
-	dataSource.setDriverClassName(driver);
+        String driver = getConfig("spring.datasource.driverClassName");
+        dataSource.setDriverClassName(driver);
 
-	String url = getConfig("spring.datasource.url");
-	dataSource.setUrl(url);
+        String url = getConfig("spring.datasource.url");
+        dataSource.setUrl(url);
 
-	String username = getConfig("spring.datasource.username");
-	dataSource.setUsername(username);
+        String username = getConfig("spring.datasource.username");
+        dataSource.setUsername(username);
 
-	String password = getConfig("spring.datasource.password");
-	dataSource.setPassword(password);
+        String password = getConfig("spring.datasource.password");
+        dataSource.setPassword(password);
 
-	return dataSource;
-
+        return dataSource;
     }
 
     @Bean
     public PlatformTransactionManager transactionManager() {
-	JpaTransactionManager transactionManager = new JpaTransactionManager();
-	transactionManager.setEntityManagerFactory(this
-		.entityManagerFactoryBean().getObject());
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(
+                this.entityManagerFactoryBean().getObject());
 
-	return transactionManager;
+        return transactionManager;
     }
 
 }
