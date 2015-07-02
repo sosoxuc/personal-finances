@@ -18,171 +18,51 @@ import javax.persistence.TemporalType;
 @Table(name = "TRANSACTIONS")
 public class Transaction implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "Transaction")
-	@TableGenerator(name = "Transaction")
-	private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "Transaction")
+    @TableGenerator(name = "Transaction")
+    public Integer id;
 
-	@Temporal(TemporalType.DATE)
-	private Date transactionDate;
+    @Temporal(TemporalType.DATE)
+    public Date transactionDate;
 
-	private Integer employeeId;
-	
-	private Integer employeeName;
-	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date userDate;
+    public BigDecimal transactionAmount;
 
-	private BigDecimal transactionAmount;
-	
-	private Integer debitAccountId;
-	
-	private String debitAccountName;
-	
-	private Integer creditAccountId;
-	
-	private String creditAccountName;
+    public BigDecimal transactionRest;
 
-	private Integer projectId;
-	
-	private String projectName;
+    public Integer transactionOrder;
 
-	private Integer reasonId;
-	
-	private String reasonName;
-	
-	private Integer transactionState;
-	
-	@Lob
-	private String note;
-	
-	public Integer getId() {
-		return id;
-	}
+    public Integer employeeId;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer employeeName;
 
-	public Date getTransactionDate() {
-		return transactionDate;
-	}
+    @Temporal(TemporalType.TIMESTAMP)
+    public Date userDate;
 
-	public void setTransactionDate(Date transactionDate) {
-		this.transactionDate = transactionDate;
-	}
+    public Integer debitAccountId;
 
-	public Integer getEmployeeId() {
-		return employeeId;
-	}
+    public String debitAccountName;
 
-	public void setEmployeeId(Integer employeeId) {
-		this.employeeId = employeeId;
-	}
+    public BigDecimal debitAccountRest;
 
-	public Integer getEmployeeName() {
-		return employeeName;
-	}
+    public Integer creditAccountId;
 
-	public void setEmployeeName(Integer employeeName) {
-		this.employeeName = employeeName;
-	}
+    public String creditAccountName;
 
-	public Date getUserDate() {
-		return userDate;
-	}
+    public BigDecimal creditAccountRest;
 
-	public void setUserDate(Date userDate) {
-		this.userDate = userDate;
-	}
+    public Integer projectId;
 
-	public BigDecimal getTransactionAmount() {
-		return transactionAmount;
-	}
+    public String projectName;
 
-	public void setTransactionAmount(BigDecimal transactionAmount) {
-		this.transactionAmount = transactionAmount;
-	}
+    public Integer reasonId;
 
-	public Integer getDebitAccountId() {
-		return debitAccountId;
-	}
+    public String reasonName;
 
-	public void setDebitAccountId(Integer debitAccountId) {
-		this.debitAccountId = debitAccountId;
-	}
+    public Integer transactionState;
 
-	public String getDebitAccountName() {
-		return debitAccountName;
-	}
-
-	public void setDebitAccountName(String debitAccountName) {
-		this.debitAccountName = debitAccountName;
-	}
-
-	public Integer getCreditAccountId() {
-		return creditAccountId;
-	}
-
-	public void setCreditAccountId(Integer creditAccountId) {
-		this.creditAccountId = creditAccountId;
-	}
-
-	public String getCreditAccountName() {
-		return creditAccountName;
-	}
-
-	public void setCreditAccountName(String creditAccountName) {
-		this.creditAccountName = creditAccountName;
-	}
-
-	public Integer getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(Integer projectId) {
-		this.projectId = projectId;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
-	public Integer getReasonId() {
-		return reasonId;
-	}
-
-	public void setReasonId(Integer reasonId) {
-		this.reasonId = reasonId;
-	}
-
-	public String getReasonName() {
-		return reasonName;
-	}
-
-	public void setReasonName(String reasonName) {
-		this.reasonName = reasonName;
-	}
-
-	public Integer getTransactionState() {
-		return transactionState;
-	}
-
-	public void setTransactionState(Integer transactionState) {
-		this.transactionState = transactionState;
-	}
+    @Lob
+    public String note;
 }
