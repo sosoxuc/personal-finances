@@ -12,6 +12,9 @@
 - [ ] Cloud instalation
 - [ ] Multi-lingual
 - [ ] Feedbacks
+- [x] CI builds - https://travis-ci.org/sosoxuc/personal-finances
+- [ ] Tests
+- [ ] Swagger API Docs
  
 ###Financial
 - [ ] save all transactions
