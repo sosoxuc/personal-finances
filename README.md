@@ -2,8 +2,11 @@
 
 [![Build Status](https://travis-ci.org/sosoxuc/personal-finances.svg?branch=master)](https://travis-ci.org/sosoxuc/personal-finances)
 
-## Features software must have
+##Technologies used
+- [ ] Java Spring ORM + REST ????
+- [ ] ExtJS ????
 
+## Features software must have
 ###Ecosystem
 - [ ] Local instalation
 - [ ] Cloud instalation
