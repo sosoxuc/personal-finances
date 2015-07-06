@@ -28,3 +28,7 @@
 - [ ] Integration with SMS service
 - [ ] Integration with Mail
 - [ ] Integration with Other systems
+ 
+###Reporting
+- [ ] Import data from excel
+- [ ] Export PDF, Excel
