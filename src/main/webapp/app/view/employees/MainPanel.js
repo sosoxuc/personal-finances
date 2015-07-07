@@ -2,6 +2,7 @@ Ext.define("TR.view.employees.MainPanel", {
     extend : "Ext.panel.Panel",
     border: false,
     layout: 'border',
+    title : 'თანამშრომლები',
     constructor : function(cfg) {
 	    cfg = cfg || {};
 	    var me = this;

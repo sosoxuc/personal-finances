@@ -41,28 +41,6 @@ public class Transaction implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     public Date userDate;
 
-    public Integer debitAccountId;
-
-    public String debitAccountName;
-
-    public BigDecimal debitAccountRest;
-
-    public Integer creditAccountId;
-
-    public String creditAccountName;
-
-    public BigDecimal creditAccountRest;
-
-    public Integer projectId;
-
-    public String projectName;
-
-    public Integer reasonId;
-
-    public String reasonName;
-
-    public Integer transactionState;
-
     @Lob
     public String note;
 }

@@ -2,6 +2,7 @@ Ext.define('TR.view.transactions.MainPanel', {
 	extend : 'Ext.panel.Panel',
 	border: false,
 	layout: 'border',
+	title : 'ტრანზაქციები',
 	defaults: {
 		split: true
 	},
