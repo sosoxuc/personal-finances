@@ -33,7 +33,7 @@ import personal.security.SecurityInterceptor;
 @EnableWebMvc
 @EnableCaching
 @EnableTransactionManagement
-@ComponentScan(basePackages = ".")
+@ComponentScan(basePackages = "personal")
 public class SpringConfig extends WebMvcConfigurerAdapter {
 
     @Override
@@ -127,5 +127,4 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 
         return transactionManager;
     }
-
 }
