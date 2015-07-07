@@ -21,7 +21,7 @@
 - [ ] Save transactions
 - [ ] List transactions
     - [ ] Infinity scroll
-- [ ] (Re)Order transactions
+- [ ] Order transactions
 - [ ] Calculate rests
 - [ ] Projects, rests for projects
 - [ ] Turnovers
