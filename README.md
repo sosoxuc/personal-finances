@@ -18,10 +18,12 @@
 - [ ] Swagger API Docs
  
 ###Financial
-- [ ] save all transactions
-- [ ] Get current rest
-- [ ] Get current rest per account
-- [ ] Planning, resrs by plan
+- [ ] Save transactions
+- [ ] Calculate rests
+- [ ] Projects, rests for projects
+- [ ] Turnovers
+- [ ] Normal plan
+- [ ] Credit plan
 - [ ] Alerts
  
 ###Integrations
