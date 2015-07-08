@@ -32,7 +32,7 @@ Ext.define('TR.view.MainPanel', {
             width : 32
         }, {
             xtype : 'label',
-            html : '<p style="font-size:16px; margin:0;"><i>Personal</i> Finances</p>'
+            html : '<p style="font-size:16px; margin:0;color:#3892d4;font-weight:bold;"><i style="color:#000000;font-weight:normal;">Personal</i> FINANCES</p>'
         }, '->', geokb, {
             text : 'გამოსვლა',
             handler : logout
