@@ -27,7 +27,7 @@ Ext.define('TR.view.MainPanel', {
 
         me.tbar = [ {
             xtype : 'label',
-            html : '<b>Personal Finances System</b>'
+            html : '<p style="font-size:16px; margin:0;"><i>Personal</i> Finances</p>'
         }, '->', geokb, {
             text : 'გამოსვლა',
             handler : logout

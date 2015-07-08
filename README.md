@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/sosoxuc/personal-finances.svg?branch=master)](https://travis-ci.org/sosoxuc/personal-finances)
 
 ##Technologies used
-- [ ] Java Spring ORM + REST ????
-- [ ] ExtJS ????
+- [ ] Java Spring ORM + REST
+- [ ] ExtJS 5
 
 ## Features software must have
 ###Ecosystem
