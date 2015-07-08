@@ -1,14 +1,10 @@
 package personal.spring;
 
-import static personal.spring.ConfigUtil.getConfig;
-
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,22 +17,23 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
+import org.springframework.web.servlet.config.annotation.*;
 import personal.security.SecurityInterceptor;
 
+import javax.sql.DataSource;
+import java.util.Properties;
+
+import static personal.spring.ConfigUtil.getConfig;
+
 @Configuration
+@Profile("dev")
 @EnableWebMvc
-@Profile("default")
 @EnableCaching
 @EnableTransactionManagement
 @ComponentScan(basePackages = "personal")
-public class SpringConfig extends WebMvcConfigurerAdapter {
+public class SpringDevConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void configureContentNegotiation(
@@ -49,8 +46,6 @@ public class SpringConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-
-        registry.addInterceptor(new SecurityInterceptor());
     }
 
     @Override

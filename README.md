@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.org/sosoxuc/personal-finances.svg?branch=master)](https://travis-ci.org/sosoxuc/personal-finances)
 
 ##Technologies used
-- [ ] Java Spring ORM + REST
-- [ ] ExtJS 6
+- Java Spring ORM + REST
+- ExtJS 6
 
 ## Features software must have
 ###Ecosystem
@@ -22,6 +22,9 @@
 - [ ] List transactions
     - [ ] Infinity scroll
 - [ ] Order transactions
+- [ ] Currencies support
+- [ ] Currencies services
+- [ ] Operations support
 - [ ] Calculate rests
 - [ ] Projects, rests for projects
 - [ ] Turnovers
