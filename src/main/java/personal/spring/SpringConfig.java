@@ -1,11 +1,5 @@
 package personal.spring;
 
-import static personal.spring.ConfigUtil.getConfig;
-
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -22,13 +16,13 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
+import org.springframework.web.servlet.config.annotation.*;
 import personal.security.SecurityInterceptor;
+
+import javax.sql.DataSource;
+import java.util.Properties;
+
+import static personal.spring.ConfigUtil.getConfig;
 
 @Configuration
 @EnableWebMvc

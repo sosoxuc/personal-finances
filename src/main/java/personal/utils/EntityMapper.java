@@ -23,14 +23,14 @@ public class EntityMapper {
      */
     public static String getIdField(EntityManager em, Class<?> entityClass) {
 
-	String name;
+    String name;
 
-	EntityType<?> entityType = em.getMetamodel().entity(entityClass);
-	Class<?> idClass = entityType.getIdType().getJavaType();
-	SingularAttribute<?, ?> attribute = entityType.getDeclaredId(idClass);
-	name = attribute.getName();
+    EntityType<?> entityType = em.getMetamodel().entity(entityClass);
+    Class<?> idClass = entityType.getIdType().getJavaType();
+    SingularAttribute<?, ?> attribute = entityType.getDeclaredId(idClass);
+    name = attribute.getName();
 
-	return name;
+    return name;
     }
 
     /**
@@ -42,7 +42,7 @@ public class EntityMapper {
      * @return {@link Object}
      */
     public static Object getIdValue(EntityManagerFactory emf, Object entity) {
-	return emf.getPersistenceUnitUtil().getIdentifier(entity);
+    return emf.getPersistenceUnitUtil().getIdentifier(entity);
     }
 
     /**
@@ -54,6 +54,6 @@ public class EntityMapper {
      * @return
      */
     public static Object getIdValue(EntityManager em, Object entity) {
-	return getIdValue(em.getEntityManagerFactory(), entity);
+    return getIdValue(em.getEntityManagerFactory(), entity);
     }
 }
