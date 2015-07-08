@@ -1,8 +1,8 @@
 package personal.utils;
 
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Map;
 
 public class SqlUtils {
 
@@ -23,29 +23,29 @@ public class SqlUtils {
      * @return increased counter.
      */
     public static void sqlParam(String data, Map<String, Object> params,
-	    StringBuilder sql, String expression, SqlStringContaining contains) {
+        StringBuilder sql, String expression, SqlStringContaining contains) {
 
-	if (StringUtils.isBlank(data)) {
-	    return;
-	}
-	switch (contains) {
-	case END:
-	    data = "%".concat(data);
-	    break;
-	case START:
-	    data = data.concat("%");
-	    break;
-	case FULL:
-	    data = data.replace(" ", "%");
-	    data = "%".concat(data).concat("%");
-	    break;
-	default:
-	    break;
-	}
+    if (StringUtils.isBlank(data)) {
+        return;
+    }
+    switch (contains) {
+    case END:
+        data = "%".concat(data);
+        break;
+    case START:
+        data = data.concat("%");
+        break;
+    case FULL:
+        data = data.replace(" ", "%");
+        data = "%".concat(data).concat("%");
+        break;
+    default:
+        break;
+    }
 
-	data = data.trim();
+    data = data.trim();
 
-	sqlParam(data, params, sql, expression);
+    sqlParam(data, params, sql, expression);
     }
 
     /**
@@ -63,38 +63,38 @@ public class SqlUtils {
      * @return increased counter.
      */
     public static void sqlParam(Object data, Map<String, Object> params,
-	    StringBuilder sql, String expression) {
+        StringBuilder sql, String expression) {
 
-	if (data != null) {
-	    sql.append(expression);
-	    String param = extractParameter(expression);
-	    params.put(param, data);
-	}
+    if (data != null) {
+        sql.append(expression);
+        String param = extractParameter(expression);
+        params.put(param, data);
+    }
     }
 
     public static String extractParameter(String expression) {
 
-	if (StringUtils.isBlank(expression)) {
-	    throw new IllegalArgumentException();
-	}
+    if (StringUtils.isBlank(expression)) {
+        throw new IllegalArgumentException();
+    }
 
-	int count = StringUtils.countMatches(expression, ":");
+    int count = StringUtils.countMatches(expression, ":");
 
-	if (count != 1) {
-	    throw new IllegalArgumentException();
-	}
+    if (count != 1) {
+        throw new IllegalArgumentException();
+    }
 
-	int pos = StringUtils.indexOf(expression, ":");
+    int pos = StringUtils.indexOf(expression, ":");
 
-	String sub = expression.substring(pos + 1);
+    String sub = expression.substring(pos + 1);
 
-	if (StringUtils.isBlank(sub)) {
-	    throw new IllegalArgumentException();
-	}
+    if (StringUtils.isBlank(sub)) {
+        throw new IllegalArgumentException();
+    }
 
-	String paramName = sub.split("\\s+")[0];
+    String paramName = sub.split("\\s+")[0];
 
-	return paramName;
+    return paramName;
     }
 
     /**
@@ -105,6 +105,6 @@ public class SqlUtils {
      * 
      */
     public enum SqlStringContaining {
-	START, END, FULL, NONE;
+    START, END, FULL, NONE;
     }
 }
