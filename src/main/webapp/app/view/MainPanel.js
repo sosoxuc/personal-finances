@@ -25,7 +25,12 @@ Ext.define('TR.view.MainPanel', {
         };
         changeVal(geokbField, geokb);
 
-        me.tbar = [ {
+        me.tbar = [{
+            xtype : 'image',
+            src : './images/icon.png',
+            height : 32,
+            width : 32
+        }, {
             xtype : 'label',
             html : '<p style="font-size:16px; margin:0;"><i>Personal</i> Finances</p>'
         }, '->', geokb, {
