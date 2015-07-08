@@ -15,36 +15,36 @@ public class SecurityInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
 
-        // if (handler instanceof HandlerMethod) {
-        // HandlerMethod handlerMethod = (HandlerMethod) handler;
-        // Method method = handlerMethod.getMethod();
-        // boolean admin = method.isAnnotationPresent(AdminRole.class);
-        //
-        // boolean user = method.isAnnotationPresent(UserRole.class);
-        //
-        // if (admin || user) {
-        //
-        // Passport passport = SessionUtils.getPassport();
-        // if (passport != null) {
-        //
-        // if (admin && passport.getUserRole() != null
-        // && passport.getUserRole().equals(Role.ADMIN)) {
-        // return true;
-        // } else if (user
-        // && (passport.getUserRole() == null || passport
-        // .getUserRole().equals(Role.USER))) {
-        // return true;
-        // }
-        // response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        // return false;
-        //
-        // } else {
-        // response.sendError(HttpServletResponse.SC_FORBIDDEN);
-        // return false;
-        // }
-        // }
-        //
-        // }
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
+            Method method = handlerMethod.getMethod();
+            boolean admin = method.isAnnotationPresent(AdminRole.class);
+
+            boolean user = method.isAnnotationPresent(UserRole.class);
+
+            if (admin || user) {
+
+                Passport passport = SessionUtils.getPassport();
+                if (passport != null) {
+
+                    if (admin && passport.getUserRole() != null
+                            && passport.getUserRole().equals(Role.ADMIN)) {
+                        return true;
+                    } else if (user
+                            && (passport.getUserRole() == null || passport
+                            .getUserRole().equals(Role.USER))) {
+                        return true;
+                    }
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    return false;
+
+                } else {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    return false;
+                }
+            }
+
+        }
 
         return true;
     }
