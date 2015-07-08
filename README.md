@@ -4,7 +4,7 @@
 
 ##Technologies used
 - [ ] Java Spring ORM + REST
-- [ ] ExtJS 5
+- [ ] ExtJS 6
 
 ## Features software must have
 ###Ecosystem
