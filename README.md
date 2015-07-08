@@ -22,6 +22,9 @@
 - [ ] List transactions
     - [ ] Infinity scroll
 - [ ] Order transactions
+- [ ] Currencies support
+- [ ] Currencies services
+- [ ] Operations support
 - [ ] Calculate rests
 - [ ] Projects, rests for projects
 - [ ] Turnovers
