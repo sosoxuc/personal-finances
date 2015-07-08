@@ -14,7 +14,7 @@
 - [ ] Feedbacks
 - [x] [CI builds](https://travis-ci.org/sosoxuc/personal-finances)
 - [x] Tests
-    - [ ] [Must override interceptor which is disabled for now](https://github.com/sosoxuc/personal-finances/issues/1)
+    - [x] [Must override interceptor which is disabled for now](https://github.com/sosoxuc/personal-finances/issues/1)
 - [ ] Swagger API Docs
  
 ###Financial
