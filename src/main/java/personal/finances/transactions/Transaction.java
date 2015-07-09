@@ -34,4 +34,8 @@ public class Transaction implements Serializable {
 
     @Lob
     public String note;
+
+    public Integer projectId;
+
+    public String projectName;
 }

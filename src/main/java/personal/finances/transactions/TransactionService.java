@@ -4,6 +4,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.finances.projects.Project;
 import personal.security.AdminRole;
 import personal.security.UserRole;
 
@@ -22,12 +23,19 @@ public class TransactionService {
 
     @RequestMapping("/create")
     @Transactional(rollbackFor = Throwable.class)
-    public Integer create(@RequestParam BigDecimal amount) {
+    public Integer create(
+            @RequestParam BigDecimal amount,
+            @RequestParam Integer projectId) {
         Transaction transaction = new Transaction();
         Date now = new Date();
         transaction.userDate = now;
         transaction.transactionAmount = amount;
         transaction.transactionDate = now;
+
+        Project project = em.find(Project.class, projectId);
+        transaction.projectId = projectId;
+        transaction.projectName = project.projectName;
+
         em.persist(transaction);
         return transaction.id;
     }
