@@ -31,11 +31,15 @@ public class TransactionService {
             @RequestParam BigDecimal amount,
             @RequestParam Integer projectId,
             @RequestParam String date,
-            @RequestParam String note) throws ParseException {
+            @RequestParam String note,
+            @RequestParam Integer direction) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
         transaction.userDate = new Date();
-        transaction.transactionAmount = amount;
+
+        // set direction to amount
+
+        transaction.transactionAmount = amount.multiply(new BigDecimal(direction));
         transaction.transactionDate = transactionDate;
         transaction.transactionNote = note;
 
