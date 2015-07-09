@@ -13,7 +13,6 @@ Ext.define("TR.view.projects.AddWindow", {
         var form = Ext.create('Ext.form.Panel', {
             border: false,
             split: true,
-            //width: 350,
             region: 'center',
             bodyPadding: 5,
             fieldDefaults : {
@@ -72,40 +71,6 @@ Ext.define("TR.view.projects.AddWindow", {
                 callback : function(id) {
                     cfg.searchForm.search();
                     me.close();
-                }
-            });
-        }
-        
-        function addPosition(){
-            Ext.Msg.prompt("პოზიციის დამატება", "პოზიცია", function(ans, text){
-                if(ans == 'ok' && text){
-                    myRequest({
-                        url: 'rest/employee/addPosition',
-                        params: {
-                            name: text
-                        },
-                        callback: function(id){
-                            if(id) positionStore.load();
-                            positionCombo.setValue(id);
-                        }
-                    });
-                }
-            });
-        }
-        
-        function addWorkplace(){
-            Ext.Msg.prompt("სამუშაო ადგილის დამატება", "სამუშაო ადგილი", function(ans, text){
-                if(ans == 'ok' && text){
-                    myRequest({
-                        url: 'rest/employee/addWorkplace',
-                        params: {
-                            name: text
-                        },
-                        callback: function(id){
-                            if(id) workplaceStore.load();
-                            workplaceCombo.setValue(id);
-                        }
-                    });
                 }
             });
         }
