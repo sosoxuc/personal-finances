@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.List;
 
 /**
  * Created by niko on 7/9/15.
@@ -29,5 +30,12 @@ public class ProjectService {
 
         em.persist(project);
         return new ResponseEntity<>(project.id, HttpStatus.OK);
+    }
+
+    @RequestMapping("/list")
+    public ResponseEntity<List<Project>> create() {
+        List<Project> projects = em.createQuery("from Project", Project.class)
+                .getResultList();
+        return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 }
