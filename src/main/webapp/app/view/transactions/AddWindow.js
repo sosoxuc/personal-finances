@@ -47,7 +47,7 @@ Ext.define("TR.view.transactions.AddWindow", {
             }, projectsCombo, {
                 xtype: 'datefield',
                 name: 'date',
-                format: 'Y-m-d',
+                format: 'd-m-Y',
                 fieldLabel : 'თარიღი',
                 allowBlank : false,
             }]
