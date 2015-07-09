@@ -39,6 +39,22 @@ public class ProjectService {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    @RequestMapping("/update")
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Project> update(
+            @RequestParam("id") Integer id,
+            @RequestParam("projectName") String projectName) {
+        Project project = em.find(Project.class, id);
+
+        if (project != null) {
+            project.projectName = projectName;
+
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
     @RequestMapping("/remove")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> remove(@RequestParam("id") Integer id) {
@@ -50,4 +66,5 @@ public class ProjectService {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+
 }
