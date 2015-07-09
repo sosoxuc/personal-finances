@@ -62,11 +62,8 @@ Ext.define("TR.view.projects.AddWindow", {
 	    	if (!form.getForm().isValid())
 			    return;
 		    var values = form.getForm().getValues();
-		    values.userRole = values.userRole ? 2 : 1;
-		    correctDates(values, ['birthDate', 'expireDate']);
-		    
 		    myRequest({
-		        url : 'rest/employee/update',
+		        url : 'rest/project/update',
 		        params : values,
 		        callback : function(id) {
 			        cfg.searchForm.search();
