@@ -14,4 +14,6 @@ public class Project implements Serializable{
     public Integer id;
 
     public String projectName;
+
+    public Integer isActive;
 }
