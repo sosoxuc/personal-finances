@@ -4,9 +4,8 @@ Ext.define("TR.view.projects.ProjectsGrid", {
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
-
-        me.store = Ext.create('TR.store.projects.Store');
-
+        me.store = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
+        
         me.tbar = [ {
             text : 'დამატება',
             name : 'add',

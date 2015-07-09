@@ -8,7 +8,19 @@ Ext.define("TR.view.transactions.AddWindow", {
 	constructor : function(cfg) {
 		cfg = cfg || {};
 		var me = this;
+		var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
 
+		var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'projectId',
+            emptyText: 'პროექტი',
+            fieldLabel : 'პროექტი',
+            queryMode: 'local',
+            store: projectsStore,
+            displayField: 'projectName',
+            valueField: 'id',
+            editable: false
+        });
+		
 		me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
 
 		var form = Ext.create('Ext.form.Panel', {
@@ -32,7 +44,7 @@ Ext.define("TR.view.transactions.AddWindow", {
 				fieldLabel : 'თანხა',
 				allowBlank : false,
 				format : '0.00'
-			}]
+			}, projectsCombo]
 		});
 
 		me.items = [ form ];
