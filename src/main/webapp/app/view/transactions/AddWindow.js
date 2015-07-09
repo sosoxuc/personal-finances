@@ -10,6 +10,17 @@ Ext.define("TR.view.transactions.AddWindow", {
         var me = this;
         var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
 
+        var directionsStore = Ext.create('Ext.data.Store', {
+            fields: [
+                {name: 'label'},
+                {name: 'value', type: 'int'}
+            ], 
+            data: [
+                {label: 'გასავალი', value: -1},
+                {label: 'შემოსავალი', value: 1}
+            ]
+        });
+        
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'projectId',
             emptyText: 'პროექტი',
@@ -18,8 +29,17 @@ Ext.define("TR.view.transactions.AddWindow", {
             store: projectsStore,
             displayField: 'projectName',
             valueField: 'id',
-            editable: false,
             value: cfg.data ? cfg.data.projectId : ''
+        });
+        
+        var directionCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'direction',
+            fieldLabel : 'მიმართულება',
+            queryMode: 'local',
+            store: directionsStore,
+            displayField: 'label',
+            valueField: 'value',
+            value: cfg.data ? Math.sign(cfg.data.transactionAmount) : ''
         });
         
         me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
