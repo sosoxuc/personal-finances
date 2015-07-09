@@ -65,12 +65,13 @@ Ext.define("TR.view.projects.AddWindow", {
             if (!form.getForm().isValid())
                 return;
             var values = form.getForm().getValues();
-            valust.id = cfg.data.id;
+            values.id = cfg.data.id;
             myRequest({
                 url : 'rest/project/update',
                 params : values,
                 callback : function(id) {
-                    cfg.searchForm.search();
+                    cfg.grid.store.load();
+                    cfg.grid.getSelectionModel().deselectAll();
                     me.close();
                 }
             });
