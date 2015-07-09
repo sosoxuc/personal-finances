@@ -33,9 +33,21 @@ public class ProjectService {
     }
 
     @RequestMapping("/list")
-    public ResponseEntity<List<Project>> create() {
+    public ResponseEntity<List<Project>> list() {
         List<Project> projects = em.createQuery("from Project", Project.class)
                 .getResultList();
         return new ResponseEntity<>(projects, HttpStatus.OK);
+    }
+
+    @RequestMapping("/remove")
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Project> remove(@RequestParam("id") Integer id) {
+        Project project = em.find(Project.class, id);
+
+        if (project != null) {
+            em.remove(project);
+            return new ResponseEntity<>(project, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }
