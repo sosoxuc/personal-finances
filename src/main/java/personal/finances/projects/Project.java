@@ -1,5 +1,17 @@
 package personal.finances.projects;
 
-public class Project {
+import javax.persistence.*;
+import java.io.Serializable;
 
+@Entity
+@Table(name = "PROJECTS")
+public class Project implements Serializable{
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "Project")
+    @TableGenerator(name = "Project")
+    public Integer id;
+
+    public String projectName;
 }
