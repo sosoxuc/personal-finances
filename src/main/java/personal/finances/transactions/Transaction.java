@@ -33,7 +33,7 @@ public class Transaction implements Serializable {
     public Date userDate;
 
     @Lob
-    public String note;
+    public String transactionNote;
 
     public Integer projectId;
 

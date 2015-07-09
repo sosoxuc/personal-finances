@@ -11,12 +11,16 @@ import personal.security.UserRole;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/transaction")
 public class TransactionService {
+
+    private static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     @PersistenceContext
     private EntityManager em;
@@ -25,16 +29,33 @@ public class TransactionService {
     @Transactional(rollbackFor = Throwable.class)
     public Integer create(
             @RequestParam BigDecimal amount,
-            @RequestParam Integer projectId) {
+            @RequestParam Integer projectId,
+            @RequestParam String date) throws ParseException {
         Transaction transaction = new Transaction();
-        Date now = new Date();
-        transaction.userDate = now;
+        Date transactionDate = df.parse(date);
+        transaction.userDate = new Date();
         transaction.transactionAmount = amount;
-        transaction.transactionDate = now;
+        transaction.transactionDate = transactionDate;
 
+        //set project
         Project project = em.find(Project.class, projectId);
         transaction.projectId = projectId;
         transaction.projectName = project.projectName;
+
+        //set order
+        List<Transaction> lastTransaction = em.createQuery(
+                "from Transaction where transactionDate = :transactionDate order by transactionOrder desc", Transaction.class)
+                .setParameter("transactionDate", transactionDate)
+                .setFirstResult(0)
+                .setMaxResults(1)
+                .getResultList();
+
+        if ( ! lastTransaction.isEmpty()) {
+            Integer transactionOrder = lastTransaction.get(0).transactionOrder;
+            transaction.transactionOrder = transactionOrder + 1;
+        } else {
+            transaction.transactionOrder = 0;
+        }
 
         em.persist(transaction);
         return transaction.id;

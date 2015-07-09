@@ -47,6 +47,7 @@ public class ProjectService {
     public ResponseEntity<Project> update(
             @RequestParam("id") Integer id,
             @RequestParam("projectName") String projectName) {
+        //TODO update in transaction
         Project project = em.find(Project.class, id);
         //TODO project name validation
         if (project != null && project.isActive.equals(1)) {
