@@ -30,12 +30,14 @@ public class TransactionService {
     public Integer create(
             @RequestParam BigDecimal amount,
             @RequestParam Integer projectId,
-            @RequestParam String date) throws ParseException {
+            @RequestParam String date,
+            @RequestParam String note) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
         transaction.userDate = new Date();
         transaction.transactionAmount = amount;
         transaction.transactionDate = transactionDate;
+        transaction.transactionNote = note;
 
         //set project
         Project project = em.find(Project.class, projectId);
@@ -43,22 +45,43 @@ public class TransactionService {
         transaction.projectName = project.projectName;
 
         //set order
-        List<Transaction> lastTransaction = em.createQuery(
-                "from Transaction where transactionDate = :transactionDate order by transactionOrder desc", Transaction.class)
-                .setParameter("transactionDate", transactionDate)
-                .setFirstResult(0)
-                .setMaxResults(1)
-                .getResultList();
+        List<Transaction> dayTransactions = getLastTransactions(transactionDate);
 
-        if ( ! lastTransaction.isEmpty()) {
-            Integer transactionOrder = lastTransaction.get(0).transactionOrder;
+        if ( ! dayTransactions.isEmpty()) {
+            Integer transactionOrder = dayTransactions.get(0).transactionOrder;
             transaction.transactionOrder = transactionOrder + 1;
         } else {
             transaction.transactionOrder = 0;
         }
 
+        //set rest
+        List<Transaction> lastTransactions = getLastTransactions();
+        if ( ! lastTransactions.isEmpty()) {
+            BigDecimal transactionRest = lastTransactions.get(0).transactionRest;
+            transaction.transactionRest = transactionRest.add(transaction.transactionAmount);
+        } else {
+            transaction.transactionRest = transaction.transactionAmount;
+        }
+
         em.persist(transaction);
         return transaction.id;
+    }
+
+    private List<Transaction> getLastTransactions(Date transactionDate) {
+        return em.createQuery(
+                    "from Transaction where transactionDate = :transactionDate order by transactionOrder desc", Transaction.class)
+                .setParameter("transactionDate", transactionDate)
+                .setFirstResult(0)
+                .setMaxResults(1)
+                .getResultList();
+    }
+
+    private List<Transaction> getLastTransactions() {
+        return em.createQuery(
+                "from Transaction order by transactionDate desc, transactionOrder desc", Transaction.class)
+                .setFirstResult(0)
+                .setMaxResults(1)
+                .getResultList();
     }
 
     @RequestMapping("/search")
