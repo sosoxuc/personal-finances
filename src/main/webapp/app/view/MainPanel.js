@@ -44,7 +44,7 @@ Ext.define('TR.view.MainPanel', {
         
         var tabPanel = Ext.create('Ext.tab.Panel', {
             border : false,
-            items : [ projects, transactions, employees ]
+            items : [ transactions, employees, projects ]
         });
 
         me.items = [ tabPanel ];

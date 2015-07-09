@@ -44,7 +44,13 @@ Ext.define("TR.view.transactions.AddWindow", {
                 fieldLabel : 'თანხა',
                 allowBlank : false,
                 format : '0.00'
-            }, projectsCombo]
+            }, projectsCombo, {
+                xtype: 'datefield',
+                name: 'date',
+                format: 'Y-m-d',
+                fieldLabel : 'თარიღი',
+                allowBlank : false,
+            }]
         });
 
         me.items = [ form ];
