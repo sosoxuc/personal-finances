@@ -18,7 +18,8 @@ Ext.define("TR.view.transactions.AddWindow", {
             store: projectsStore,
             displayField: 'projectName',
             valueField: 'id',
-            editable: false
+            editable: false,
+            value: cfg.data ? cfg.data.projectId : ''
         });
         
         me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
@@ -43,13 +44,21 @@ Ext.define("TR.view.transactions.AddWindow", {
                 name : 'amount',
                 fieldLabel : 'თანხა',
                 allowBlank : false,
-                format : '0.00'
+                format : '0.00',
+                value: cfg.data ? cfg.data.transactionAmount : ''
             }, projectsCombo, {
                 xtype: 'datefield',
                 name: 'date',
                 format: 'd-m-Y',
                 fieldLabel : 'თარიღი',
                 allowBlank : false,
+                disabled: cfg.edit,
+                value: cfg.data ? cfg.data.transactionDate : ''
+            }, {
+                name: 'note',
+                fieldLabel : 'დანიშნულება',
+                allowBlank : false,
+                value: cfg.data ? cfg.data.transactionNote : ''
             }]
         });
 
@@ -57,12 +66,16 @@ Ext.define("TR.view.transactions.AddWindow", {
 
         me.buttons = [{
             text : 'დამატება',
-            handler : add
+            handler : cfg.edit ? edit : add
         }];
 
+        
         me.callParent(arguments);
-
-        form.getForm().findField('amount').focus();
+        me.on({
+            show:function(){
+                me.form.getForm().findField('amount').focus();
+            }
+        });
 
         function add() {
             if (!form.getForm().isValid())
@@ -71,6 +84,21 @@ Ext.define("TR.view.transactions.AddWindow", {
 
             myRequest({
                 url : 'rest/transaction/create',
+                params : values,
+                callback : function(id) {
+                    cfg.searchForm.filter();
+                    me.close();
+                }
+            });
+        }
+        
+        function edit() {
+            if (!form.getForm().isValid())
+                return;
+            var values = form.getForm().getValues();
+
+            myRequest({
+                url : 'rest/transaction/update',
                 params : values,
                 callback : function(id) {
                     cfg.searchForm.filter();

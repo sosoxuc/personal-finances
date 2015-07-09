@@ -45,25 +45,20 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             dataIndex : 'transactionAmount',
             flex : 1
         }, {
+            header : 'ნაშთი',
+            xtype : 'numbercolumn',
+            format : '0.00',
+            align : 'right',
+            dataIndex : 'transactionRest',
+            flex : 1
+        }, {
             header : 'პროექტი',
             dataIndex : 'projectName',
             flex : 1.5
         }, {
             header : 'დანიშნულება',
-            dataIndex : 'reasonName',
-            flex : 1
-        }, {
-            header : 'დასახელება',
-            dataIndex : 'debitAccountName',
-            flex : 2
-        }, {
-            header : 'კორესპოდენტი',
-            dataIndex : 'creditAccountName',
-            flex : 1.5
-        }, {
-            header : 'შენიშვნა',
-            dataIndex : 'note',
-            flex : 3
+            dataIndex : 'transactionNote',
+            flex : 2.5
         } ];
 
         
@@ -82,17 +77,11 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             if (sel.length == 0)
                 return;
 
-            var win = Ext.create('TR.view.transactions.AddWindow', {
+            Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
                 edit : true,
-                employeeId : sel[0].get('id'),
-                searchForm : me.searchForm
+                data: sel[0].getData()
             });
-            var values = sel[0].getData();
-
-            values.userRole = values.userRole == 2 ? 1 : 0;
-
-            win.down('form').getForm().setValues(values);
         }
 
         function remove() {
@@ -109,7 +98,6 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                         callback : function(res) {
                             me.store.load();
                             me.getSelectionModel().deselectAll();
-                            //resetButtons();
                         }
                     });
                 }
