@@ -56,7 +56,7 @@ Ext.define("TR.view.transactions.AddWindow", {
                 allowBlank : false
             },
             defaultType : 'textfield',
-            items : [ {
+            items : [ directionCombo, {
                 xtype : 'numberfield',
                 hideTrigger : true,
                 keyNavEnabled : false,
