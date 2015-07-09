@@ -1,5 +1,5 @@
 Ext.define('TR.store.projects.Store', {
-    extend : ''Ext.data.Store',
+    extend : 'Ext.data.Store',
     storeId: 'projectsStore',
     fields: ['id', 'projectName'],
     proxy: {
