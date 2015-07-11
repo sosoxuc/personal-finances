@@ -1,5 +1,6 @@
 package personal.finances.accounts;
 
+import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,7 @@ public class AccountService {
             @RequestParam(required = false) String accountNumber){
         Account account = new Account();
         account.accountName = accountName;
+        account.accountNumber = accountNumber;
         account.isActive = 1;
 
         em.persist(account);
