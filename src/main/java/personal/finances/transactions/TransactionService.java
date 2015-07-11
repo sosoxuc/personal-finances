@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
+import personal.finances.transactions.rest.TransactionRest;
+import personal.finances.transactions.rest.TransactionRestType;
 import personal.security.AdminRole;
 import personal.security.UserRole;
 
@@ -16,6 +18,7 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -75,15 +78,33 @@ public class TransactionService {
         }
 
         //set rest
-        List<Transaction> lastTransactions = getLastTransactions();
-        if ( ! lastTransactions.isEmpty()) {
-            BigDecimal transactionRest = lastTransactions.get(0).transactionRest;
-            transaction.transactionRest = transactionRest.add(transaction.transactionAmount);
-        } else {
-            transaction.transactionRest = transaction.transactionAmount;
-        }
+        //TODO extract method
+        List<TransactionRest> transactionRests = new ArrayList<>(3);
+        TransactionRest accountRest = new TransactionRest();
+        accountRest.transactionId = transaction.id;
+        accountRest.transactionRestType = TransactionRestType.ACCOUNT;
+        accountRest.transactionRest = transaction.transactionAmount;
+
+        transactionRests.add(accountRest);
+
+        TransactionRest projectRest = new TransactionRest();
+        projectRest.transactionId = transaction.id;
+        projectRest.transactionRestType = TransactionRestType.ACCOUNT;
+        projectRest.transactionRest = transaction.transactionAmount;
+
+        transactionRests.add(projectRest);
+
+        TransactionRest totalRest = new TransactionRest();
+        totalRest.transactionId = transaction.id;
+        totalRest.transactionRestType = TransactionRestType.ACCOUNT;
+        totalRest.transactionRest = transaction.transactionAmount;
+
+        transactionRests.add(totalRest);
+
+        transaction.transactionRests = transactionRests;
 
         em.persist(transaction);
+
         return transaction.id;
     }
 
