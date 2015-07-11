@@ -4,6 +4,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.finances.accounts.Account;
+import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.security.AdminRole;
 import personal.security.UserRole;
@@ -32,7 +34,10 @@ public class TransactionService {
             @RequestParam Integer projectId,
             @RequestParam String date,
             @RequestParam String note,
-            @RequestParam Integer direction) throws ParseException {
+            @RequestParam Integer direction,
+            @RequestParam Integer accountId,
+            @RequestParam Integer currencyId
+            ) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
         transaction.userDate = new Date();
@@ -42,6 +47,16 @@ public class TransactionService {
         transaction.transactionAmount = amount.multiply(new BigDecimal(direction));
         transaction.transactionDate = transactionDate;
         transaction.transactionNote = note;
+
+        //set account
+        Account account = em.find(Account.class, accountId);
+        transaction.accountId = account.id;
+        transaction.accountName = account.accountName;
+
+        //set currency
+        Currency currency = em.find(Currency.class, currencyId);
+        transaction.currencyId = currency.id;
+        transaction.currencyCode = currency.currencyCode;
 
         //set project
         Project project = em.find(Project.class, projectId);

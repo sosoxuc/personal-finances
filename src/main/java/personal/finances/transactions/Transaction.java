@@ -38,4 +38,12 @@ public class Transaction implements Serializable {
     public Integer projectId;
 
     public String projectName;
+
+    public Integer accountId;
+
+    public String accountName;
+
+    public Integer currencyId;
+
+    public String currencyCode;
 }
