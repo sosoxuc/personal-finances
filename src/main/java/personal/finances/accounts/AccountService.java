@@ -1,6 +1,5 @@
 package personal.finances.accounts;
 
-import com.sun.org.apache.bcel.internal.generic.ACONST_NULL;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +11,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static personal.States.ACTIVE;
+import static personal.States.INACTIVE;
 /**
  * Created by niko on 7/11/15.
  */
@@ -31,7 +32,7 @@ public class AccountService {
         Account account = new Account();
         account.accountName = accountName;
         account.accountNumber = accountNumber;
-        account.isActive = 1;
+        account.isActive = ACTIVE;
 
         em.persist(account);
 
@@ -41,7 +42,7 @@ public class AccountService {
     @RequestMapping("/list")
     public ResponseEntity<List<Account>> list() {
         List<Account> accounts = em.createQuery("from Account where isActive = :isActive", Account.class)
-                .setParameter("isActive", 1)
+                .setParameter("isActive", ACTIVE)
                 .getResultList();
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
@@ -54,7 +55,7 @@ public class AccountService {
             @RequestParam(required = false) String accountNumber) {
 
         Account account = em.find(Account.class, id);
-        if (account != null && account.isActive.equals(1)) {
+        if (account != null && account.isActive.equals(ACTIVE)) {
             account.accountName = accountName;
             account.accountNumber = accountNumber;
             //TODO update post process
@@ -70,8 +71,8 @@ public class AccountService {
     public ResponseEntity<Account> remove(@RequestParam("id") Integer id) {
         Account account = em.find(Account.class, id);
 
-        if (account != null && account.isActive.equals(1)) {
-            account.isActive = 0;
+        if (account != null && account.isActive.equals(ACTIVE)) {
+            account.isActive = INACTIVE;
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

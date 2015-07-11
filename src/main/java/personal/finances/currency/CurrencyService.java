@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-
+import static personal.States.ACTIVE;
+import static personal.States.INACTIVE;
 /**
  * Created by Niko on 7/11/15.
  */
@@ -27,7 +28,7 @@ public class CurrencyService {
 
         Currency currency = new Currency();
         currency.currencyName = currencyName;
-        currency.isActive = 1;
+        currency.isActive = ACTIVE;
 
         em.persist(currency);
 
@@ -37,7 +38,7 @@ public class CurrencyService {
     @RequestMapping("/list")
     public ResponseEntity<List<Currency>> list() {
         List<Currency> currencies = em.createQuery("from Currency where isActive = :isActive order by currencyName asc", Currency.class)
-                .setParameter("isActive", 1)
+                .setParameter("isActive", ACTIVE)
                 .getResultList();
         return new ResponseEntity<>(currencies, HttpStatus.OK);
     }
@@ -49,7 +50,7 @@ public class CurrencyService {
             @RequestParam String currencyName) {
 
         Currency currency = em.find(Currency.class, id);
-        if (currency != null && currency.isActive.equals(1)) {
+        if (currency != null && currency.isActive.equals(ACTIVE)) {
             currency.currencyName = currencyName;
 
             //TODO update post process
@@ -65,8 +66,8 @@ public class CurrencyService {
     public ResponseEntity<Currency> remove(@RequestParam("id") Integer id) {
         Currency currency = em.find(Currency.class, id);
 
-        if (currency != null && currency.isActive.equals(1)) {
-            currency.isActive = 0;
+        if (currency != null && currency.isActive.equals(ACTIVE)) {
+            currency.isActive = INACTIVE;
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
