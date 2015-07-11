@@ -12,6 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
+import static personal.States.ACTIVE;
+import static personal.States.INACTIVE;
 /**
  * Created by Niko on 7/9/15.
  */
@@ -34,7 +36,7 @@ public class ProjectService {
 
         Project project = new Project();
         project.projectName = projectName;
-        project.isActive = 1;
+        project.isActive = ACTIVE;
 
         em.persist(project);
 
@@ -44,7 +46,7 @@ public class ProjectService {
     @RequestMapping("/list")
     public ResponseEntity<List<Project>> list() {
         List<Project> projects = em.createQuery("from Project where isActive = :isActive", Project.class)
-                .setParameter("isActive", 1)
+                .setParameter("isActive", ACTIVE)
                 .getResultList();
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
@@ -61,7 +63,7 @@ public class ProjectService {
         }
 
         Project project = em.find(Project.class, id);
-        if (project != null && project.isActive.equals(1)) {
+        if (project != null && project.isActive.equals(ACTIVE)) {
             project.projectName = projectName;
 
             new UpdatePostProcessor(em, project).process();
@@ -77,8 +79,8 @@ public class ProjectService {
     public ResponseEntity<Project> remove(@RequestParam("id") Integer id) {
         Project project = em.find(Project.class, id);
 
-        if (project != null && project.isActive.equals(1)) {
-            project.isActive = 0;
+        if (project != null && project.isActive.equals(ACTIVE)) {
+            project.isActive = INACTIVE;
             return new ResponseEntity<>(project, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,7 +91,7 @@ public class ProjectService {
 
         List<Project> projects = em.createQuery("from Project where projectName = :projectName and isActive = :isActive", Project.class)
                 .setParameter("projectName", name)
-                .setParameter("isActive", 1)
+                .setParameter("isActive", ACTIVE)
                 .getResultList();
 
         if (projects.size() > 1) {
