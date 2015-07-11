@@ -21,11 +21,11 @@ Ext.define("TR.view.accounts.AccountsGrid", {
         } ];
 
         me.columns = [ {
-            header : 'დასახელება',
+            header : 'ანგარიშის დასახელება',
             dataIndex : 'accountName',
             flex : 1
         }, {
-            header : 'დასახელება',
+            header : 'ანგარიშის ნომერი',
             dataIndex : 'accountNumber',
             flex : 1
         } ];
