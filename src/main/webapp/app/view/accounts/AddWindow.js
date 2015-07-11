@@ -18,18 +18,19 @@ Ext.define("TR.view.accounts.AddWindow", {
             fieldDefaults : {
                 labelWidth : 150,
                 labelAlign : 'right',
-                anchor : '100%',
-                allowBlank: false
+                anchor : '100%'
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'დასახელება',
+                fieldLabel : 'ანგარიშის დასახელება',
                 name : 'accountName',
-                value: cfg.data ? cfg.data.accountName : ''
+                value: cfg.data ? cfg.data.accountName : '',
+                allowBlank: false
             }, {
-                fieldLabel : 'დასახელება',
+                fieldLabel : 'ანგარიშის ნომერი',
                 name : 'accountNumber',
-                value: cfg.data ? cfg.data.accountNumber : ''
+                value: cfg.data ? cfg.data.accountNumber : '',
+                allowBlank: true
             }]
         });
         
