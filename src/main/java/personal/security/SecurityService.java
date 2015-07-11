@@ -2,6 +2,7 @@ package personal.security;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import personal.employees.Employee;
@@ -30,7 +31,7 @@ public class SecurityService {
     @PersistenceContext
     private EntityManager em;
 
-    @RequestMapping("/signin")
+    @RequestMapping(value = "/signin", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public Passport signin(@RequestParam String username,
             @RequestParam String password) {
@@ -91,19 +92,19 @@ public class SecurityService {
         return passport;
     }
 
-    @RequestMapping("/passport")
+    @RequestMapping(value = "/passport", method = RequestMethod.GET)
     public Passport passport() {
         return SessionUtils.getPassport();
     }
 
-    @RequestMapping("/signout")
+    @RequestMapping(value = "/signout", method = RequestMethod.POST)
     public void signout() {
         getSession().invalidate();
     }
 
     @AdminRole
     @UserRole
-    @RequestMapping("/changePass")
+    @RequestMapping(value = "/changePass", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public void change(String password) {
         Employee user = em.find(Employee.class, getEmployeeId());
