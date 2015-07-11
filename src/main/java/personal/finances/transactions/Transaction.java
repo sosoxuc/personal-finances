@@ -1,9 +1,12 @@
 package personal.finances.transactions;
 
+import personal.finances.transactions.rest.TransactionRest;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "TRANSACTIONS")
@@ -20,8 +23,6 @@ public class Transaction implements Serializable {
     public Date transactionDate;
 
     public BigDecimal transactionAmount;
-
-    public BigDecimal transactionRest;
 
     public Integer transactionOrder;
 
@@ -46,4 +47,9 @@ public class Transaction implements Serializable {
     public Integer currencyId;
 
     public String currencyCode;
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "transactionId")
+    public List<TransactionRest> transactionRests;
+
 }
