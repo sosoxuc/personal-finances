@@ -45,6 +45,14 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             dataIndex : 'transactionAmount',
             flex : 1
         }, {
+            header : 'ვალუტა',
+            dataIndex : 'currencyCode',
+            flex : 1
+        }, {
+            header : 'ანგარიში',
+            dataIndex : 'accountName',
+            flex : 1
+        }, {
             header : 'ნაშთი',
             xtype : 'numbercolumn',
             format : '0.00',

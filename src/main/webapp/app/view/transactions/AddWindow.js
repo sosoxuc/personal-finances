@@ -66,8 +66,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
         
         var now = new Date();
-        var nowStr = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
-        console.log(nowStr);
+
         var form = Ext.create('Ext.form.Panel', {
             border : false,
             region : 'center',
@@ -97,7 +96,7 @@ Ext.define("TR.view.transactions.AddWindow", {
                 fieldLabel : 'თარიღი',
                 allowBlank : false,
                 disabled: cfg.edit,
-                value: cfg.data ? cfg.data.transactionDate : nowStr
+                value: cfg.data ? cfg.data.transactionDate : now.ddmmyyyy()
             }, {
                 name: 'note',
                 fieldLabel : 'დანიშნულება',

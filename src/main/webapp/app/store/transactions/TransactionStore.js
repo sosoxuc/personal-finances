@@ -12,12 +12,12 @@ Ext.define("TR.store.transactions.TransactionStore", {
         'transactionAmount',
         'transactionRest', 
         'transactionOrder',
+        'transactionDate',
+        'accountId',
+        'accountName',
+        'currencyId',
+        'currencyCode',
         {
-            name : 'transactionDate',
-            convert : function(v) {
-                return v ? new Date(v) : '';
-            }
-        }, {
             name : 'userDate',
             convert : function(v) {
                 return v ? new Date(v) : '';
