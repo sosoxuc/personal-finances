@@ -1,4 +1,4 @@
-Ext.define("TR.view.projects.ProjectsGrid", {
+Ext.define("TR.view.currencies.CurrenciesGrid", {
     extend : "Ext.grid.Panel",
     border : false,
     constructor : function(cfg) {
