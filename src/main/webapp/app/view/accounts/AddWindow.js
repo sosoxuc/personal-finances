@@ -25,7 +25,11 @@ Ext.define("TR.view.accounts.AddWindow", {
             items : [ {
                 fieldLabel : 'დასახელება',
                 name : 'accountName',
-                value: cfg.data ? cfg.data.projectName : ''
+                value: cfg.data ? cfg.data.accountName : ''
+            }, {
+                fieldLabel : 'დასახელება',
+                name : 'accountNumber',
+                value: cfg.data ? cfg.data.accountNumber : ''
             }]
         });
         

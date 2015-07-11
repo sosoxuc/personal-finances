@@ -24,6 +24,10 @@ Ext.define("TR.view.accounts.AccountsGrid", {
             header : 'დასახელება',
             dataIndex : 'accountName',
             flex : 1
+        }, {
+            header : 'დასახელება',
+            dataIndex : 'accountNumber',
+            flex : 1
         } ];
 
         me.callParent(arguments);
