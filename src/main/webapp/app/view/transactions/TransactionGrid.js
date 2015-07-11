@@ -31,6 +31,9 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         }
 
         me.columns = [ {
+            xtype: 'checkcolumn',
+            width: 50
+        }, {
             xtype : 'datecolumn',
             header : 'თარიღი',
             dataIndex : 'transactionDate',
