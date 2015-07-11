@@ -26,6 +26,10 @@ Ext.define("TR.view.currencies.AddWindow", {
                 fieldLabel : 'დასახელება',
                 name : 'currencyName',
                 value: cfg.data ? cfg.data.currencyName : ''
+            }, {
+                fieldLabel : 'კოდი',
+                name : 'currencyCode',
+                value: cfg.data ? cfg.data.currencyCode : ''
             }]
         });
         

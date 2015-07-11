@@ -9,7 +9,8 @@ Ext.define("TR.view.transactions.AddWindow", {
         cfg = cfg || {};
         var me = this;
         var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
-
+        var currenciesStore = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
+        var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
         var directionsStore = Ext.create('Ext.data.Store', {
             fields: [
                 {name: 'label'},
@@ -21,9 +22,29 @@ Ext.define("TR.view.transactions.AddWindow", {
             ]
         });
         
+        
+        var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'currencyId',
+            fieldLabel : 'ვალუტა',
+            queryMode: 'local',
+            store: currenciesStore,
+            displayField: 'currencyCode',
+            valueField: 'id',
+            value: cfg.data ? cfg.data.currencyId : ''
+        });
+        
+        var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'accountId',
+            fieldLabel : 'ანგარიში',
+            queryMode: 'local',
+            store: accountsStore,
+            displayField: 'accountName',
+            valueField: 'id',
+            value: cfg.data ? cfg.data.accountId : ''
+        });
+        
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'projectId',
-            emptyText: 'პროექტი',
             fieldLabel : 'პროექტი',
             queryMode: 'local',
             store: projectsStore,
@@ -43,7 +64,10 @@ Ext.define("TR.view.transactions.AddWindow", {
         });
         
         me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
-
+        
+        var now = new Date();
+        var nowStr = now.getDate() + '-' + now.getMonth() + '-' + now.getFullYear();
+        console.log(nowStr);
         var form = Ext.create('Ext.form.Panel', {
             border : false,
             region : 'center',
@@ -66,14 +90,14 @@ Ext.define("TR.view.transactions.AddWindow", {
                 allowBlank : false,
                 format : '0.00',
                 value: cfg.data ? cfg.data.transactionAmount : ''
-            }, projectsCombo, {
+            }, currenciesCombo, accountsCombo, projectsCombo, {
                 xtype: 'datefield',
                 name: 'date',
                 format: 'd-m-Y',
                 fieldLabel : 'თარიღი',
                 allowBlank : false,
                 disabled: cfg.edit,
-                value: cfg.data ? cfg.data.transactionDate : ''
+                value: cfg.data ? cfg.data.transactionDate : nowStr
             }, {
                 name: 'note',
                 fieldLabel : 'დანიშნულება',

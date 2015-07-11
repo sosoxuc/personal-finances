@@ -24,6 +24,10 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
             header : 'დასახელება',
             dataIndex : 'currencyName',
             flex : 1
+        }, {
+            header : 'კოდი',
+            dataIndex : 'currencyCode',
+            flex : 1
         } ];
 
         me.callParent(arguments);
