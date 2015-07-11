@@ -2,6 +2,7 @@ package personal.finances.transactions;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import personal.finances.accounts.Account;
@@ -27,7 +28,7 @@ public class TransactionService {
     @PersistenceContext
     private EntityManager em;
 
-    @RequestMapping("/create")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public Integer create(
             @RequestParam BigDecimal amount,
@@ -103,7 +104,7 @@ public class TransactionService {
                 .getResultList();
     }
 
-    @RequestMapping("/search")
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     public List<Transaction> search() {
         String qlString = "select t from Transaction t order by t.transactionDate desc,t.id desc";
         return em.createQuery(qlString, Transaction.class).getResultList();
@@ -111,7 +112,7 @@ public class TransactionService {
 
     @UserRole
     @AdminRole
-    @RequestMapping("/remove")
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public void remove(@RequestParam Integer id) {
         Transaction transaction = em.find(Transaction.class, id);

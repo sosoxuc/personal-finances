@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +26,7 @@ public class ProjectService {
     @PersistenceContext
     private EntityManager em;
 
-    @RequestMapping("/create")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Integer> create(@RequestParam("projectName") String projectName) {
 
@@ -43,7 +44,7 @@ public class ProjectService {
         return new ResponseEntity<>(project.id, HttpStatus.OK);
     }
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Project>> list() {
         List<Project> projects = em.createQuery("from Project where isActive = :isActive", Project.class)
                 .setParameter("isActive", ACTIVE)
@@ -51,7 +52,7 @@ public class ProjectService {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
-    @RequestMapping("/update")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> update(
             @RequestParam("id") Integer id,
@@ -74,7 +75,7 @@ public class ProjectService {
     }
 
 
-    @RequestMapping("/remove")
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> remove(@RequestParam("id") Integer id) {
         Project project = em.find(Project.class, id);
@@ -86,7 +87,7 @@ public class ProjectService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping("/get/{name}")
+    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET)
     public ResponseEntity<Project> getByName(@PathVariable("name") String name) {
 
         List<Project> projects = em.createQuery("from Project where projectName = :projectName and isActive = :isActive", Project.class)
