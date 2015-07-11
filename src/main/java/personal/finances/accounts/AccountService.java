@@ -24,7 +24,9 @@ public class AccountService {
 
     @RequestMapping("/create")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Account> create(@RequestParam String accountName){
+    public ResponseEntity<Account> create(
+            @RequestParam String accountName,
+            @RequestParam(required = false) String accountNumber){
         Account account = new Account();
         account.accountName = accountName;
         account.isActive = 1;
@@ -46,12 +48,13 @@ public class AccountService {
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Account> update(
             @RequestParam Integer id,
-            @RequestParam String accountName) {
+            @RequestParam String accountName,
+            @RequestParam(required = false) String accountNumber) {
 
         Account account = em.find(Account.class, id);
         if (account != null && account.isActive.equals(1)) {
             account.accountName = accountName;
-
+            account.accountNumber = accountNumber;
             //TODO update post process
 
             return new ResponseEntity<>(account, HttpStatus.OK);
