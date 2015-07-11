@@ -33,7 +33,6 @@ Ext.define("TR.view.accounts.AddWindow", {
                 allowBlank: true
             }]
         });
-        
 
         me.items = [ form ];
 
