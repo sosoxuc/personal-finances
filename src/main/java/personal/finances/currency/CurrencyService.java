@@ -24,10 +24,13 @@ public class CurrencyService {
 
     @RequestMapping("/create")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Currency> create(@RequestParam String currencyName){
+    public ResponseEntity<Currency> create(
+            @RequestParam String currencyName,
+            @RequestParam String currencyCode){
 
         Currency currency = new Currency();
         currency.currencyName = currencyName;
+        currency.currencyCode = currencyCode;
         currency.isActive = ACTIVE;
 
         em.persist(currency);
@@ -47,12 +50,13 @@ public class CurrencyService {
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> update(
             @RequestParam Integer id,
-            @RequestParam String currencyName) {
+            @RequestParam String currencyName,
+            @RequestParam String currencyCode) {
 
         Currency currency = em.find(Currency.class, id);
         if (currency != null && currency.isActive.equals(ACTIVE)) {
             currency.currencyName = currencyName;
-
+            currency.currencyCode = currencyCode;
             //TODO update post process
 
             return new ResponseEntity<>(currency, HttpStatus.OK);
