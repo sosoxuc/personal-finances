@@ -24,7 +24,7 @@ public class SwaggerConfig {
                 .pathProvider(new SwaggerPathProvider() {
                     @Override
                     protected String applicationPath() {
-                        return "/rest";
+                        return "/personal-finances/rest";
                     }
 
                     @Override
