@@ -49,7 +49,7 @@ public class CurrencyService {
         return new ResponseEntity<>(currencies, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/update", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> update(@RequestParam Integer id,
             @RequestParam String currencyName,
@@ -66,7 +66,7 @@ public class CurrencyService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> remove(@RequestParam("id") Integer id) {
         Currency currency = em.find(Currency.class, id);
