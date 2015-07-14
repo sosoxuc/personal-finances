@@ -20,6 +20,7 @@ Ext.application({
 		} else {
 			myRequest({
 				url: 'rest/security/passport',
+				method: 'GET',
 				callback: function(passport){
 					log(passport);
 					if(passport.valid){
