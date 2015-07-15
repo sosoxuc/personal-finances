@@ -59,7 +59,9 @@ public class CurrencyService {
         if (currency != null && currency.isActive.equals(ACTIVE)) {
             currency.currencyName = currencyName;
             currency.currencyCode = currencyCode;
-            // TODO update post process
+
+            //update related transactions etc
+            new UpdatePostProcessor(em, currency).process();
 
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
