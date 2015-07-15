@@ -127,7 +127,7 @@ public class TransactionService {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public List<Transaction> search() {
-        String qlString = "select t from Transaction t order by t.transactionDate desc,t.id desc";
+        String qlString = "select distinct t from Transaction t left join fetch t.transactionRests order by t.transactionDate desc,t.id desc";
         return em.createQuery(qlString, Transaction.class).getResultList();
     }
 

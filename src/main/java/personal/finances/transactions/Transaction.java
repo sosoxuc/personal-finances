@@ -1,5 +1,7 @@
 package personal.finances.transactions;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import personal.finances.transactions.rest.TransactionRest;
 
 import javax.persistence.*;
