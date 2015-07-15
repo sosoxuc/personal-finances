@@ -9,6 +9,7 @@ import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
+import personal.finances.transactions.rest.TransactionRestCalculator;
 import personal.finances.transactions.rest.TransactionRestType;
 import personal.security.AdminRole;
 import personal.security.UserRole;
@@ -78,28 +79,7 @@ public class TransactionService {
         }
 
         //set rest
-        //TODO extract method
-        List<TransactionRest> transactionRests = new ArrayList<>(3);
-        TransactionRest accountRest = new TransactionRest();
-        accountRest.transactionId = transaction.id;
-        accountRest.transactionRestType = TransactionRestType.ACCOUNT;
-        accountRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(accountRest);
-
-        TransactionRest projectRest = new TransactionRest();
-        projectRest.transactionId = transaction.id;
-        projectRest.transactionRestType = TransactionRestType.ACCOUNT;
-        projectRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(projectRest);
-
-        TransactionRest totalRest = new TransactionRest();
-        totalRest.transactionId = transaction.id;
-        totalRest.transactionRestType = TransactionRestType.ACCOUNT;
-        totalRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(totalRest);
+        List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
         transaction.transactionRests = transactionRests;
 
