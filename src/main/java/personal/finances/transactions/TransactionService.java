@@ -159,10 +159,10 @@ public class TransactionService {
             queryParams.put("direction", direction);
         }
 
-        queryBuilder.append(" order by t.transactionDate desc, t.id desc");
-
-        TypedQuery<Transaction> query = em.createQuery(String.format(queryBuilder.toString(), "select distinct t from Transaction t left join fetch t.transactionRests" ), Transaction.class);
         javax.persistence.Query countQuery = em.createQuery(String.format(queryBuilder.toString(), "select count(t) from Transaction t" ));
+
+        queryBuilder.append(" order by t.transactionDate desc, t.id desc");
+        TypedQuery<Transaction> query = em.createQuery(String.format(queryBuilder.toString(), "select distinct t from Transaction t left join fetch t.transactionRests" ), Transaction.class);
 
         for (String key : queryParams.keySet()) {
             query.setParameter(key, queryParams.get(key));
