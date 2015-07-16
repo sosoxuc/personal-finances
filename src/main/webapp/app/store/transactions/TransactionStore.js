@@ -40,7 +40,8 @@ Ext.define("TR.store.transactions.TransactionStore", {
         url : 'rest/transaction/search',
         type : 'rest',
         reader : {
-            type : 'json'
+            type : 'json',
+            rootProperty: 'list'
         }
     }
 });

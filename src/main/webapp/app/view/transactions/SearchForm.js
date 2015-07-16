@@ -23,8 +23,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: currenciesStore,
             displayField: 'currencyCode',
-            valueField: 'id',
-            value: cfg.data ? cfg.data.currencyId : ''
+            valueField: 'id'
         });
         
         var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -33,8 +32,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: accountsStore,
             displayField: 'accountName',
-            valueField: 'id',
-            value: cfg.data ? cfg.data.accountId : ''
+            valueField: 'id'
         });
         
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -43,8 +41,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
-            valueField: 'id',
-            value: cfg.data ? cfg.data.projectId : ''
+            valueField: 'id'
         });
         
         var directionCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -53,8 +50,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: directionsStore,
             displayField: 'label',
-            valueField: 'value',
-            value: cfg.data ? Math.sign(cfg.data.transactionAmount) : ''
+            valueField: 'value'
         });
         
         me.defaults = {
@@ -70,14 +66,12 @@ Ext.define("TR.view.transactions.SearchForm", {
             xtype: 'datefield',
             fieldLabel: 'დასაწყისი',
             name: 'startDate',
-            format: 'd-m-Y',
-            value: cfg.startDate ? new Date(cfg.startDate) : ''
+            format: 'd-m-Y'
         }, {
             xtype: 'datefield',
             fieldLabel: 'დასასრული',
             name: 'endDate',
-            format: 'd-m-Y',
-            value: cfg.endDate ? new Date(cfg.endDate) : ''
+            format: 'd-m-Y'
         } ];
         
         var controls2 =  { 
@@ -105,7 +99,15 @@ Ext.define("TR.view.transactions.SearchForm", {
         me.filter=filter;
         
         function filter(){
-            var values = me.getForm().getValues();
+            var values = me.getForm().getValues(false,false,false,false);
+
+            for (var property in values) {
+                if (values.hasOwnProperty(property)) {
+                    if (values[property] == '') {
+                        delete values[property];
+                    }
+                }
+            }
             me.searchedValues = values;
             cfg.grid.load(values);
         }
