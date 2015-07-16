@@ -21,12 +21,8 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             handler : remove
         } ];
 
-        me.load = function(date1, date2) {
-            me.store.getProxy().extraParams = {
-                employee : cfg.employeeId,
-                startDate : date1 || '',
-                endDate : date2 || ''
-            };
+        me.load = function(params) {
+            me.store.getProxy().extraParams = params;
             me.store.load();
         }
 

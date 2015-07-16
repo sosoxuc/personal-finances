@@ -12,43 +12,79 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         cfg.grid.searchForm = me;
         
+        var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
+        var currenciesStore = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
+        var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
+        
+        var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'currencyId',
+            fieldLabel : 'ვალუტა',
+            queryMode: 'local',
+            store: currenciesStore,
+            displayField: 'currencyCode',
+            valueField: 'id',
+            value: cfg.data ? cfg.data.currencyId : ''
+        });
+        
+        var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'accountId',
+            fieldLabel : 'ანგარიში',
+            queryMode: 'local',
+            store: accountsStore,
+            displayField: 'accountName',
+            valueField: 'id',
+            value: cfg.data ? cfg.data.accountId : ''
+        });
+        
+        var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'projectId',
+            fieldLabel : 'პროექტი',
+            queryMode: 'local',
+            store: projectsStore,
+            displayField: 'projectName',
+            valueField: 'id',
+            value: cfg.data ? cfg.data.projectId : ''
+        });
+        
         me.defaults = {
             margin: '0 10 0 0'
         };
-        me.items = [{
+        
+        var controls =  { 
+                layout: 'vbox',
+                xtype: 'fieldcontainer',
+        }
+        
+        controls.items = [{
             xtype: 'datefield',
             fieldLabel: 'დასაწყისი',
             name: 'startDate',
-            format: 'd/m/Y',
+            format: 'd-m-Y',
             value: cfg.startDate ? new Date(cfg.startDate) : ''
         }, {
             xtype: 'datefield',
             fieldLabel: 'დასასრული',
             name: 'endDate',
-            format: 'd/m/Y',
+            format: 'd-m-Y',
             value: cfg.endDate ? new Date(cfg.endDate) : ''
-        }, {
+        }, currenciesCombo, accountsCombo, projectsCombo ];
+        
+        var button =  {
             xtype: 'button',
             text: 'ფილტრი',
             handler: filter
-        }];
+        };
 
+        me.items = [ controls, button ];
+        
         me.callParent(arguments);
 
         me.filter=filter;
         
         function filter(){
             var values = me.getForm().getValues();
-            correctDates(values, ['startDate', 'endDate']);
             me.searchedValues = values;
-            cfg.grid.load(values.startDate, values.endDate);
-        }
-        
-        function exportGrid(btn){
-            btn.setHref("rest/log/dailyLogExport?" +
-                    "employee="+ cfg.employeeId + 
-                    "&startDate="+ me.searchedValues.startDate +
-                    "&endDate="+ me.searchedValues.endDate);
+            cfg.grid.load(values);
         }
     }
 });
