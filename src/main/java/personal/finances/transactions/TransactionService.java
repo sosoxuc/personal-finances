@@ -202,15 +202,15 @@ public class TransactionService {
         transaction.isActive = States.INACTIVE;
     }
     
-    
-    @Transactional(rollbackFor = Throwable.class)
-    public UploadResponse uploadUsers(@RequestParam MultipartFile file) {
+
+    @RequestMapping("/upload")
+    public UploadResponse uploadTransactions(@RequestParam MultipartFile file) {
         UploadResponse response;
         try {
             File tempFile = File.createTempFile("upload", ".tmp");
             file.transferTo(tempFile);
 
-            processUsersFile(tempFile);
+            processTransactionsFile(tempFile);
 
             response = new UploadResponse(true);
             response.setFileName(tempFile.getName());
@@ -222,7 +222,7 @@ public class TransactionService {
         return response;
     }
 
-    private void processUsersFile(File file) throws IOException, BiffException {
+    private void processTransactionsFile(File file) throws IOException, BiffException {
 
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
