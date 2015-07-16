@@ -53,7 +53,7 @@ public class TransactionService {
         transaction.userDate = new Date();
 
         // set direction to amount
-
+        transaction.direction = direction;
         transaction.transactionAmount = amount.multiply(new BigDecimal(direction));
         transaction.transactionDate = transactionDate;
         transaction.transactionNote = note;
@@ -118,6 +118,7 @@ public class TransactionService {
             @RequestParam(required = false) Integer accountId,
             @RequestParam(required = false) Integer projectId,
             @RequestParam(required = false) Integer currencyId,
+            @RequestParam(required = false) Integer direction,
             @RequestParam(required = false) Integer start,
             @RequestParam(required = false) Integer limit) throws ParseException {
 
@@ -151,6 +152,11 @@ public class TransactionService {
         if (currencyId != null) {
             queryBuilder.append(" and t.currencyId = :currencyId");
             queryParams.put("currencyId", currencyId);
+        }
+
+        if (direction != null) {
+            queryBuilder.append(" and t.direction = :direction");
+            queryParams.put("direction", direction);
         }
 
         queryBuilder.append(" order by t.transactionDate desc, t.id desc");
