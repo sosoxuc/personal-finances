@@ -48,6 +48,8 @@ public class Transaction implements Serializable {
 
     public String currencyCode;
 
+    public Integer direction;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "transactionId")
     public List<TransactionRest> transactionRests;
