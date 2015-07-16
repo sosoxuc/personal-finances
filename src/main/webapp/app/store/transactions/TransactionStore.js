@@ -10,7 +10,19 @@ Ext.define("TR.store.transactions.TransactionStore", {
     fields : [
         'id',
         'transactionAmount',
-        'transactionRest', 
+        'transactionRests',
+        {
+            name: 'transactionRestValue',
+            calculate: function (data) {
+                if (data.transactionRests[0]){
+                    return data.transactionRests[0].transactionRest;
+                } else {
+                    return '';
+                }
+                    
+                
+            }
+        },
         'transactionOrder',
         'transactionDate',
         'accountId',

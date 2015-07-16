@@ -41,7 +41,6 @@ Ext.define("TR.view.transactions.SearchForm", {
             var values = me.getForm().getValues();
             correctDates(values, ['startDate', 'endDate']);
             me.searchedValues = values;
-            log(me.searchedValues);
             cfg.grid.load(values.startDate, values.endDate);
         }
         

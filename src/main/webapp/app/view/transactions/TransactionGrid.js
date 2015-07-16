@@ -57,7 +57,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             xtype : 'numbercolumn',
             format : '0.00',
             align : 'right',
-            dataIndex : 'transactionRest',
+            dataIndex : 'transactionRestValue',
             flex : 1
         }, {
             header : 'პროექტი',
