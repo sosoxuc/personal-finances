@@ -11,17 +11,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
         var currenciesStore = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
         var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
-        var directionsStore = Ext.create('Ext.data.Store', {
-            fields: [
-                {name: 'label'},
-                {name: 'value', type: 'int'}
-            ], 
-            data: [
-                {label: 'გასავალი', value: -1},
-                {label: 'შემოსავალი', value: 1}
-            ]
-        });
-        
+        var directionsStore = Ext.StoreManager.lookup('directionsStore') || Ext.create('TR.store.directions.Store');
         
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'currencyId',

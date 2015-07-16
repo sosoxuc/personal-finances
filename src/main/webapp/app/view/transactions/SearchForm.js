@@ -15,6 +15,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         var projectsStore = Ext.StoreManager.lookup('projectsStore') || Ext.create('TR.store.projects.Store');
         var currenciesStore = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
         var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
+        var directionsStore = Ext.StoreManager.lookup('directionsStore') || Ext.create('TR.store.directions.Store');
         
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'currencyId',
@@ -46,16 +47,26 @@ Ext.define("TR.view.transactions.SearchForm", {
             value: cfg.data ? cfg.data.projectId : ''
         });
         
+        var directionCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'direction',
+            fieldLabel : 'მიმართულება',
+            queryMode: 'local',
+            store: directionsStore,
+            displayField: 'label',
+            valueField: 'value',
+            value: cfg.data ? Math.sign(cfg.data.transactionAmount) : ''
+        });
+        
         me.defaults = {
             margin: '0 10 0 0'
         };
         
-        var controls =  { 
+        var controls1 =  { 
                 layout: 'vbox',
                 xtype: 'fieldcontainer',
         }
         
-        controls.items = [{
+        controls1.items = [{
             xtype: 'datefield',
             fieldLabel: 'დასაწყისი',
             name: 'startDate',
@@ -67,7 +78,19 @@ Ext.define("TR.view.transactions.SearchForm", {
             name: 'endDate',
             format: 'd-m-Y',
             value: cfg.endDate ? new Date(cfg.endDate) : ''
-        }, currenciesCombo, accountsCombo, projectsCombo ];
+        } ];
+        
+        var controls2 =  { 
+            layout: 'vbox',
+            xtype: 'fieldcontainer',
+            items: [currenciesCombo, accountsCombo]
+        };
+        
+        var controls3 =  { 
+            layout: 'vbox',
+            xtype: 'fieldcontainer',
+            items: [projectsCombo, directionCombo]
+        };
         
         var button =  {
             xtype: 'button',
@@ -75,7 +98,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             handler: filter
         };
 
-        me.items = [ controls, button ];
+        me.items = [ controls1, controls2, controls3, button ];
         
         me.callParent(arguments);
 
