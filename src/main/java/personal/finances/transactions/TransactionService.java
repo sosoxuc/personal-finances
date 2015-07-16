@@ -10,7 +10,6 @@ import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
-import personal.finances.transactions.rest.TransactionRestType;
 import personal.security.AdminRole;
 import personal.security.UserRole;
 
@@ -19,7 +18,6 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

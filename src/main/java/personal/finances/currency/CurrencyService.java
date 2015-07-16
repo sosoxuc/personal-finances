@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
+
 import static personal.States.ACTIVE;
 import static personal.States.INACTIVE;
 

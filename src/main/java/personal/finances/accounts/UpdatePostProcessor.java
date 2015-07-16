@@ -1,7 +1,5 @@
 package personal.finances.accounts;
 
-import personal.finances.currency.Currency;
-
 import javax.persistence.EntityManager;
 
 /**
