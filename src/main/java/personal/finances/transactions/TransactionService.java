@@ -1,5 +1,6 @@
 package personal.finances.transactions;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,8 +8,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
 import personal.ListPage;
 import personal.States;
+import personal.UploadResponse;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
@@ -20,6 +28,9 @@ import personal.security.UserRole;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -189,5 +200,54 @@ public class TransactionService {
     public void remove(@RequestParam Integer id) {
         Transaction transaction = em.find(Transaction.class, id);
         transaction.isActive = States.INACTIVE;
+    }
+    
+    
+    @Transactional(rollbackFor = Throwable.class)
+    public UploadResponse uploadUsers(@RequestParam MultipartFile file) {
+        UploadResponse response;
+        try {
+            File tempFile = File.createTempFile("upload", ".tmp");
+            file.transferTo(tempFile);
+
+            processUsersFile(tempFile);
+
+            response = new UploadResponse(true);
+            response.setFileName(tempFile.getName());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            response = new UploadResponse(false);
+            response.setError(ex.getMessage());
+        }
+        return response;
+    }
+
+    private void processUsersFile(File file) throws IOException, BiffException {
+
+        Workbook workbook = Workbook.getWorkbook(file);
+        Sheet sheet = workbook.getSheet(0);
+        for (int i = 0; i < sheet.getRows(); i++) {
+            Cell idCell = sheet.getCell(0, i);
+            String idText = idCell.getContents();
+            if (StringUtils.isNotBlank(idText)) {
+//                Applicant applicant = new Applicant();
+//                Integer id = Integer.valueOf(idText);
+//                applicant.setId(id);
+//                applicant.setPersonalNo(sheet.getCell(1, i).getContents());
+//                applicant.setLastName(sheet.getCell(2, i).getContents());
+//                applicant.setFirstName(sheet.getCell(3, i).getContents());
+//
+//                String subjectName = sheet.getCell(4, i).getContents();
+//                applicant.setSubjectName(subjectName);
+//
+//                ExamsService examsService = ExamsService.get(em);
+//                Integer subject = examsService.subjectByName(subjectName);
+//                applicant.setSubject(subject);
+//                applicant.setState(Applicant.State.ACTIVE.getId());
+//                applicant.setCreateDate(new Date());
+//                applicant.setState(States.ACTIVE);
+                em.persist(null);
+            }
+        }
     }
 }
