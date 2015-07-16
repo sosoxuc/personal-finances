@@ -58,8 +58,9 @@ public class AccountService {
         if (account != null && account.isActive.equals(ACTIVE)) {
             account.accountName = accountName;
             account.accountNumber = accountNumber;
-            // TODO update post process
 
+            // update relation transactions and so on
+            new UpdatePostProcessor(em, account).process();
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.States;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
-import personal.finances.transactions.rest.TransactionRestType;
+import personal.finances.transactions.rest.TransactionRestCalculator;
 import personal.security.AdminRole;
 import personal.security.UserRole;
 
@@ -18,7 +19,6 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -78,31 +78,11 @@ public class TransactionService {
         }
 
         //set rest
-        //TODO extract method
-        List<TransactionRest> transactionRests = new ArrayList<>(3);
-        TransactionRest accountRest = new TransactionRest();
-        accountRest.transactionId = transaction.id;
-        accountRest.transactionRestType = TransactionRestType.ACCOUNT;
-        accountRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(accountRest);
-
-        TransactionRest projectRest = new TransactionRest();
-        projectRest.transactionId = transaction.id;
-        projectRest.transactionRestType = TransactionRestType.ACCOUNT;
-        projectRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(projectRest);
-
-        TransactionRest totalRest = new TransactionRest();
-        totalRest.transactionId = transaction.id;
-        totalRest.transactionRestType = TransactionRestType.ACCOUNT;
-        totalRest.transactionRest = transaction.transactionAmount;
-
-        transactionRests.add(totalRest);
+        List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
         transaction.transactionRests = transactionRests;
 
+        transaction.isActive = States.ACTIVE;
         em.persist(transaction);
 
         return transaction.id;
@@ -127,8 +107,8 @@ public class TransactionService {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public List<Transaction> search() {
-        String qlString = "select t from Transaction t order by t.transactionDate desc,t.id desc";
-        return em.createQuery(qlString, Transaction.class).getResultList();
+        String qlString = "select distinct t from Transaction t left join fetch t.transactionRests where t.isActive = :isActive order by t.transactionDate desc, t.id desc";
+        return em.createQuery(qlString, Transaction.class).setParameter("isActive", States.ACTIVE).getResultList();
     }
 
     @UserRole
@@ -137,6 +117,6 @@ public class TransactionService {
     @Transactional(rollbackFor = Throwable.class)
     public void remove(@RequestParam Integer id) {
         Transaction transaction = em.find(Transaction.class, id);
-        em.remove(transaction);
+        transaction.isActive = States.INACTIVE;
     }
 }
