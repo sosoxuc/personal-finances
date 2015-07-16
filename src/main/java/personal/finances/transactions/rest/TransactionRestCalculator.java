@@ -1,5 +1,6 @@
 package personal.finances.transactions.rest;
 
+import personal.States;
 import personal.finances.transactions.Transaction;
 
 import javax.persistence.EntityManager;
@@ -23,7 +24,8 @@ public class TransactionRestCalculator {
 
     public Transaction lastProjectScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.projectId = :projectId order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.projectId = :projectId and isActive = :isActive order by transactionOrder desc", Transaction.class)
+                .setParameter("isActive", States.ACTIVE)
                 .setParameter("projectId", transaction.projectId)
                 .setFirstResult(0)
                 .setMaxResults(1)
@@ -35,8 +37,9 @@ public class TransactionRestCalculator {
 
     public Transaction lastAccountScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.accountId = :accountId order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.accountId = :accountId and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
                 .setParameter("accountId", transaction.accountId)
+                .setParameter("isActive", States.ACTIVE)
                 .setFirstResult(0)
                 .setMaxResults(1)
                 .getResultList();
@@ -46,7 +49,8 @@ public class TransactionRestCalculator {
 
     public Transaction getLastTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                .setParameter("isActive", States.ACTIVE)
                 .setFirstResult(0)
                 .setMaxResults(1)
                 .getResultList();

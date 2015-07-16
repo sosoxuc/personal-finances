@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.States;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
@@ -81,6 +82,7 @@ public class TransactionService {
 
         transaction.transactionRests = transactionRests;
 
+        transaction.isActive = States.ACTIVE;
         em.persist(transaction);
 
         return transaction.id;
@@ -105,8 +107,8 @@ public class TransactionService {
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
     public List<Transaction> search() {
-        String qlString = "select distinct t from Transaction t left join fetch t.transactionRests order by t.transactionDate desc,t.id desc";
-        return em.createQuery(qlString, Transaction.class).getResultList();
+        String qlString = "select distinct t from Transaction t left join fetch t.transactionRests where t.isActive = :isActive order by t.transactionDate desc, t.id desc";
+        return em.createQuery(qlString, Transaction.class).setParameter("isActive", States.ACTIVE).getResultList();
     }
 
     @UserRole
@@ -115,6 +117,6 @@ public class TransactionService {
     @Transactional(rollbackFor = Throwable.class)
     public void remove(@RequestParam Integer id) {
         Transaction transaction = em.find(Transaction.class, id);
-        em.remove(transaction);
+        transaction.isActive = States.INACTIVE;
     }
 }
