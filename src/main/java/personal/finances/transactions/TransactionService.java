@@ -32,6 +32,8 @@ import javax.persistence.TypedQuery;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -204,13 +206,16 @@ public class TransactionService {
     
 
     @RequestMapping("/upload")
-    public UploadResponse uploadTransactions(@RequestParam MultipartFile file) {
+    public UploadResponse uploadTransactions(
+            @RequestParam MultipartFile file,
+            @RequestParam Integer accountId,
+            @RequestParam Integer projectId) {
         UploadResponse response;
         try {
             File tempFile = File.createTempFile("upload", ".tmp");
             file.transferTo(tempFile);
 
-            processTransactionsFile(tempFile);
+            processTransactionsFile(tempFile, accountId, projectId);
 
             response = new UploadResponse(true);
             response.setFileName(tempFile.getName());
@@ -222,32 +227,54 @@ public class TransactionService {
         return response;
     }
 
-    private void processTransactionsFile(File file) throws IOException, BiffException {
+    private void processTransactionsFile(File file, Integer accountId, Integer projectId) throws IOException, BiffException, ParseException {
 
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
         for (int i = 0; i < sheet.getRows(); i++) {
-            Cell idCell = sheet.getCell(0, i);
-            String idText = idCell.getContents();
-            if (StringUtils.isNotBlank(idText)) {
-//                Applicant applicant = new Applicant();
-//                Integer id = Integer.valueOf(idText);
-//                applicant.setId(id);
-//                applicant.setPersonalNo(sheet.getCell(1, i).getContents());
-//                applicant.setLastName(sheet.getCell(2, i).getContents());
-//                applicant.setFirstName(sheet.getCell(3, i).getContents());
-//
-//                String subjectName = sheet.getCell(4, i).getContents();
-//                applicant.setSubjectName(subjectName);
-//
-//                ExamsService examsService = ExamsService.get(em);
-//                Integer subject = examsService.subjectByName(subjectName);
-//                applicant.setSubject(subject);
-//                applicant.setState(Applicant.State.ACTIVE.getId());
-//                applicant.setCreateDate(new Date());
-//                applicant.setState(States.ACTIVE);
-                em.persist(null);
+
+            Transaction transaction = new Transaction();
+            transaction.accountId = accountId;
+            transaction.projectId = projectId;
+
+            Cell dateCell = sheet.getCell(0, i);
+            String dateText = dateCell.getContents();
+
+
+            Cell amountCell = sheet.getCell(1, i);
+            String amountText = amountCell.getContents();
+            if (StringUtils.isNotBlank(dateText)) {
+                DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+                symbols.setGroupingSeparator(',');
+                symbols.setDecimalSeparator('.');
+                String pattern = "#,##0.0#";
+                DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+                decimalFormat.setParseBigDecimal(true);
+
+                BigDecimal amount = (BigDecimal) decimalFormat.parse(amountText);
+                transaction.transactionAmount = amount;
+
+                if (amount.signum() < 0) {
+                    transaction.direction = Direction.OUT;
+                } else {
+                    transaction.direction = Direction.IN;
+                }
             }
+
+            Cell currencyCell = sheet.getCell(2, i);
+            String currencyCellText = currencyCell.getContents();
+            if (StringUtils.isNotBlank(currencyCellText)) {
+                transaction.currencyId = Integer.getInteger(currencyCellText);
+            }
+
+            Cell noteCell = sheet.getCell(3, i);
+            String noteText = noteCell.getContents();
+            if (StringUtils.isNotBlank(noteText)) {
+                transaction.transactionNote = noteText;
+            }
+
+            create(transaction.transactionAmount, transaction.projectId, dateText, noteText,
+                   transaction.direction, transaction.accountId, transaction.currencyId);
         }
     }
 }
