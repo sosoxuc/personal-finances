@@ -206,10 +206,11 @@ public class TransactionService {
     
 
     @RequestMapping("/upload")
+    @Transactional(rollbackFor = Throwable.class)
     public UploadResponse uploadTransactions(
-            @RequestParam MultipartFile file,
             @RequestParam Integer accountId,
-            @RequestParam Integer projectId) {
+            @RequestParam Integer projectId,
+            @RequestParam MultipartFile file) {
         UploadResponse response;
         try {
             File tempFile = File.createTempFile("upload", ".tmp");
@@ -231,7 +232,7 @@ public class TransactionService {
 
         Workbook workbook = Workbook.getWorkbook(file);
         Sheet sheet = workbook.getSheet(0);
-        for (int i = 0; i < sheet.getRows(); i++) {
+        for (int i = 1; i < sheet.getRows(); i++) {
 
             Transaction transaction = new Transaction();
             transaction.accountId = accountId;
@@ -239,11 +240,11 @@ public class TransactionService {
 
             Cell dateCell = sheet.getCell(0, i);
             String dateText = dateCell.getContents();
-
+            dateText = dateText.replaceAll("/", "-");
 
             Cell amountCell = sheet.getCell(1, i);
             String amountText = amountCell.getContents();
-            if (StringUtils.isNotBlank(dateText)) {
+            if (StringUtils.isNotBlank(amountText)) {
                 DecimalFormatSymbols symbols = new DecimalFormatSymbols();
                 symbols.setGroupingSeparator(',');
                 symbols.setDecimalSeparator('.');
@@ -264,7 +265,7 @@ public class TransactionService {
             Cell currencyCell = sheet.getCell(2, i);
             String currencyCellText = currencyCell.getContents();
             if (StringUtils.isNotBlank(currencyCellText)) {
-                transaction.currencyId = Integer.getInteger(currencyCellText);
+                transaction.currencyId = Integer.parseInt(currencyCellText);
             }
 
             Cell noteCell = sheet.getCell(3, i);
