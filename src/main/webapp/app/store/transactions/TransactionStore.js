@@ -14,13 +14,14 @@ Ext.define("TR.store.transactions.TransactionStore", {
         {
             name: 'transactionRestValue',
             calculate: function (data) {
-                if (data.transactionRests[0]){
-                    return data.transactionRests[0].transactionRest;
-                } else {
-                    return '';
-                }
-                    
-                
+                var rests = data.transactionRests;
+                var result = null;
+                Ext.Array.forEach(rests, function(rest){
+                    if (rest.transactionRestType=='CURRENCY'){
+                        result = rest.transactionRest;
+                    }
+                });
+                return result;
             }
         },
         'transactionOrder',

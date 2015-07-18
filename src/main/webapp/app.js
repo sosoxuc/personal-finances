@@ -22,7 +22,6 @@ Ext.application({
 				url: 'rest/security/passport',
 				method: 'GET',
 				callback: function(passport){
-					log(passport);
 					if(passport.valid){
 						tr.employee = passport.employee;
 						viewport.add(Ext.create('TR.view.MainPanel', {
