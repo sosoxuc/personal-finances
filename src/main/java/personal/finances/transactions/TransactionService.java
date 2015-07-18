@@ -203,6 +203,7 @@ public class TransactionService {
             transactionRest.isActive = States.INACTIVE;
         }
         transaction.isActive = States.INACTIVE;
+        new TransactionPostDelete(em, transaction).updateRests();
     }
     
 
