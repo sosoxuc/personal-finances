@@ -56,6 +56,10 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             dataIndex : 'transactionRestValue',
             flex : 1
         }, {
+            header : 'ვალუტა',
+            dataIndex : 'currencyCode',
+            flex : 1
+        }, {
             header : 'პროექტი',
             dataIndex : 'projectName',
             flex : 1.5
