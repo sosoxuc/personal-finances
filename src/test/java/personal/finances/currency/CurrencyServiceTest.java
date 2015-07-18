@@ -75,11 +75,9 @@ public class CurrencyServiceTest {
         ResultActions result;
         result = mock.perform(post("/currency/update").param("id", "-1")
                 .param("currencyName", "test2").param("currencyCode", "num2"));
-        result.andExpect(status().is4xxClientError());
+        result.andExpect(status().isNotFound());
 
         result = mock.perform(post("/currency/remove").param("id", "-1"));
-        result.andExpect(status().is4xxClientError());
-
+        result.andExpect(status().isNotFound());
     }
-
 }

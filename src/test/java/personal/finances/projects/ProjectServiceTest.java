@@ -13,6 +13,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import personal.finances.accounts.Account;
 import personal.spring.SpringDevConfig;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,8 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by Niko on 7/10/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({"dev"})
-@ContextConfiguration(classes = {SpringDevConfig.class })
+@ActiveProfiles({ "dev" })
+@ContextConfiguration(classes = { SpringDevConfig.class })
 @WebAppConfiguration
 @FixMethodOrder(MethodSorters.JVM)
 public class ProjectServiceTest {
@@ -33,52 +37,74 @@ public class ProjectServiceTest {
     @Autowired
     private WebApplicationContext wac;
 
-    private String projectName = "a";
-    private static Integer id;
-
     @Test
-    public void testProjectInsert() throws Exception {
+    public void testProjects() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
         result = mock
-                .perform(post("/project/create").param("projectName", projectName));
+                .perform(post("/project/create").param("projectName", "test"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
         String idStr = result.andReturn().getResponse().getContentAsString();
-        id = Integer.valueOf(idStr);
+        Integer id = Integer.valueOf(idStr);
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0].id").value(id));
+        result.andExpect(jsonPath("$[0].projectName").value("test"));
 
-        result = mock.perform(get("/project/get/" + projectName));
+        result = mock.perform(post("/project/update").param("id", idStr)
+                .param("projectName", "test2"));
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$id").value(id));
+
+        result = mock.perform(get("/project/list"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$[0].id").value(id));
+        result.andExpect(jsonPath("$[0].projectName").value("test2"));
+
+        result = mock.perform(post("/project/remove").param("id", idStr));
+        result.andExpect(status().isOk());
+
+        result = mock.perform(get("/project/list"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$[0]").doesNotExist());
+
     }
 
     @Test
-    public void testProjectUpdate() throws Exception {
-//        projectName = "b";
-//        MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
-//        ResultActions result;
-//        result = mock
-//                .perform(post("/project/update")
-//                .param("id", id.toString())
-//                .param("projectName", projectName));
-//        result.andExpect(status().isOk());
-//        result.andExpect(jsonPath("$").exists());
-//        result.andExpect(jsonPath("$projectName").value(projectName));
-    }
+    public void testAccountsExceptions() throws Exception {
+        MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
+        ResultActions result;
+        result = mock.perform(post("/project/update").param("id", "-1")
+                .param("projectName", "test2"));
+        result.andExpect(status().isNotFound());
 
-   //@Test
-    public void testProjectRemove() throws Exception {
-//        MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
-//        ResultActions result;
-//        result = mock
-//                .perform(post("/project/remove")
-//                        .param("id", id.toString()));
-//        result.andExpect(status().isOk());
-//        result.andExpect(jsonPath("$").exists());
-//        result.andExpect(jsonPath("$isActive").value(0));
+        result = mock.perform(post("/project/remove").param("id", "-1"));
+        result.andExpect(status().isNotFound());
+
+        result = mock
+                .perform(post("/project/create").param("projectName", "test5"));
+        result.andExpect(status().isOk());
+        String idStr = result.andReturn().getResponse().getContentAsString();
+
+        result = mock
+                .perform(post("/project/create").param("projectName", "test5"));
+        result.andExpect(status().isConflict());
+
+        result = mock
+                .perform(post("/project/create").param("projectName", "test6"));
+        result.andExpect(status().isOk());
+        String idStr2 = result.andReturn().getResponse().getContentAsString();
+
+        result = mock.perform(post("/project/update").param("id", idStr2)
+                .param("projectName", "test5"));
+        result.andExpect(status().isConflict());
+
+        result = mock.perform(post("/project/remove").param("id", idStr));
+        result.andExpect(status().isOk());
+
+        result = mock.perform(post("/project/remove").param("id", idStr2));
+        result.andExpect(status().isOk());
+
     }
 }

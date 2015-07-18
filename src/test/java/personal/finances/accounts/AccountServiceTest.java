@@ -74,10 +74,9 @@ public class AccountServiceTest {
         ResultActions result;
         result = mock.perform(post("/account/update").param("id", "-1")
                 .param("accountName", "test2").param("accountNumber", "num2"));
-        result.andExpect(status().is4xxClientError());
+        result.andExpect(status().isNotFound());
 
         result = mock.perform(post("/account/remove").param("id", "-1"));
-        result.andExpect(status().is4xxClientError());
-
+        result.andExpect(status().isNotFound());
     }
 }

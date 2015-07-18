@@ -13,24 +13,24 @@ public class ListPage<T> {
     }
 
     public ListPage(Collection<T> list, Integer count) {
-	this.list = list;
-	this.count = count;
+        this.list = list;
+        this.count = count;
     }
 
     public Collection<T> getList() {
-	return list;
+        return list;
     }
 
     public void setList(Collection<T> list) {
-	this.list = list;
+        this.list = list;
     }
 
     public Integer getCount() {
-	return count;
+        return count;
     }
 
     public void setCount(Integer count) {
-	this.count = count;
+        this.count = count;
     }
 
 }
