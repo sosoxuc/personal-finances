@@ -70,6 +70,11 @@ public class TransactionServiceTest {
         result = mock.perform(get("/transaction/search"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.list[0].id").value(id));
+        
+        result = mock.perform(get("/transaction/rests/currencies"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$[0]").exists());
+        
     }
 
     @After
