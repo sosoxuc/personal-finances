@@ -23,6 +23,7 @@ import personal.finances.accounts.Account;
 import personal.finances.accounts.AccountServiceTest;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyServiceTest;
+import personal.finances.projects.Project;
 import personal.finances.projects.ProjectServiceTest;
 import personal.spring.SpringDevConfig;
 
@@ -49,7 +50,8 @@ public class TransactionServiceTest {
         Currency currency = CurrencyServiceTest.createCurrency(mock);
         currencyId = currency.id.toString();
 
-        projectId = ProjectServiceTest.createProject(mock);
+        Project project = ProjectServiceTest.createProject(mock);
+        projectId = project.id.toString();
     }
 
     @Test
@@ -69,12 +71,12 @@ public class TransactionServiceTest {
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.list[0].id").value(id));
     }
-    
+
     @After
     public void cleanupLibs() throws Exception {
-        
+
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
-        
+
         AccountServiceTest.removeAccount(mock, accountId);
         CurrencyServiceTest.removeCurrency(mock, currencyId);
         ProjectServiceTest.removeProject(mock, projectId);
