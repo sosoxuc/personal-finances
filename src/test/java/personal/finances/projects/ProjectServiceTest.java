@@ -24,6 +24,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created by Niko on 7/10/15.
  */
@@ -41,11 +43,7 @@ public class ProjectServiceTest {
     public void testProjects() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock
-                .perform(post("/project/create").param("projectName", "test"));
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$").exists());
-        String idStr = result.andReturn().getResponse().getContentAsString();
+        String idStr = createProject(mock);
         Integer id = Integer.valueOf(idStr);
 
         result = mock.perform(get("/project/list"));
@@ -69,6 +67,17 @@ public class ProjectServiceTest {
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
 
+    }
+
+    public static String createProject(MockMvc mock)
+            throws Exception, UnsupportedEncodingException {
+        ResultActions result;
+        result = mock
+                .perform(post("/project/create").param("projectName", "test"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$").exists());
+        String idStr = result.andReturn().getResponse().getContentAsString();
+        return idStr;
     }
 
     @Test
