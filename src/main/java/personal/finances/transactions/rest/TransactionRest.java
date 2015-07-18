@@ -5,6 +5,7 @@ import personal.States;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by niko on 7/11/15.
@@ -22,6 +23,10 @@ public class TransactionRest implements Serializable {
 
     public Integer transactionId;
 
+
+    @Temporal(TemporalType.DATE)
+    public Date transactionDate;
+
     public BigDecimal transactionRest;
 
     @Enumerated(EnumType.STRING)
@@ -34,4 +39,8 @@ public class TransactionRest implements Serializable {
 
     public Integer isActive = States.ACTIVE; //Active default
 
+    public TransactionRest(Date transactionDate) {
+        this.transactionDate = transactionDate;
+    }
+    public TransactionRest(){}
 }

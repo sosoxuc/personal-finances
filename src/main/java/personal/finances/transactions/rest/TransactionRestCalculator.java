@@ -79,7 +79,7 @@ public class TransactionRestCalculator {
         List<TransactionRest> transactionRests  = new ArrayList<>(3);
         TransactionRest tr;
 
-        tr = new TransactionRest();
+        tr = new TransactionRest(transaction.transactionDate);
         tr.transactionRestType = TransactionRestType.PROJECT;
         tr.referenceId = transaction.projectId;
         transactionRests.add(tr);
@@ -93,11 +93,18 @@ public class TransactionRestCalculator {
         } else {
             tr.transactionRest = transaction.transactionAmount;
         }
+        em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
+                "  WHERE r.isActive = :isActive and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                .setParameter("rest", transaction.transactionAmount)
+                .setParameter("isActive", States.ACTIVE)
+                .setParameter("referenceId", transaction.projectId)
+                .setParameter("transactionDate", transaction.transactionDate)
+                .executeUpdate();
 
-        //em.createQuery("update TransactionRest r set r.")
+
 
         //Account
-        tr = new TransactionRest();
+        tr = new TransactionRest(transaction.transactionDate);
         tr.transactionRestType = TransactionRestType.ACCOUNT;
         tr.referenceId = transaction.accountId;
         transactionRests.add(tr);
@@ -110,9 +117,15 @@ public class TransactionRestCalculator {
         } else {
             tr.transactionRest = transaction.transactionAmount;
         }
-
+        em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
+                "  WHERE r.isActive = :isActive and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                .setParameter("rest", transaction.transactionAmount)
+                .setParameter("isActive", States.ACTIVE)
+                .setParameter("referenceId", transaction.accountId)
+                .setParameter("transactionDate", transaction.transactionDate)
+                .executeUpdate();
         //All
-        tr = new TransactionRest();
+        tr = new TransactionRest(transaction.transactionDate);
         tr.transactionRestType = TransactionRestType.ALL;
         transactionRests.add(tr);
 
@@ -123,9 +136,15 @@ public class TransactionRestCalculator {
         } else {
             tr.transactionRest = transaction.transactionAmount;
         }
+        em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
+                "  WHERE r.isActive = :isActive and r.referenceId is null and r.transactionDate > :transactionDate")
+                .setParameter("rest", transaction.transactionAmount)
+                .setParameter("isActive", States.ACTIVE)
+                .setParameter("transactionDate", transaction.transactionDate)
+                .executeUpdate();
 
         //Currency
-        tr = new TransactionRest();
+        tr = new TransactionRest(transaction.transactionDate);
         tr.transactionRestType = TransactionRestType.CURRENCY;
         tr.referenceId = transaction.currencyId;
         transactionRests.add(tr);
@@ -137,7 +156,13 @@ public class TransactionRestCalculator {
         } else {
             tr.transactionRest = transaction.transactionAmount;
         }
-
+        em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
+                "  WHERE r.isActive = :isActive and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                .setParameter("rest", transaction.transactionAmount)
+                .setParameter("isActive", States.ACTIVE)
+                .setParameter("referenceId", transaction.currencyId)
+                .setParameter("transactionDate", transaction.transactionDate)
+                .executeUpdate();
         return transactionRests;
     }
 
