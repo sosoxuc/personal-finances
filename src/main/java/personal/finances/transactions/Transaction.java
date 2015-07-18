@@ -50,7 +50,7 @@ public class Transaction implements Serializable {
 
     public Integer direction;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "transactionId")
     public List<TransactionRest> transactionRests;
 

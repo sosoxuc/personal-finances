@@ -1,5 +1,7 @@
 package personal.finances.transactions.rest;
 
+import personal.States;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -29,5 +31,7 @@ public class TransactionRest implements Serializable {
     public String resourceName;
 
     public Integer referenceId;
+
+    public Integer isActive = States.ACTIVE; //Active default
 
 }

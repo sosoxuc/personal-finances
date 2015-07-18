@@ -199,6 +199,9 @@ public class TransactionService {
     @Transactional(rollbackFor = Throwable.class)
     public void remove(@RequestParam Integer id) {
         Transaction transaction = em.find(Transaction.class, id);
+        for (TransactionRest transactionRest : transaction.transactionRests) {
+            transactionRest.isActive = States.INACTIVE;
+        }
         transaction.isActive = States.INACTIVE;
     }
     

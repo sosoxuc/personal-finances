@@ -81,6 +81,7 @@ public class TransactionRestCalculator {
 
         tr = new TransactionRest();
         tr.transactionRestType = TransactionRestType.PROJECT;
+        tr.referenceId = transaction.projectId;
         transactionRests.add(tr);
 
         //Project
@@ -93,10 +94,12 @@ public class TransactionRestCalculator {
             tr.transactionRest = transaction.transactionAmount;
         }
 
+        //em.createQuery("update TransactionRest r set r.")
 
         //Account
         tr = new TransactionRest();
         tr.transactionRestType = TransactionRestType.ACCOUNT;
+        tr.referenceId = transaction.accountId;
         transactionRests.add(tr);
 
         Transaction accountScopeTransaction = lastAccountScopeTransaction();
@@ -124,6 +127,7 @@ public class TransactionRestCalculator {
         //Currency
         tr = new TransactionRest();
         tr.transactionRestType = TransactionRestType.CURRENCY;
+        tr.referenceId = transaction.currencyId;
         transactionRests.add(tr);
 
         Transaction currencyScopedTransaction = lastCurrencyScopeTransaction();
