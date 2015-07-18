@@ -101,7 +101,9 @@ public class ProjectServiceTest {
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
         result.andExpect(status().isOk());
-        String idStr = result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
+        Project project1= new ObjectMapper().readValue(jsonStr, Project.class);
+        String idStr=project1.id.toString();
 
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
@@ -110,7 +112,9 @@ public class ProjectServiceTest {
         result = mock
                 .perform(post("/project/create").param("projectName", "test6"));
         result.andExpect(status().isOk());
-        String idStr2 = result.andReturn().getResponse().getContentAsString();
+        String jsonStr2 = result.andReturn().getResponse().getContentAsString();
+        Project project2= new ObjectMapper().readValue(jsonStr2, Project.class);
+        String idStr2=project2.id.toString();
 
         result = mock.perform(post("/project/update").param("id", idStr2)
                 .param("projectName", "test5"));
