@@ -90,9 +90,7 @@ public class ProjectService {
                 .setParameter("isActive", ACTIVE)
                 .getResultList();
 
-        if (projects.size() > 1) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        } else if (projects.size() == 0) {
+        if (projects.size() == 0) {
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(projects.get(0), HttpStatus.OK);
