@@ -1,15 +1,19 @@
 package personal.finances.transactions.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.finances.currency.Currency;
+import personal.finances.currency.CurrencyService;
 import personal.finances.transactions.Transaction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,6 +27,9 @@ public class TransactionRestService {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    CurrencyService currencyService;
 
     @RequestMapping("/account")
     public ResponseEntity<TransactionRest> account(
@@ -108,6 +115,28 @@ public class TransactionRestService {
                 }
             }
         }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping("/currencies")
+    public ResponseEntity<List<TransactionRest>> currencies(@RequestParam(required = false) String transactionDate) throws ParseException {
+        ResponseEntity<List<Currency>> responseEntity = currencyService.list();
+        List<Currency> currencies = responseEntity.getBody();
+
+        if ( ! currencies.isEmpty()) {
+            List<TransactionRest> rests = new ArrayList<>();
+            for (Currency currency : currencies) {
+                ResponseEntity<TransactionRest> currencyResp = currency(currency.id, transactionDate);
+                if (currencyResp.getStatusCode().equals(HttpStatus.OK)) {
+                    TransactionRest transactionRest = currencyResp.getBody();
+                    transactionRest.resourceName = currency.currencyCode;
+                    rests.add(transactionRest);
+                }
+            }
+
+            return new ResponseEntity<>(rests, HttpStatus.OK);
+        }
+
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

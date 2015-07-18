@@ -25,6 +25,9 @@ public class TransactionRest implements Serializable {
     @Enumerated(EnumType.STRING)
     public TransactionRestType transactionRestType;
 
+    @Transient
+    public String resourceName;
+
     public Integer referenceId;
 
 }

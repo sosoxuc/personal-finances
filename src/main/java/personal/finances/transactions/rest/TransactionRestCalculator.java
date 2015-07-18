@@ -51,8 +51,7 @@ public class TransactionRestCalculator {
 
     public Transaction lastCurrencyScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.accountId = :accountId and e.currencyId =:currencyId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
-                .setParameter("accountId", transaction.accountId)
+                "select e from Transaction e where e.currencyId =:currencyId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("currencyId", transaction.currencyId)
                 .setParameter("transactionDate", transaction.transactionDate)
