@@ -34,8 +34,8 @@ public class AccountServiceTest {
     public void testAccounts() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock
-                .perform(post("/account/create").param("accountName", "test"));
+        result = mock.perform(post("/account/create")
+                .param("accountName", "test").param("accountNumber", "num"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
         String jsonStr = result.andReturn().getResponse().getContentAsString();
@@ -47,15 +47,17 @@ public class AccountServiceTest {
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].accountName").value("test"));
+        result.andExpect(jsonPath("$[0].accountNumber").value("num"));
 
         result = mock.perform(post("/account/update").param("id", idStr)
-                .param("accountName", "test2"));
+                .param("accountName", "test2").param("accountNumber", "num2"));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].accountName").value("test2"));
+        result.andExpect(jsonPath("$[0].accountNumber").value("num2"));
 
         result = mock.perform(post("/account/remove").param("id", idStr));
         result.andExpect(status().isOk());
@@ -63,6 +65,19 @@ public class AccountServiceTest {
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
+
     }
 
+    @Test
+    public void testAccountsExceptions() throws Exception {
+        MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
+        ResultActions result;
+        result = mock.perform(post("/account/update").param("id", "-1")
+                .param("accountName", "test2").param("accountNumber", "num2"));
+        result.andExpect(status().is4xxClientError());
+
+        result = mock.perform(post("/account/remove").param("id", "-1"));
+        result.andExpect(status().is4xxClientError());
+
+    }
 }
