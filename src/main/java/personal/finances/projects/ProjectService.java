@@ -24,7 +24,7 @@ public class ProjectService {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Integer> create(@RequestParam("projectName") String projectName) {
+    public ResponseEntity<Project> create(@RequestParam("projectName") String projectName) {
 
         ResponseEntity<Project> resp = getByName(projectName);
         if (resp.getStatusCode().equals(HttpStatus.OK) && resp.getBody() != null) {
@@ -37,7 +37,7 @@ public class ProjectService {
 
         em.persist(project);
 
-        return new ResponseEntity<>(project.id, HttpStatus.OK);
+        return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
