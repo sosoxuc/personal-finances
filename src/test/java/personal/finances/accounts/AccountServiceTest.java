@@ -5,6 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import personal.spring.SpringDevConfig;
@@ -34,12 +39,7 @@ public class AccountServiceTest {
     public void testAccounts() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/account/create")
-                .param("accountName", "test").param("accountNumber", "num"));
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$").exists());
-        String jsonStr = result.andReturn().getResponse().getContentAsString();
-        Account account = new ObjectMapper().readValue(jsonStr, Account.class);
+        Account account = createAccount(mock);
         String idStr = account.id.toString();
         Integer id = account.id;
 
@@ -59,13 +59,32 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].accountName").value("test2"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num2"));
 
-        result = mock.perform(post("/account/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeAccount(mock, idStr);
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
 
+    }
+
+    public static void removeAccount(MockMvc mock, String idStr)
+            throws Exception {
+        ResultActions result;
+        result = mock.perform(post("/account/remove").param("id", idStr));
+        result.andExpect(status().isOk());
+    }
+
+    public static Account createAccount(MockMvc mock)
+            throws Exception, UnsupportedEncodingException, IOException,
+            JsonParseException, JsonMappingException {
+        ResultActions result;
+        result = mock.perform(post("/account/create")
+                .param("accountName", "test").param("accountNumber", "num"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$").exists());
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
+        Account account = new ObjectMapper().readValue(jsonStr, Account.class);
+        return account;
     }
 
     @Test

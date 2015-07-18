@@ -5,6 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import personal.spring.SpringDevConfig;
@@ -35,13 +40,7 @@ public class CurrencyServiceTest {
     public void testCurrencies() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/currency/create")
-                .param("currencyName", "test").param("currencyCode", "code"));
-        result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$").exists());
-        String jsonStr = result.andReturn().getResponse().getContentAsString();
-        Currency currency = new ObjectMapper().readValue(jsonStr,
-                Currency.class);
+        Currency currency = createCurrency(mock);
         String idStr = currency.id.toString();
         Integer id = currency.id;
 
@@ -61,12 +60,31 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].currencyName").value("test2"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code2"));
 
-        result = mock.perform(post("/currency/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeCurrency(mock, idStr);
 
         result = mock.perform(get("/currency/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
+    }
+
+    public static void removeCurrency(MockMvc mock, String idStr) throws Exception {
+        ResultActions result;
+        result = mock.perform(post("/currency/remove").param("id", idStr));
+        result.andExpect(status().isOk());
+    }
+
+    public static Currency createCurrency(MockMvc mock)
+            throws Exception, UnsupportedEncodingException, IOException,
+            JsonParseException, JsonMappingException {
+        ResultActions result;
+        result = mock.perform(post("/currency/create")
+                .param("currencyName", "test").param("currencyCode", "code"));
+        result.andExpect(status().isOk());
+        result.andExpect(jsonPath("$").exists());
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
+        Currency currency = new ObjectMapper().readValue(jsonStr,
+                Currency.class);
+        return currency;
     }
 
     @Test
