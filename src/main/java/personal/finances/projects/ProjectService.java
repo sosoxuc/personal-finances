@@ -21,6 +21,13 @@ public class ProjectService {
 
     @PersistenceContext
     private EntityManager em;
+    
+    public static void init(EntityManager em){
+        ProjectService service =new ProjectService();
+        service.em=em;
+        service.create("სამსახური");
+        service.create("სხვა პროექტი");
+    }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)

@@ -1,5 +1,13 @@
 package personal.finances.accounts;
 
+import static personal.States.ACTIVE;
+import static personal.States.INACTIVE;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
-
-import static personal.States.ACTIVE;
-import static personal.States.INACTIVE;
 
 /**
  * Created by niko on 7/11/15.
@@ -24,6 +25,13 @@ public class AccountService {
 
     @PersistenceContext
     private EntityManager em;
+    
+    public static void init(EntityManager em){
+        AccountService service =new AccountService();
+        service.em=em;
+        service.create("პირადი",null);
+        service.create("საბანკო",null);
+    }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
