@@ -21,6 +21,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import personal.spring.SpringDevConfig;
 
 /**
@@ -40,8 +42,9 @@ public class ProjectServiceTest {
     public void testProjects() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        String idStr = createProject(mock);
-        Integer id = Integer.valueOf(idStr);
+        Project project = createProject(mock);
+        String idStr = project.id.toString();
+        Integer id = project.id;
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
@@ -65,21 +68,23 @@ public class ProjectServiceTest {
 
     }
 
-    public static void removeProject(MockMvc mock, String idStr) throws Exception {
+    public static void removeProject(MockMvc mock, String idStr)
+            throws Exception {
         ResultActions result;
         result = mock.perform(post("/project/remove").param("id", idStr));
         result.andExpect(status().isOk());
     }
 
-    public static String createProject(MockMvc mock)
+    public static Project createProject(MockMvc mock)
             throws Exception, UnsupportedEncodingException {
         ResultActions result;
         result = mock
                 .perform(post("/project/create").param("projectName", "test"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
-        String idStr = result.andReturn().getResponse().getContentAsString();
-        return idStr;
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
+        Project project = new ObjectMapper().readValue(jsonStr, Project.class);
+        return project;
     }
 
     @Test
@@ -96,7 +101,9 @@ public class ProjectServiceTest {
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
         result.andExpect(status().isOk());
-        String idStr = result.andReturn().getResponse().getContentAsString();
+        String jsonStr = result.andReturn().getResponse().getContentAsString();
+        Project project1= new ObjectMapper().readValue(jsonStr, Project.class);
+        String idStr=project1.id.toString();
 
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
@@ -105,7 +112,9 @@ public class ProjectServiceTest {
         result = mock
                 .perform(post("/project/create").param("projectName", "test6"));
         result.andExpect(status().isOk());
-        String idStr2 = result.andReturn().getResponse().getContentAsString();
+        String jsonStr2 = result.andReturn().getResponse().getContentAsString();
+        Project project2= new ObjectMapper().readValue(jsonStr2, Project.class);
+        String idStr2=project2.id.toString();
 
         result = mock.perform(post("/project/update").param("id", idStr2)
                 .param("projectName", "test5"));
