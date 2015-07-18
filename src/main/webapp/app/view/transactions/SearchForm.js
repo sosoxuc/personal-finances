@@ -86,13 +86,19 @@ Ext.define("TR.view.transactions.SearchForm", {
             items: [projectsCombo, directionCombo]
         };
         
-        var button =  {
+        var filterButton =  {
             xtype: 'button',
             text: 'ფილტრი',
             handler: filter
         };
-
-        me.items = [ controls1, controls2, controls3, button ];
+        
+        var resetButton =  {
+            xtype: 'button',
+            text: 'გასუფთავება',
+            handler: reset
+        };
+        
+        me.items = [ controls1, controls2, controls3, filterButton, resetButton ];
         
         me.callParent(arguments);
 
@@ -111,5 +117,10 @@ Ext.define("TR.view.transactions.SearchForm", {
             me.searchedValues = values;
             cfg.grid.load(values);
         }
+        
+        function reset(){
+            me.getForm().reset();
+        }
+        
     }
 });
