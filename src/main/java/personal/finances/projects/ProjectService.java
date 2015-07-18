@@ -83,8 +83,7 @@ public class ProjectService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @RequestMapping(value = "/get/{name}", method = RequestMethod.GET)
-    public ResponseEntity<Project> getByName(@PathVariable("name") String name) {
+    private ResponseEntity<Project> getByName(String name) {
 
         List<Project> projects = em.createQuery("from Project where projectName = :projectName and isActive = :isActive", Project.class)
                 .setParameter("projectName", name)
