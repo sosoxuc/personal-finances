@@ -25,5 +25,6 @@ public class TransactionRest implements Serializable {
     @Enumerated(EnumType.STRING)
     public TransactionRestType transactionRestType;
 
+    public Integer referenceId;
 
 }

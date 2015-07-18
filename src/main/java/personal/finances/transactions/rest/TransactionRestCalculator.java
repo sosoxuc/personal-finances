@@ -24,9 +24,10 @@ public class TransactionRestCalculator {
 
     public Transaction lastProjectScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.projectId = :projectId and isActive = :isActive order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.projectId = :projectId and isActive = :isActive and e.transactionDate <= :transactionDate order by transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("projectId", transaction.projectId)
+                .setParameter("transactionDate", transaction.transactionDate)
                 .setFirstResult(0)
                 .setMaxResults(1)
                 .getResultList();
@@ -37,9 +38,24 @@ public class TransactionRestCalculator {
 
     public Transaction lastAccountScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.accountId = :accountId and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.accountId = :accountId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                .setParameter("accountId", transaction.accountId)
+                .setParameter("transactionDate", transaction.transactionDate)
+                .setParameter("isActive", States.ACTIVE)
+                .setFirstResult(0)
+                .setMaxResults(1)
+                .getResultList();
+
+        return transactions.isEmpty() ? null : transactions.get(0);
+    }
+
+    public Transaction lastCurrencyScopeTransaction(){
+        List<Transaction> transactions = em.createQuery(
+                "select e from Transaction e where e.accountId = :accountId and e.currencyId =:currencyId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
                 .setParameter("accountId", transaction.accountId)
                 .setParameter("isActive", States.ACTIVE)
+                .setParameter("currencyId", transaction.currencyId)
+                .setParameter("transactionDate", transaction.transactionDate)
                 .setFirstResult(0)
                 .setMaxResults(1)
                 .getResultList();
@@ -49,8 +65,9 @@ public class TransactionRestCalculator {
 
     public Transaction getLastTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.isActive = :isActive and e.transactionDate <= :transactionDate order by transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
+                .setParameter("transactionDate", transaction.transactionDate)
                 .setFirstResult(0)
                 .setMaxResults(1)
                 .getResultList();
@@ -67,6 +84,7 @@ public class TransactionRestCalculator {
         tr.transactionRestType = TransactionRestType.PROJECT;
         transactionRests.add(tr);
 
+        //Project
         Transaction projectScopeTransaction = lastProjectScopeTransaction();
         if (projectScopeTransaction != null) {
             TransactionRest projectRest = extract(projectScopeTransaction.transactionRests, TransactionRestType.PROJECT);
@@ -100,6 +118,19 @@ public class TransactionRestCalculator {
         if (lastTransaction != null) {
             TransactionRest all = extract(lastTransaction.transactionRests, TransactionRestType.ALL);
             tr.transactionRest = transaction.transactionAmount.add(all.transactionRest);
+        } else {
+            tr.transactionRest = transaction.transactionAmount;
+        }
+
+        //Currency
+        tr = new TransactionRest();
+        tr.transactionRestType = TransactionRestType.CURRENCY;
+        transactionRests.add(tr);
+
+        Transaction currencyScopedTransaction = lastCurrencyScopeTransaction();
+        if (currencyScopedTransaction != null) {
+            TransactionRest currencyScoped = extract(currencyScopedTransaction.transactionRests, TransactionRestType.CURRENCY);
+            tr.transactionRest = transaction.transactionAmount.add(currencyScoped.transactionRest);
         } else {
             tr.transactionRest = transaction.transactionAmount;
         }
