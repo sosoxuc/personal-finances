@@ -1,5 +1,12 @@
 package personal.finances.projects;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.io.UnsupportedEncodingException;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,17 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import personal.finances.accounts.Account;
 import personal.spring.SpringDevConfig;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Niko on 7/10/15.
@@ -60,13 +57,18 @@ public class ProjectServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].projectName").value("test2"));
 
-        result = mock.perform(post("/project/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeProject(mock, idStr);
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
 
+    }
+
+    public static void removeProject(MockMvc mock, String idStr) throws Exception {
+        ResultActions result;
+        result = mock.perform(post("/project/remove").param("id", idStr));
+        result.andExpect(status().isOk());
     }
 
     public static String createProject(MockMvc mock)
@@ -81,7 +83,7 @@ public class ProjectServiceTest {
     }
 
     @Test
-    public void testAccountsExceptions() throws Exception {
+    public void testProjectsExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
         result = mock.perform(post("/project/update").param("id", "-1")
@@ -109,11 +111,9 @@ public class ProjectServiceTest {
                 .param("projectName", "test5"));
         result.andExpect(status().isConflict());
 
-        result = mock.perform(post("/project/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeProject(mock, idStr);
 
-        result = mock.perform(post("/project/remove").param("id", idStr2));
-        result.andExpect(status().isOk());
+        removeProject(mock, idStr2);
 
     }
 }

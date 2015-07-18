@@ -59,13 +59,19 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].accountName").value("test2"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num2"));
 
-        result = mock.perform(post("/account/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeAccount(mock, idStr);
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
 
+    }
+
+    public static void removeAccount(MockMvc mock, String idStr)
+            throws Exception {
+        ResultActions result;
+        result = mock.perform(post("/account/remove").param("id", idStr));
+        result.andExpect(status().isOk());
     }
 
     public static Account createAccount(MockMvc mock)

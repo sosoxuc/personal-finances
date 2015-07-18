@@ -5,12 +5,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.UnsupportedEncodingException;
-
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -19,17 +19,11 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.springframework.test.context.ActiveProfiles;
-
 import personal.finances.accounts.Account;
 import personal.finances.accounts.AccountServiceTest;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyServiceTest;
-import personal.finances.projects.ProjectService;
 import personal.finances.projects.ProjectServiceTest;
-import personal.spring.SpringConfig;
 import personal.spring.SpringDevConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -74,5 +68,15 @@ public class TransactionServiceTest {
         result = mock.perform(get("/transaction/search"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.list[0].id").value(id));
+    }
+    
+    @After
+    public void cleanupLibs() throws Exception {
+        
+        MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
+        
+        AccountServiceTest.removeAccount(mock, accountId);
+        CurrencyServiceTest.removeCurrency(mock, currencyId);
+        ProjectServiceTest.removeProject(mock, projectId);
     }
 }

@@ -60,12 +60,17 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].currencyName").value("test2"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code2"));
 
-        result = mock.perform(post("/currency/remove").param("id", idStr));
-        result.andExpect(status().isOk());
+        removeCurrency(mock, idStr);
 
         result = mock.perform(get("/currency/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
+    }
+
+    public static void removeCurrency(MockMvc mock, String idStr) throws Exception {
+        ResultActions result;
+        result = mock.perform(post("/currency/remove").param("id", idStr));
+        result.andExpect(status().isOk());
     }
 
     public static Currency createCurrency(MockMvc mock)
