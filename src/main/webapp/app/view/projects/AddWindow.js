@@ -54,8 +54,14 @@ Ext.define("TR.view.projects.AddWindow", {
                 url : 'rest/project/create',
                 params : values,
                 callback : function(id) {
-                    cfg.grid.store.load();
-                    cfg.grid.getSelectionModel().deselectAll();
+                    if (cfg.combo) {
+                        cfg.combo.setValue(parseInt(id));
+                        cfg.combo.store.load();
+                    }
+                    if (cfg.grid) {
+                        cfg.grid.store.load();
+                        cfg.grid.getSelectionModel().deselectAll();
+                    }
                     me.close();
                 }
             });

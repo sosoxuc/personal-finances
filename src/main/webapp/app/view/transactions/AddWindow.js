@@ -35,13 +35,25 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'projectId',
-            fieldLabel : 'პროექტი',
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
             valueField: 'id',
             value: cfg.data ? cfg.data.projectId : ''
         });
+        
+        var projectsInput = {
+            xtype: 'fieldcontainer',
+            fieldLabel: 'პროექტი',
+            layout: 'hbox',
+            items: [ projectsCombo, {
+                xtype: 'splitter'
+            }, {
+                xtype: 'button',
+                text: '+',
+                handler: addProject
+            } ]
+        }
         
         var directionCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'direction',
@@ -79,7 +91,7 @@ Ext.define("TR.view.transactions.AddWindow", {
                 allowBlank : false,
                 format : '0.00',
                 value: cfg.data ? cfg.data.transactionAmount : ''
-            }, currenciesCombo, accountsCombo, projectsCombo, {
+            }, currenciesCombo, accountsCombo, projectsInput, {
                 xtype: 'datefield',
                 name: 'date',
                 format: 'd-m-Y',
@@ -110,6 +122,12 @@ Ext.define("TR.view.transactions.AddWindow", {
             }
         });
 
+        function addProject(){
+            Ext.create('TR.view.projects.AddWindow', {
+                combo : projectsCombo
+            });
+        }
+        
         function add() {
             if (!form.getForm().isValid())
                 return;
