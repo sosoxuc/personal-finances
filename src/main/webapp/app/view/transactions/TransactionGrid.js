@@ -126,7 +126,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             var rec = sel[0];
             myRequest({
                 params : {
-                    id : rec.get('id'),
+                    transactionId : rec.get('id'),
                     direction: -1
                 },
                 url : 'rest/transaction/shift',
@@ -142,7 +142,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             var rec = sel[0];
             myRequest({
                 params : {
-                    id : rec.get('id'),
+                    transactionId : rec.get('id'),
                     direction: 1
                 },
                 url : 'rest/transaction/shift',
