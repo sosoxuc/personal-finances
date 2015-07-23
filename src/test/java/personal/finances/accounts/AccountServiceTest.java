@@ -42,6 +42,7 @@ public class AccountServiceTest {
         Account account = createAccount(mock);
         String idStr = account.id.toString();
         Integer id = account.id;
+        Long version = account.version;
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
@@ -49,8 +50,13 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].accountName").value("test"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num"));
 
-        result = mock.perform(post("/account/update").param("id", idStr)
-                .param("accountName", "test2").param("accountNumber", "num2"));
+
+
+        result = mock.perform(post("/account/update")
+                .param("id", idStr)
+                .param("accountName", "test2")
+                .param("accountNumber", "num2")
+                .param("version", version.toString() ));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/account/list"));
@@ -59,7 +65,7 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].accountName").value("test2"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num2"));
 
-        removeAccount(mock, idStr);
+        removeAccount(mock, idStr, version + 1);
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
@@ -67,19 +73,22 @@ public class AccountServiceTest {
 
     }
 
-    public static void removeAccount(MockMvc mock, String idStr)
+    public static void removeAccount(MockMvc mock, String idStr, Long version)
             throws Exception {
         ResultActions result;
-        result = mock.perform(post("/account/remove").param("id", idStr));
+        result = mock
+                .perform(post("/account/remove")
+                        .param("id", idStr)
+                        .param("version", version.toString()));
         result.andExpect(status().isOk());
     }
 
     public static Account createAccount(MockMvc mock)
-            throws Exception, UnsupportedEncodingException, IOException,
-            JsonParseException, JsonMappingException {
+            throws Exception {
         ResultActions result;
         result = mock.perform(post("/account/create")
-                .param("accountName", "test").param("accountNumber", "num"));
+                .param("accountName", "test")
+                .param("accountNumber", "num"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
         String jsonStr = result.andReturn().getResponse().getContentAsString();
@@ -91,11 +100,16 @@ public class AccountServiceTest {
     public void testAccountsExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/account/update").param("id", "-1")
-                .param("accountName", "test2").param("accountNumber", "num2"));
+        result = mock.perform(post("/account/update")
+                .param("id", "-1")
+                .param("accountName", "test2")
+                .param("accountNumber", "num2")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
-        result = mock.perform(post("/account/remove").param("id", "-1"));
+        result = mock.perform(post("/account/remove")
+                .param("id", "-1")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
     }
 }
