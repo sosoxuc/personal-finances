@@ -248,6 +248,9 @@ public class TransactionService {
                             if (from.transactionRestType.equals(TransactionRestType.CURRENCY)
                                     &&  ! from.referenceId.equals(to.referenceId)) {
                                 continue;
+                            } else if (from.transactionRestType.equals(TransactionRestType.ACCOUNT)
+                                    &&  ! from.referenceId.equals(to.referenceId)) {
+                                continue;
                             }
                             if (direction * -1 > 0) {
                                 from.transactionRest = from.transactionRest.subtract(shiftTo.transactionAmount);
