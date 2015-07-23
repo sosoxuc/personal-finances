@@ -58,12 +58,17 @@ public class AccountService {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Account> update(@RequestParam Integer id,
+    public ResponseEntity<Account> update(
+            @RequestParam Integer id,
             @RequestParam String accountName,
-            @RequestParam(required = false) String accountNumber) {
+            @RequestParam(required = false) String accountNumber,
+            @RequestParam Long version) {
 
         Account account = em.find(Account.class, id);
         if (account != null && account.isActive.equals(ACTIVE)) {
+            if ( ! version.equals(account.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             account.accountName = accountName;
             account.accountNumber = accountNumber;
 
@@ -76,10 +81,15 @@ public class AccountService {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Account> remove(@RequestParam("id") Integer id) {
+    public ResponseEntity<Account> remove(
+            @RequestParam("id") Integer id,
+            @RequestParam ("version") Long version) {
         Account account = em.find(Account.class, id);
 
         if (account != null && account.isActive.equals(ACTIVE)) {
+            if ( ! version.equals(account.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             account.isActive = INACTIVE;
             return new ResponseEntity<>(account, HttpStatus.OK);
         }

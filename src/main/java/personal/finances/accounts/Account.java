@@ -20,5 +20,8 @@ public class Account implements Serializable{
 
     public String accountNumber;
 
+    @Version
+    public Long version;
+
     public Integer isActive;
 }
