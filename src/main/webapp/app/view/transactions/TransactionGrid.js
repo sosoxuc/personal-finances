@@ -22,12 +22,10 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         },'-',{
             text : 'ზევით',
             handler : up,
-            disabled: true,
             name : 'up'
         },{
             text : 'ქვევით',
             handler : down,
-            disabled: true,
             name : 'down'
         } ];
 
