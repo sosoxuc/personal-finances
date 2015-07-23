@@ -37,6 +37,11 @@ public class Patches {
                 .setParameter("version", 1L)
                 .executeUpdate();
 
+        //Update transactions version
+        em.createQuery("update Transaction t set t.version = :version where t.version is null")
+                .setParameter("version", 1L)
+                .executeUpdate();
+
     }
 
 }

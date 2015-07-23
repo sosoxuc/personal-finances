@@ -54,5 +54,8 @@ public class Transaction implements Serializable {
     @JoinColumn(name = "transactionId")
     public List<TransactionRest> transactionRests;
 
+    @Version
+    public Long version;
+
     public Integer isActive;
 }

@@ -180,8 +180,8 @@ public class TransactionService {
             countQuery.setParameter(key, queryParams.get(key));
         }
 
-        start = start == null? start = 0 : start ;
-        limit = limit == null? limit = 50 : start ;
+        start = start == null? 0 : start ;
+        limit = limit == null? 50 : start ;
 
         query.setFirstResult(start);
         query.setMaxResults(limit);
@@ -197,13 +197,18 @@ public class TransactionService {
     @AdminRole
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public void remove(@RequestParam Integer id) {
+    public ResponseEntity<Transaction> remove(@RequestParam Integer id, @RequestParam Long version) {
         Transaction transaction = em.find(Transaction.class, id);
+        if ( ! version.equals(transaction.version)) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         for (TransactionRest transactionRest : transaction.transactionRests) {
             transactionRest.isActive = States.INACTIVE;
         }
         transaction.isActive = States.INACTIVE;
         new TransactionPostDelete(em, transaction).updateRests();
+
+        return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
     
 
