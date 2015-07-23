@@ -246,7 +246,7 @@ public class TransactionService {
                      for (TransactionRest to : shiftTo.transactionRests) {
                         if (from.transactionRestType.equals(to.transactionRestType)) {
                             if (from.transactionRestType.equals(TransactionRestType.CURRENCY)
-                                    && from.referenceId.equals(to.referenceId)) {
+                                    &&  ! from.referenceId.equals(to.referenceId)) {
                                 continue;
                             }
                             if (direction * -1 > 0) {
