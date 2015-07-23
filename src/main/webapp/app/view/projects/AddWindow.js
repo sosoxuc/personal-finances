@@ -66,6 +66,7 @@ Ext.define("TR.view.projects.AddWindow", {
                 return;
             var values = form.getForm().getValues();
             values.id = cfg.data.id;
+            values.version = cfg.data.version;
             myRequest({
                 url : 'rest/project/update',
                 params : values,
