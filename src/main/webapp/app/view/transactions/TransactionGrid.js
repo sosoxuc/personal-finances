@@ -19,6 +19,16 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             text : 'წაშლა',
             name : 'remove',
             handler : remove
+        },'-',{
+            text : 'ზევით',
+            handler : up,
+            disabled: true,
+            name : 'up'
+        },{
+            text : 'ქვევით',
+            handler : down,
+            disabled: true,
+            name : 'down'
         } ];
 
         me.load = function(params) {
@@ -108,6 +118,38 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                             me.getSelectionModel().deselectAll();
                         }
                     });
+                }
+            });
+        }
+        
+        function down(btn) {
+            var sel = me.getSelectionModel().getSelection();
+            if(!sel.length) return ;
+            var rec = sel[0];
+            myRequest({
+                params : {
+                    id : rec.get('id'),
+                    direction: -1
+                },
+                url : 'rest/transaction/shift',
+                callback : function(response) {
+                    me.store.load();
+                }
+            });
+        }
+        
+        function up() {
+            var sel = me.getSelectionModel().getSelection();
+            if(!sel.length) return ;
+            var rec = sel[0];
+            myRequest({
+                params : {
+                    id : rec.get('id'),
+                    direction: 1
+                },
+                url : 'rest/transaction/shift',
+                callback : function(response) {
+                    me.store.load();
                 }
             });
         }
