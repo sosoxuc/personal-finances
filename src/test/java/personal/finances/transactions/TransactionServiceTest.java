@@ -82,8 +82,8 @@ public class TransactionServiceTest {
 
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        AccountServiceTest.removeAccount(mock, accountId);
-        CurrencyServiceTest.removeCurrency(mock, currencyId);
-        ProjectServiceTest.removeProject(mock, projectId);
+//        AccountServiceTest.removeAccount(mock, accountId);
+//        CurrencyServiceTest.removeCurrency(mock, currencyId);
+//        ProjectServiceTest.removeProject(mock, projectId);
     }
 }

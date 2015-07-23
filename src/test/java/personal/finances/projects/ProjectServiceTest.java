@@ -45,14 +45,18 @@ public class ProjectServiceTest {
         Project project = createProject(mock);
         String idStr = project.id.toString();
         Integer id = project.id;
+        Long version = project.version;
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].projectName").value("test"));
 
-        result = mock.perform(post("/project/update").param("id", idStr)
-                .param("projectName", "test2"));
+        result = mock
+                .perform(post("/project/update")
+                        .param("id", idStr)
+                        .param("projectName", "test2")
+                        .param("version", version.toString()));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/project/list"));
@@ -60,7 +64,7 @@ public class ProjectServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].projectName").value("test2"));
 
-        removeProject(mock, idStr);
+        removeProject(mock, idStr, version + 1);
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
@@ -68,15 +72,18 @@ public class ProjectServiceTest {
 
     }
 
-    public static void removeProject(MockMvc mock, String idStr)
+    public static void removeProject(MockMvc mock, String idStr, Long version)
             throws Exception {
         ResultActions result;
-        result = mock.perform(post("/project/remove").param("id", idStr));
+        result = mock
+                .perform(post("/project/remove")
+                        .param("id", idStr)
+                        .param("version", version.toString()));
         result.andExpect(status().isOk());
     }
 
     public static Project createProject(MockMvc mock)
-            throws Exception, UnsupportedEncodingException {
+            throws Exception {
         ResultActions result;
         result = mock
                 .perform(post("/project/create").param("projectName", "test"));
@@ -91,11 +98,15 @@ public class ProjectServiceTest {
     public void testProjectsExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/project/update").param("id", "-1")
-                .param("projectName", "test2"));
+        result = mock.perform(post("/project/update")
+                .param("id", "-1")
+                .param("projectName", "test2")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
-        result = mock.perform(post("/project/remove").param("id", "-1"));
+        result = mock.perform(post("/project/remove")
+                .param("id", "-1")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
         result = mock
@@ -104,7 +115,7 @@ public class ProjectServiceTest {
         String jsonStr = result.andReturn().getResponse().getContentAsString();
         Project project1= new ObjectMapper().readValue(jsonStr, Project.class);
         String idStr=project1.id.toString();
-
+        Long version = project1.version;
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
         result.andExpect(status().isConflict());
@@ -113,16 +124,19 @@ public class ProjectServiceTest {
                 .perform(post("/project/create").param("projectName", "test6"));
         result.andExpect(status().isOk());
         String jsonStr2 = result.andReturn().getResponse().getContentAsString();
-        Project project2= new ObjectMapper().readValue(jsonStr2, Project.class);
-        String idStr2=project2.id.toString();
+        Project project2 = new ObjectMapper().readValue(jsonStr2, Project.class);
+        String idStr2 = project2.id.toString();
+        Long version2 = project2.version;
 
-        result = mock.perform(post("/project/update").param("id", idStr2)
-                .param("projectName", "test5"));
+        result = mock.perform(post("/project/update")
+                .param("id", idStr2)
+                .param("projectName", "test5")
+                .param("version", version2.toString()));
         result.andExpect(status().isConflict());
 
-        removeProject(mock, idStr);
+        removeProject(mock, idStr, version);
 
-        removeProject(mock, idStr2);
+        removeProject(mock, idStr2, version);
 
     }
 }

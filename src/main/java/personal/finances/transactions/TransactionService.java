@@ -172,7 +172,7 @@ public class TransactionService {
 
         javax.persistence.Query countQuery = em.createQuery(String.format(queryBuilder.toString(), "select count(t) from Transaction t" ));
 
-        queryBuilder.append(" order by t.transactionDate desc, t.id desc");
+        queryBuilder.append(" order by t.transactionDate desc, t.transactionOrder desc, t.id desc");
         TypedQuery<Transaction> query = em.createQuery(String.format(queryBuilder.toString(), "select distinct t from Transaction t left join fetch t.transactionRests" ), Transaction.class);
 
         for (String key : queryParams.keySet()) {
@@ -180,8 +180,8 @@ public class TransactionService {
             countQuery.setParameter(key, queryParams.get(key));
         }
 
-        start = start == null? start = 0 : start ;
-        limit = limit == null? limit = 50 : start ;
+        start = start == null? 0 : start ;
+        limit = limit == null? 50 : start ;
 
         query.setFirstResult(start);
         query.setMaxResults(limit);
@@ -197,15 +197,72 @@ public class TransactionService {
     @AdminRole
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public void remove(@RequestParam Integer id) {
+    public ResponseEntity<Transaction> remove(@RequestParam Integer id, @RequestParam Long version) {
         Transaction transaction = em.find(Transaction.class, id);
+        if ( ! version.equals(transaction.version)) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         for (TransactionRest transactionRest : transaction.transactionRests) {
             transactionRest.isActive = States.INACTIVE;
         }
         transaction.isActive = States.INACTIVE;
         new TransactionPostDelete(em, transaction).updateRests();
+
+        return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
-    
+
+    @RequestMapping(value = "/shift", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Transaction> shift(@RequestParam Integer transactionId, @RequestParam Integer direction) {
+
+        Transaction shiftFrom = em.find(Transaction.class, transactionId);
+
+        if (shiftFrom.isActive.equals(1)) {
+            StringBuilder queryBuilder = new StringBuilder();
+            queryBuilder.append("select e from Transaction e where e.isActive = :isActive");
+            queryBuilder.append(" and e.projectId = :projectId");
+
+            queryBuilder.append(" and e.transactionDate = :transactionDate");
+
+            if (direction * -1 > 0) {
+                queryBuilder.append(" and e.transactionOrder < :transactionOrder  order by e.transactionOrder desc");
+            } else {
+                queryBuilder.append(" and e.transactionOrder > :transactionOrder  order by e.transactionOrder asc");
+            }
+
+            List<Transaction> transactions = em.createQuery(queryBuilder.toString(), Transaction.class)
+                    .setParameter("isActive", 1)
+                    .setParameter("projectId", shiftFrom.projectId)
+                    .setParameter("transactionOrder", shiftFrom.transactionOrder)
+                    .setParameter("transactionDate", shiftFrom.transactionDate)
+                    .setFirstResult(0)
+                    .setMaxResults(1)
+                    .getResultList();
+
+            if (transactions.size() == 1) {
+                Transaction shiftTo = transactions.get(0);
+                for (TransactionRest from : shiftFrom.transactionRests) {
+                     for (TransactionRest to : shiftTo.transactionRests) {
+                        if (from.transactionRestType.equals(to.transactionRestType)) {
+                            if (direction * -1 > 0) {
+                                from.transactionRest = from.transactionRest.subtract(shiftTo.transactionAmount);
+                                to.transactionRest = from.transactionRest.add(shiftTo.transactionAmount);
+                            } else {
+                                to.transactionRest = to.transactionRest.subtract(shiftFrom.transactionAmount);
+                                from.transactionRest = to.transactionRest.add(shiftTo.transactionAmount);
+                            }
+                        }
+                     }
+                }
+                Integer transactionOrder = shiftFrom.transactionOrder;
+                shiftFrom.transactionOrder = shiftTo.transactionOrder;
+                shiftTo.transactionOrder = transactionOrder;
+
+                return new ResponseEntity<>(shiftFrom, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     @RequestMapping("/upload")
     @Transactional(rollbackFor = Throwable.class)

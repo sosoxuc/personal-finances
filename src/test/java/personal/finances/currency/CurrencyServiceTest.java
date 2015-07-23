@@ -43,6 +43,7 @@ public class CurrencyServiceTest {
         Currency currency = createCurrency(mock);
         String idStr = currency.id.toString();
         Integer id = currency.id;
+        Long version = currency.version;
 
         result = mock.perform(get("/currency/list"));
         result.andExpect(status().isOk());
@@ -50,8 +51,12 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].currencyName").value("test"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code"));
 
-        result = mock.perform(post("/currency/update").param("id", idStr)
-                .param("currencyName", "test2").param("currencyCode", "code2"));
+        version = version + 1;
+        result = mock.perform(post("/currency/update")
+                .param("id", idStr)
+                .param("currencyName", "test2")
+                .param("currencyCode", "code2")
+                .param("version", version.toString()));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/currency/list"));
@@ -60,22 +65,23 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].currencyName").value("test2"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code2"));
 
-        removeCurrency(mock, idStr);
+        removeCurrency(mock, idStr, version + 1);
 
         result = mock.perform(get("/currency/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
     }
 
-    public static void removeCurrency(MockMvc mock, String idStr) throws Exception {
+    public static void removeCurrency(MockMvc mock, String idStr, Long version) throws Exception {
         ResultActions result;
-        result = mock.perform(post("/currency/remove").param("id", idStr));
+        result = mock.perform(post("/currency/remove")
+                .param("id", idStr)
+                .param("version", version.toString()));
         result.andExpect(status().isOk());
     }
 
     public static Currency createCurrency(MockMvc mock)
-            throws Exception, UnsupportedEncodingException, IOException,
-            JsonParseException, JsonMappingException {
+            throws Exception {
         ResultActions result;
         result = mock.perform(post("/currency/create")
                 .param("currencyName", "test").param("currencyCode", "code"));
@@ -91,11 +97,16 @@ public class CurrencyServiceTest {
     public void testCurrenciesExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/currency/update").param("id", "-1")
-                .param("currencyName", "test2").param("currencyCode", "num2"));
+        result = mock.perform(post("/currency/update")
+                .param("id", "-1")
+                .param("currencyName", "test2")
+                .param("currencyCode", "num2")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
-        result = mock.perform(post("/currency/remove").param("id", "-1"));
+        result = mock.perform(post("/currency/remove")
+                .param("id", "-1")
+                .param("version", "-1"));
         result.andExpect(status().isNotFound());
     }
 }
