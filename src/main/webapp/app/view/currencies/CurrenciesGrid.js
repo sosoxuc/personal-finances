@@ -56,10 +56,12 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
                 return;
             Ext.Msg.confirm('გაფრთხილება', 'დაადასტურეთ წაშლა!', function(ans) {
                 if (ans === 'yes') {
+                    var rec = sel[0];
                     myRequest({
                         url : 'rest/currency/remove',
                         params : {
-                            id : sel[0].get('id')
+                            id : rec.get('id'),
+                            version: rec.get('version')
                         },
                         callback : function(res) {
                             me.store.load();

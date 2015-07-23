@@ -70,6 +70,8 @@ Ext.define("TR.view.accounts.AddWindow", {
                 return;
             var values = form.getForm().getValues();
             values.id = cfg.data.id;
+            values.version = cfg.data.version;
+            
             myRequest({
                 url : 'rest/account/update',
                 params : values,
