@@ -21,6 +21,7 @@ import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
+import personal.finances.transactions.rest.TransactionRestType;
 import personal.security.AdminRole;
 import personal.security.UserRole;
 
@@ -244,6 +245,10 @@ public class TransactionService {
                 for (TransactionRest from : shiftFrom.transactionRests) {
                      for (TransactionRest to : shiftTo.transactionRests) {
                         if (from.transactionRestType.equals(to.transactionRestType)) {
+                            if (from.transactionRestType.equals(TransactionRestType.CURRENCY)
+                                    && from.referenceId.equals(to.referenceId)) {
+                                continue;
+                            }
                             if (direction * -1 > 0) {
                                 from.transactionRest = from.transactionRest.subtract(shiftTo.transactionAmount);
                                 to.transactionRest = from.transactionRest.add(shiftTo.transactionAmount);
