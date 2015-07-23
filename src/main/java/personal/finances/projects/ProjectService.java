@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -59,7 +60,8 @@ public class ProjectService {
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> update(
             @RequestParam("id") Integer id,
-            @RequestParam("projectName") String projectName) {
+            @RequestParam("projectName") String projectName,
+            @RequestParam("version") Long version) {
 
         ResponseEntity<Project> resp = getByName(projectName);
         if (resp.getStatusCode().equals(HttpStatus.OK) && resp.getBody() != null) {
@@ -68,6 +70,10 @@ public class ProjectService {
 
         Project project = em.find(Project.class, id);
         if (project != null && project.isActive.equals(ACTIVE)) {
+
+            if ( ! version.equals(project.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             project.projectName = projectName;
 
             new UpdatePostProcessor(em, project).process();
@@ -80,11 +86,18 @@ public class ProjectService {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Project> remove(@RequestParam("id") Integer id) {
+    public ResponseEntity<Project> remove(
+            @RequestParam("id") Integer id,
+            @RequestParam("version") Long version) {
+
         Project project = em.find(Project.class, id);
 
         if (project != null && project.isActive.equals(ACTIVE)) {
+            if ( ! version.equals(project.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             project.isActive = INACTIVE;
+
             return new ResponseEntity<>(project, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);

@@ -16,4 +16,7 @@ public class Project implements Serializable{
     public String projectName;
 
     public Integer isActive;
+
+    @Version
+    public Long version;
 }
