@@ -1,4 +1,4 @@
-Ext.define("TR.view.accounts.AddWindow", {
+Ext.define("TR.view.imports.AddWindow", {
     extend : "Ext.window.Window",
     modal : true,
     width : 400,
@@ -18,21 +18,17 @@ Ext.define("TR.view.accounts.AddWindow", {
             fieldDefaults : {
                 labelWidth : 150,
                 labelAlign : 'right',
-                anchor : '100%'
+                anchor : '100%',
+                allowBlank: false
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'ანგარიშის დასახელება',
-                name : 'accountName',
-                value: cfg.data ? cfg.data.accountName : '',
-                allowBlank: false
-            }, {
-                fieldLabel : 'ანგარიშის ნომერი',
-                name : 'accountNumber',
-                value: cfg.data ? cfg.data.accountNumber : '',
-                allowBlank: true
+                fieldLabel : 'დასახელება',
+                name : 'importName',
+                value: cfg.data ? cfg.data.projectName : ''
             }]
         });
+        
 
         me.items = [ form ];
 
@@ -45,7 +41,7 @@ Ext.define("TR.view.accounts.AddWindow", {
 
         me.on({
             show: function(formPanel, options) {
-                form.getForm().findField('accountsName').focus(true, 10);
+                form.getForm().findField('importName').focus(true, 10);
             }
         });
         
@@ -55,7 +51,7 @@ Ext.define("TR.view.accounts.AddWindow", {
             var values = form.getForm().getValues();
             
             myRequest({
-                url : 'rest/account/create',
+                url : 'rest/import/create',
                 params : values,
                 callback : function(id) {
                     cfg.grid.store.load();
@@ -71,9 +67,8 @@ Ext.define("TR.view.accounts.AddWindow", {
             var values = form.getForm().getValues();
             values.id = cfg.data.id;
             values.version = cfg.data.version;
-            
             myRequest({
-                url : 'rest/account/update',
+                url : 'rest/import/update',
                 params : values,
                 callback : function(id) {
                     cfg.grid.store.load();

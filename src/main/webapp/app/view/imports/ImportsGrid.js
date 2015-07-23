@@ -1,10 +1,10 @@
-Ext.define("TR.view.currencies.CurrenciesGrid", {
+Ext.define("TR.view.imports.ImportsGrid", {
     extend : "Ext.grid.Panel",
     border : false,
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
-        me.store = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
+        //me.store = Ext.StoreManager.lookup('importsStore') || Ext.create('TR.store.imports.Store');
         
         me.tbar = [ {
             text : 'დამატება',
@@ -22,18 +22,14 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
 
         me.columns = [ {
             header : 'დასახელება',
-            dataIndex : 'currencyName',
-            flex : 1
-        }, {
-            header : 'კოდი',
-            dataIndex : 'currencyCode',
+            dataIndex : 'projectName',
             flex : 1
         } ];
 
         me.callParent(arguments);
 
         function add() {
-            Ext.create('TR.view.currencies.AddWindow', {
+            Ext.create('TR.view.imports.AddWindow', {
                 grid : me
             });
         }
@@ -43,7 +39,7 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
             if (sel.length == 0)
                 return;
 
-            var addWindow = Ext.create('TR.view.currencies.AddWindow', {
+            var addWindow = Ext.create('TR.view.imports.AddWindow', {
                 grid : me,
                 edit : true,
                 data : sel[0].getData()
@@ -58,7 +54,7 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
                 if (ans === 'yes') {
                     var rec = sel[0];
                     myRequest({
-                        url : 'rest/currency/remove',
+                        url : 'rest/import/remove',
                         params : {
                             id : rec.get('id'),
                             version: rec.get('version')
