@@ -20,5 +20,8 @@ public class Currency implements Serializable{
 
     public String currencyCode;
 
+    @Version
+    public Long version;
+
     public Integer isActive;
 }

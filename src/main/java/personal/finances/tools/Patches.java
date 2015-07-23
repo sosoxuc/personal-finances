@@ -22,14 +22,11 @@ public class Patches {
     @RequestMapping(value = "/1", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public void patch1() {
-        List<Project> projects = em
-                .createQuery("select p from Project p where p.version is null",
-                        Project.class)
-                .getResultList();
+        em.createQuery("update Project p set p.version = :version where p.version is null")
+                .setParameter("version", 1L)
+                .executeUpdate();
 
-        for (Project project : projects) {
-            project.version = 0L;
-        }
+
     }
 
 }

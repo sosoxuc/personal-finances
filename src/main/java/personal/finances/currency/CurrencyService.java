@@ -35,7 +35,8 @@ public class CurrencyService {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Currency> create(@RequestParam String currencyName,
+    public ResponseEntity<Currency> create(
+            @RequestParam String currencyName,
             @RequestParam String currencyCode) {
 
         Currency currency = new Currency();
@@ -60,12 +61,18 @@ public class CurrencyService {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Currency> update(@RequestParam Integer id,
+    public ResponseEntity<Currency> update(
+            @RequestParam Integer id,
             @RequestParam String currencyName,
-            @RequestParam String currencyCode) {
+            @RequestParam String currencyCode,
+            @RequestParam String version) {
 
         Currency currency = em.find(Currency.class, id);
         if (currency != null && currency.isActive.equals(ACTIVE)) {
+            if ( ! version.equals(currency.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
+
             currency.currencyName = currencyName;
             currency.currencyCode = currencyCode;
 
@@ -79,10 +86,15 @@ public class CurrencyService {
 
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Currency> remove(@RequestParam("id") Integer id) {
+    public ResponseEntity<Currency> remove(
+            @RequestParam("id") Integer id,
+            @RequestParam String version) {
         Currency currency = em.find(Currency.class, id);
 
         if (currency != null && currency.isActive.equals(ACTIVE)) {
+            if ( ! version.equals(currency.version)) {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
             currency.isActive = INACTIVE;
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
