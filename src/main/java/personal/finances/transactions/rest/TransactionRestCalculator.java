@@ -24,7 +24,7 @@ public class TransactionRestCalculator {
 
     public Transaction lastProjectScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.projectId = :projectId and isActive = :isActive and e.transactionDate <= :transactionDate order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.projectId = :projectId and isActive = :isActive and e.transactionDate <= :transactionDate order by e.transactionDate desc, e.transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("projectId", transaction.projectId)
                 .setParameter("transactionDate", transaction.transactionDate)
@@ -38,7 +38,7 @@ public class TransactionRestCalculator {
 
     public Transaction lastAccountScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.accountId = :accountId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.accountId = :accountId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by e.transactionDate desc, e.transactionOrder desc", Transaction.class)
                 .setParameter("accountId", transaction.accountId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("isActive", States.ACTIVE)
@@ -51,7 +51,7 @@ public class TransactionRestCalculator {
 
     public Transaction lastCurrencyScopeTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.currencyId =:currencyId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.currencyId =:currencyId and e.transactionDate <= :transactionDate and e.isActive = :isActive order by e.transactionDate desc, e.transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("currencyId", transaction.currencyId)
                 .setParameter("transactionDate", transaction.transactionDate)
@@ -64,7 +64,7 @@ public class TransactionRestCalculator {
 
     public Transaction getLastTransaction(){
         List<Transaction> transactions = em.createQuery(
-                "select e from Transaction e where e.isActive = :isActive and e.transactionDate <= :transactionDate order by transactionOrder desc", Transaction.class)
+                "select e from Transaction e where e.isActive = :isActive and e.transactionDate <= :transactionDate order by e.transactionDate desc, e.transactionOrder desc", Transaction.class)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setFirstResult(0)
