@@ -222,12 +222,12 @@ public class TransactionService {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append("select e from Transaction e where e.isActive = :isActive");
 
-            queryBuilder.append(" and e.transactionDate = :transactionDate");
+            queryBuilder.append(" ");
 
             if (direction * -1 > 0) {
-                queryBuilder.append(" and e.transactionOrder < :transactionOrder  order by e.transactionOrder desc");
+                queryBuilder.append(" and ((e.transactionDate = :transactionDate and e.transactionOrder < :transactionOrder) or (e.transactionDate < :transactionDate))   order by e.transactionDate desc, e.transactionOrder desc");
             } else {
-                queryBuilder.append(" and e.transactionOrder > :transactionOrder  order by e.transactionOrder asc");
+                queryBuilder.append(" and ((e.transactionDate = :transactionDate and e.transactionOrder > :transactionOrder) or (e.transactionDate > :transactionDate))   order by e.transactionDate asc, e.transactionOrder asc");
             }
 
             List<Transaction> transactions = em.createQuery(queryBuilder.toString(), Transaction.class)
@@ -249,18 +249,37 @@ public class TransactionService {
                                 if (direction * -1 > 0) {
                                     from.transactionRest = to.transactionRest.subtract(shiftTo.transactionAmount).add(shiftFrom.transactionAmount);
                                     to.transactionRest = from.transactionRest.add(shiftTo.transactionAmount);
+
                                 } else {
                                     to.transactionRest = from.transactionRest.subtract(shiftFrom.transactionAmount).add(shiftTo.transactionAmount);
                                     from.transactionRest = to.transactionRest.add(shiftFrom.transactionAmount);
+
                                 }
                             }
                         }
                      }
                 }
-                Integer transactionOrder = shiftFrom.transactionOrder;
-                shiftFrom.transactionOrder = shiftTo.transactionOrder;
-                shiftTo.transactionOrder = transactionOrder;
+                if ( ! shiftFrom.transactionDate.equals(shiftTo.transactionDate)) {
+                    if (direction * -1 > 0) {
+                        Integer transactionOrder = shiftTo.transactionOrder;
+                        shiftFrom.transactionOrder = transactionOrder;
+                        shiftTo.transactionOrder  = transactionOrder + 1;
+                    } else {
+                        Integer transactionOrder = shiftTo.transactionOrder;
+                        shiftFrom.transactionOrder = transactionOrder;
+                        shiftTo.transactionOrder = transactionOrder - 1;
+                    }
+                    shiftFrom.transactionDate = shiftTo.transactionDate;
 
+                    for (TransactionRest transactionRest : shiftFrom.transactionRests) {
+                        transactionRest.transactionDate = shiftTo.transactionDate;
+                    }
+
+                } else {
+                    Integer transactionOrder = shiftFrom.transactionOrder;
+                    shiftFrom.transactionOrder = shiftTo.transactionOrder;
+                    shiftTo.transactionOrder = transactionOrder;
+                }
                 return new ResponseEntity<>(shiftFrom, HttpStatus.OK);
             }
         }
