@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import personal.States;
 import personal.employees.Employee;
 import personal.spring.ConfigUtil;
 import personal.utils.SecurityUtils;
@@ -12,6 +14,7 @@ import personal.utils.SecurityUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
@@ -56,9 +59,9 @@ public class SecurityService {
         }
 
         Employee user = users.iterator().next();
-        String hash = sha512(password.concat(user.getPasswordSalt()));
+        String hash = sha512(password.concat(user.passwordSalt));
 
-        if (hash.equals(user.getPasswordHash())) {
+        if (hash.equals(user.passwordHash)) {
             return buildPassport(user);
         } else {
             return invalidPassport("BAD_PASSWORD");
@@ -67,8 +70,8 @@ public class SecurityService {
 
     private Passport buildPassport(Employee user) {
         Passport passport = new Passport();
-        passport.setEmployeeId(user.getId());
-        passport.setUserRole(user.getUserRole());
+        passport.setEmployeeId(user.id);
+        passport.setUserRole(user.userRole);
         passport.setValid(true);
         passport.setAuthResult("SUCCESSFUL");
         passport.setEmployee(user);
@@ -83,10 +86,10 @@ public class SecurityService {
         passport.setValid(true);
         passport.setAuthResult("SUCCESSFUL");
         Employee admin = new Employee();
-        admin.setFirstName("Admin");
-        admin.setLastName("Admin");
-        admin.setUserRole(Role.ADMIN);
-        admin.setState(1);
+        admin.firstName = "Admin";
+        admin.lastName = "Admin";
+        admin.userRole = Role.ADMIN;
+        admin.stateId = States.ACTIVE;
         passport.setEmployee(admin);
         getSession().setAttribute(SESSION_DATA_KEY, passport);
         return passport;
@@ -112,8 +115,8 @@ public class SecurityService {
         String salt = generateString("0123456789ABCDEF", SALT_LENGHT);
         String hash = SecurityUtils.sha512(password.concat(salt));
 
-        user.setPasswordHash(hash);
-        user.setPasswordSalt(salt);
+        user.passwordHash = hash;
+        user.passwordSalt = salt;
     }
 
 }
