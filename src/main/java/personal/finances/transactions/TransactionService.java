@@ -300,11 +300,11 @@ public class TransactionService {
             processTransactionsFile(tempFile, accountId, projectId);
 
             response = new UploadResponse(true);
-            response.setFileName(tempFile.getName());
+            response.fileName = tempFile.getName();
         } catch (Exception ex) {
             ex.printStackTrace();
             response = new UploadResponse(false);
-            response.setError(ex.getMessage());
+            response.error = ex.getMessage();
         }
         return response;
     }

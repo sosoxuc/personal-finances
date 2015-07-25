@@ -6,13 +6,13 @@ public class UploadResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private boolean success;
+    public boolean success;
 
-    private String fileName;
+    public String fileName;
 
-    private String originalName;
+    public String originalName;
 
-    private String error;
+    public String error;
 
     public UploadResponse(boolean success, String error) {
         this.success = success;
@@ -21,37 +21,5 @@ public class UploadResponse implements Serializable {
 
     public UploadResponse(boolean success) {
         this(success, "");
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getOriginalName() {
-        return originalName;
-    }
-
-    public void setOriginalName(String originalName) {
-        this.originalName = originalName;
     }
 }

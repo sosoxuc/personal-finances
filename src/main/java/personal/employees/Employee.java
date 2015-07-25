@@ -3,6 +3,7 @@ package personal.employees;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -11,6 +12,7 @@ import java.util.Date;
  *
  */
 @Entity
+@Table(name = "EMPLOYEES")
 public class Employee implements Serializable {
 
     public static final long serialVersionUID = 1L;
@@ -35,18 +37,14 @@ public class Employee implements Serializable {
 
     public String email;
 
-    public Integer typeId;
-
-    public String type;
-
     @Temporal(TemporalType.DATE)
     public Date birthDate;
 
-    public String workplace;
+    public String workplaceName;
 
     public Integer workplaceId;
 
-    public String position;
+    public String positionName;
 
     public Integer positionId;
 
@@ -58,9 +56,7 @@ public class Employee implements Serializable {
     @JsonIgnore
     public String passwordSalt;
 
-    public Integer userState;
-
-    public Integer userRole;
+    public Integer userStateId;
 
     @Temporal(TemporalType.DATE)
     public Date expireDate;
