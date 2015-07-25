@@ -25,18 +25,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
 
                 Passport passport = SessionUtils.getPassport();
                 if (passport != null) {
-
-                    if (admin && passport.getUserRole() != null
-                            && passport.getUserRole().equals(Role.ADMIN)) {
-                        return true;
-                    } else if (user
-                            && (passport.getUserRole() == null || passport
-                            .getUserRole().equals(Role.USER))) {
-                        return true;
-                    }
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
-                    return false;
-
+                    return true;
                 } else {
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
                     return false;
@@ -57,7 +46,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request,
             HttpServletResponse response, Object handler, Exception ex)
-                    throws Exception {
+            throws Exception {
     }
 
 }

@@ -74,16 +74,4 @@ public class SessionUtils {
         return employeeId;
     }
 
-    public static boolean isAdmin() {
-        Passport passport = getPassport();
-        return passport != null && passport.getUserRole() != null
-                && passport.getUserRole().equals(Role.ADMIN);
-    }
-
-    public static boolean isUser() {
-        Passport passport = getPassport();
-        return passport != null
-                && (passport.getUserRole() == null || passport.getUserRole()
-                        .equals(Role.USER));
-    }
 }

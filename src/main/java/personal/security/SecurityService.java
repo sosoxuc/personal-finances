@@ -71,7 +71,6 @@ public class SecurityService {
     private Passport buildPassport(Employee user) {
         Passport passport = new Passport();
         passport.setEmployeeId(user.id);
-        passport.setUserRole(user.userRole);
         passport.setValid(true);
         passport.setAuthResult("SUCCESSFUL");
         passport.setEmployee(user);
@@ -82,13 +81,11 @@ public class SecurityService {
     private Passport adminPassport() {
         Passport passport = new Passport();
         passport.setEmployeeId(0);
-        passport.setUserRole(Role.ADMIN);
         passport.setValid(true);
         passport.setAuthResult("SUCCESSFUL");
         Employee admin = new Employee();
         admin.firstName = "Admin";
         admin.lastName = "Admin";
-        admin.userRole = Role.ADMIN;
         admin.stateId = States.ACTIVE;
         passport.setEmployee(admin);
         getSession().setAttribute(SESSION_DATA_KEY, passport);
