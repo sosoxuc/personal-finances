@@ -22,7 +22,13 @@ Ext.define("TR.view.rests.MainPanel", {
         
         me.items = [ panel ];
         
+      
+        
         me.callParent(arguments);
+        
+        me.addListener({
+            activate: load
+        });
         
         load();
         
