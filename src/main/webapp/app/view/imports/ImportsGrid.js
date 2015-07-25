@@ -7,9 +7,9 @@ Ext.define("TR.view.imports.ImportsGrid", {
         //me.store = Ext.StoreManager.lookup('importsStore') || Ext.create('TR.store.imports.Store');
         
         me.tbar = [ {
-            text : 'დამატება',
-            name : 'add',
-            handler : add
+            text : 'ატვირთვა',
+            name : 'upload',
+            handler : upload
         }, {
             text : 'რედაქტირება',
             name : 'edit',
@@ -28,8 +28,8 @@ Ext.define("TR.view.imports.ImportsGrid", {
 
         me.callParent(arguments);
 
-        function add() {
-            Ext.create('TR.view.imports.AddWindow', {
+        function upload() {
+            Ext.create('TR.view.imports.UploadWindow', {
                 grid : me
             });
         }
