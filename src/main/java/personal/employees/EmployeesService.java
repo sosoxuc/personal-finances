@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -24,7 +26,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,6 @@ import personal.ListPage;
 import personal.States;
 import personal.UploadResponse;
 import personal.utils.SqlUtils;
-import personal.utils.SqlUtils.SqlStringContaining;
 
 @RestController
 @RequestMapping("/employee")
@@ -42,6 +42,8 @@ public class EmployeesService {
 
     @PersistenceContext
     private EntityManager em;
+    
+    public static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
     @RequestMapping("/workplace/list")
     public List<Workplace> getWorkplaces() {
@@ -64,7 +66,7 @@ public class EmployeesService {
         return em.createQuery("from Position", Position.class).getResultList();
     }
 
-    @RequestMapping("/addPosition")
+    @RequestMapping("/position/add")
     @Transactional(rollbackFor = Throwable.class)
     public Integer addPositions(@RequestParam String name) {
         Position position = new Position();
@@ -76,47 +78,36 @@ public class EmployeesService {
 
     @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
-    public Integer add() {
+    public Integer add(@RequestParam(required = false) String personalNo,
+            @RequestParam String firstName, @RequestParam String lastName,
+            @RequestParam(required = false) String phone,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String birthDate,
+            @RequestParam(required = false) Integer workplaceId,
+            @RequestParam(required = false) Integer positionId) throws ParseException {
 
         Employee employee = new Employee();
-        // employee.setPersonalNo(data.getPersonalNo());
-        // employee.setEmail(data.getEmail());
-        // employee.setFirstName(data.getFirstName());
-        // employee.setLastName(data.getLastName());
-        // employee.setPhone(data.getPhone());
-        // employee.setTypeId(data.getTypeId());
-        // employee.setType(getTypeName(data.getTypeId()));
-        // employee.setBirthDate(data.getBirthDate());
-        // employee.setUserRole(data.getUserRole());
-        // employee.setCreateDate(new Date());
-        // employee.setState(States.ACTIVE);
-        // employee.setHourlySalary(data.getHourlySalary());
-        // if (data.getBreakHour() != null && data.getBreakMinute() != null) {
-        // employee.setBreakHour(data.getBreakHour());
-        // employee.setBreakMinute(data.getBreakMinute());
-        // }
-        //
-        // employee.setPositionId(data.getPositionId());
-        // if (data.getPositionId() != null) {
-        // Position position = em.find(Position.class, data.getPositionId());
-        // employee.setPosition(position.getPositionName());
-        // }
-        //
-        // employee.setWorkplaceId(data.getWorkplaceId());
-        // if (data.getWorkplaceId() != null) {
-        // Workplace workplace = em.find(Workplace.class,
-        // data.getWorkplaceId());
-        //
-        // employee.setWorkplace(workplace.getWorkplaceName());
-        // }
-        //
-        // Integer userRole = data.getUserRole();
-        // if (userRole != null
-        // && (userRole.equals(Role.USER) || userRole.equals(ADMIN))) {
-        // employee.setUserRole(userRole);
-        // } else {
-        // employee.setUserRole(Role.USER);
-        // }
+        employee.personalNo = personalNo;
+        employee.email = email;
+        employee.firstName = firstName;
+        employee.lastName = lastName;
+        employee.phone = phone;
+
+        employee.positionId = positionId;
+        if (positionId != null) {
+            Position position = em.find(Position.class, positionId);
+            employee.positionName = position.positionName;
+        }
+
+        employee.workplaceId = workplaceId;
+        if (workplaceId != null) {
+            Workplace workplace = em.find(Workplace.class, workplaceId);
+            employee.workplaceName = workplace.workplaceName;
+        }
+
+        if (birthDate != null) {
+            employee.birthDate = df.parse(birthDate);
+        }
 
         em.persist(employee);
 
@@ -130,14 +121,9 @@ public class EmployeesService {
             @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email,
-            @RequestParam(required = false) Long birthDate,
+            @RequestParam(required = false) String birthDate,
             @RequestParam(required = false) Integer workplaceId,
-            @RequestParam(required = false) Integer positionId,
-            @RequestParam(required = false) Integer userRole,
-            @RequestParam(required = false) Integer breakHour,
-            @RequestParam(required = false) Integer breakMinute,
-            @RequestParam(required = false) Float hourlySalary,
-            @RequestParam(required = false) Integer typeId) {
+            @RequestParam(required = false) Integer positionId) throws ParseException {
 
         Employee employee = em.find(Employee.class, id);
         employee.personalNo = personalNo;
@@ -155,13 +141,13 @@ public class EmployeesService {
         employee.workplaceId = workplaceId;
         if (workplaceId != null) {
             Workplace workplace = em.find(Workplace.class, workplaceId);
-
             employee.workplaceName = workplace.workplaceName;
         }
 
         if (birthDate != null) {
-            employee.birthDate = new Date(birthDate);
+            employee.birthDate = df.parse(birthDate);
         }
+
         em.merge(employee);
     }
 
