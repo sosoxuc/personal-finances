@@ -3,9 +3,11 @@ package personal.finances.transactions.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import personal.States;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyService;
 import personal.finances.transactions.Transaction;
@@ -164,5 +166,97 @@ public class TransactionRestService {
             }
         }
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping("calculate")
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Boolean> calculate(){
+        //Delete Transaction rests
+        em.createQuery("delete from TransactionRest").executeUpdate();
+
+        List<Transaction> transactions = em.createQuery(
+                "select e from Transaction e where e.isActive = :isActive" +
+                " order by e.transactionDate asc, e.transactionOrder asc ", Transaction.class)
+                .setParameter("isActive", 1)
+                .getResultList();
+        Transaction prev = null;
+        for (Transaction transaction : transactions) {
+            List<TransactionRest> transactionRests = new ArrayList<>(3);
+            TransactionRest tr;
+
+            tr = new TransactionRest(transaction.transactionDate);
+            tr.transactionRestType = TransactionRestType.PROJECT;
+            tr.referenceId = transaction.projectId;
+            transactionRests.add(tr);
+
+                //Project
+            if (prev != null ) {
+                TransactionRest projectRest = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.PROJECT);
+
+                if (tr.referenceId.equals(projectRest.referenceId)) {
+                    tr.transactionRest = transaction.transactionAmount.add(projectRest.transactionRest);
+                } else {
+                    tr.transactionRest = transaction.transactionAmount;
+                }
+
+            } else {
+                tr.transactionRest = transaction.transactionAmount;
+            }
+
+            //Account
+            tr = new TransactionRest(transaction.transactionDate);
+            tr.transactionRestType = TransactionRestType.ACCOUNT;
+            tr.referenceId = transaction.accountId;
+            transactionRests.add(tr);
+
+            if (prev != null) {
+                TransactionRest accScope = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.ACCOUNT);
+                if (tr.referenceId.equals(accScope.referenceId)) {
+                    tr.transactionRest = transaction.transactionAmount.add(accScope.transactionRest);
+                } else {
+                    tr.transactionRest = transaction.transactionAmount;
+                }
+            } else {
+                tr.transactionRest = transaction.transactionAmount;
+            }
+
+            //All
+            tr = new TransactionRest(transaction.transactionDate);
+            tr.transactionRestType = TransactionRestType.ALL;
+            transactionRests.add(tr);
+
+
+            if (prev != null) {
+                TransactionRest all = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.ALL);
+                tr.transactionRest = transaction.transactionAmount.add(all.transactionRest);
+            } else {
+                tr.transactionRest = transaction.transactionAmount;
+            }
+
+            //Currency
+            tr = new TransactionRest(transaction.transactionDate);
+            tr.transactionRestType = TransactionRestType.CURRENCY;
+            tr.referenceId = transaction.currencyId;
+            transactionRests.add(tr);
+
+            if (prev != null) {
+                TransactionRest currencyScoped = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.CURRENCY);
+                if (tr.referenceId.equals(currencyScoped.referenceId)) {
+                    tr.transactionRest = transaction.transactionAmount.add(currencyScoped.transactionRest);
+                } else {
+                    tr.transactionRest = transaction.transactionAmount;
+                }
+            } else {
+                tr.transactionRest = transaction.transactionAmount;
+            }
+
+            transaction.transactionRests = transactionRests;
+
+            prev = transaction;
+
+            em.merge(transaction);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

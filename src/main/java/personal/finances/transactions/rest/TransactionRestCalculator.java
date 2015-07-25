@@ -4,6 +4,7 @@ import personal.States;
 import personal.finances.transactions.Transaction;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class TransactionRestCalculator {
 
         //Project
         Transaction projectScopeTransaction = lastProjectScopeTransaction();
-        if (projectScopeTransaction != null) {
+        if (projectScopeTransaction != null ) {
             TransactionRest projectRest = extract(projectScopeTransaction.transactionRests, TransactionRestType.PROJECT);
             tr.transactionRest = transaction.transactionAmount.add(projectRest.transactionRest);
 
@@ -170,7 +171,7 @@ public class TransactionRestCalculator {
         return transactionRests;
     }
 
-    private TransactionRest extract(List<TransactionRest> transactionRests, TransactionRestType type){
+    public static TransactionRest extract(List<TransactionRest> transactionRests, TransactionRestType type){
         for (TransactionRest transactionRest : transactionRests) {
             if (transactionRest.transactionRestType.equals(type)) {
                 return transactionRest;
