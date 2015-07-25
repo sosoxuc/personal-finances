@@ -221,7 +221,6 @@ public class TransactionService {
         if (shiftFrom.isActive.equals(1)) {
             StringBuilder queryBuilder = new StringBuilder();
             queryBuilder.append("select e from Transaction e where e.isActive = :isActive");
-            queryBuilder.append(" and e.projectId = :projectId");
 
             queryBuilder.append(" and e.transactionDate = :transactionDate");
 
@@ -233,7 +232,6 @@ public class TransactionService {
 
             List<Transaction> transactions = em.createQuery(queryBuilder.toString(), Transaction.class)
                     .setParameter("isActive", 1)
-                    .setParameter("projectId", shiftFrom.projectId)
                     .setParameter("transactionOrder", shiftFrom.transactionOrder)
                     .setParameter("transactionDate", shiftFrom.transactionDate)
                     .setFirstResult(0)
@@ -245,19 +243,16 @@ public class TransactionService {
                 for (TransactionRest from : shiftFrom.transactionRests) {
                      for (TransactionRest to : shiftTo.transactionRests) {
                         if (from.transactionRestType.equals(to.transactionRestType)) {
-                            if (from.transactionRestType.equals(TransactionRestType.CURRENCY)
-                                    &&  ! from.referenceId.equals(to.referenceId)) {
-                                continue;
-                            } else if (from.transactionRestType.equals(TransactionRestType.ACCOUNT)
-                                    &&  ! from.referenceId.equals(to.referenceId)) {
-                                continue;
-                            }
-                            if (direction * -1 > 0) {
-                                from.transactionRest = from.transactionRest.subtract(shiftTo.transactionAmount);
-                                to.transactionRest = from.transactionRest.add(shiftTo.transactionAmount);
-                            } else {
-                                to.transactionRest = to.transactionRest.subtract(shiftFrom.transactionAmount);
-                                from.transactionRest = to.transactionRest.add(shiftTo.transactionAmount);
+
+                            if ((from.referenceId == null && to.referenceId == null)
+                                    || from.referenceId.equals(to.referenceId)) {
+                                if (direction * -1 > 0) {
+                                    from.transactionRest = to.transactionRest.subtract(shiftTo.transactionAmount).add(shiftFrom.transactionAmount);
+                                    to.transactionRest = from.transactionRest.add(shiftTo.transactionAmount);
+                                } else {
+                                    to.transactionRest = from.transactionRest.subtract(shiftFrom.transactionAmount).add(shiftTo.transactionAmount);
+                                    from.transactionRest = to.transactionRest.add(shiftFrom.transactionAmount);
+                                }
                             }
                         }
                      }
