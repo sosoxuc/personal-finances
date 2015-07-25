@@ -37,8 +37,8 @@ Ext.define("TR.view.rests.MainPanel", {
                 url : 'rest/transaction/rests/currencies',
                 method : 'GET',
                 callback : function(data){
+                    panel.removeAll();
                     Ext.Array.forEach(data, function(item){
-                        panel.removeAll();
                         panel.add({
                             fieldLabel : item.resourceName,
                             labelAlign : 'right',
