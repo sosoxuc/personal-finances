@@ -27,7 +27,11 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             text : 'ქვევით',
             handler : down,
             name : 'down'
-        } ];
+        },'-', {
+            text : 'რეკალკულაცია',
+            name : 'recalcualte',
+            handler : recalcualte
+        }];
 
         me.load = function(params) {
             me.store.getProxy().extraParams = params;
@@ -81,6 +85,15 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         
         me.callParent(arguments);
 
+        function recalcualte() {
+            myRequest({
+                url : 'rest/transaction/rests/calculate',
+                callback : function(res) {
+                    me.store.load();
+                }
+            });
+        }
+        
         function add() {
             Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
