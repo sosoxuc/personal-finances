@@ -2,6 +2,11 @@
 	width: 100% !important;
 }
 
+/* Chrome bug fix */
+.x-form-text {
+    display: inherit !important;
+}
+
 .grid-item-green{
 	background-color: #0AE78F !important;
 }
