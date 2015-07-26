@@ -51,7 +51,7 @@ public class TransactionService {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public Integer create(
+    public Transaction create(
             @RequestParam BigDecimal amount,
             @RequestParam Integer projectId,
             @RequestParam String date,
@@ -103,7 +103,7 @@ public class TransactionService {
         transaction.isActive = States.ACTIVE;
         em.persist(transaction);
 
-        return transaction.id;
+        return transaction;
     }
 
     private List<Transaction> getLastTransactions(Date transactionDate) {
