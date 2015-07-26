@@ -5,8 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.UnsupportedEncodingException;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,11 +50,9 @@ public class ProjectServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].projectName").value("test"));
 
-        result = mock
-                .perform(post("/project/update")
-                        .param("id", idStr)
-                        .param("projectName", "test2")
-                        .param("version", version.toString()));
+        result = mock.perform(post("/project/update").param("id", idStr)
+                .param("projectName", "test2")
+                .param("version", version.toString()));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/project/list"));
@@ -64,7 +60,8 @@ public class ProjectServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].projectName").value("test2"));
 
-        removeProject(mock, idStr, version + 1);
+        project.version = project.version + 1;
+        removeProject(mock, project);
 
         result = mock.perform(get("/project/list"));
         result.andExpect(status().isOk());
@@ -72,18 +69,16 @@ public class ProjectServiceTest {
 
     }
 
-    public static void removeProject(MockMvc mock, String idStr, Long version)
+    public static void removeProject(MockMvc mock, Project project)
             throws Exception {
         ResultActions result;
-        result = mock
-                .perform(post("/project/remove")
-                        .param("id", idStr)
-                        .param("version", version.toString()));
+        result = mock.perform(
+                post("/project/remove").param("id", project.id.toString())
+                        .param("version", project.version.toString()));
         result.andExpect(status().isOk());
     }
 
-    public static Project createProject(MockMvc mock)
-            throws Exception {
+    public static Project createProject(MockMvc mock) throws Exception {
         ResultActions result;
         result = mock
                 .perform(post("/project/create").param("projectName", "test"));
@@ -98,14 +93,11 @@ public class ProjectServiceTest {
     public void testProjectsExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/project/update")
-                .param("id", "-1")
-                .param("projectName", "test2")
-                .param("version", "-1"));
+        result = mock.perform(post("/project/update").param("id", "-1")
+                .param("projectName", "test2").param("version", "-1"));
         result.andExpect(status().isNotFound());
 
-        result = mock.perform(post("/project/remove")
-                .param("id", "-1")
+        result = mock.perform(post("/project/remove").param("id", "-1")
                 .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
@@ -113,8 +105,8 @@ public class ProjectServiceTest {
                 .perform(post("/project/create").param("projectName", "test5"));
         result.andExpect(status().isOk());
         String jsonStr = result.andReturn().getResponse().getContentAsString();
-        Project project1= new ObjectMapper().readValue(jsonStr, Project.class);
-        String idStr=project1.id.toString();
+        Project project1 = new ObjectMapper().readValue(jsonStr, Project.class);
+        String idStr = project1.id.toString();
         Long version = project1.version;
         result = mock
                 .perform(post("/project/create").param("projectName", "test5"));
@@ -124,19 +116,19 @@ public class ProjectServiceTest {
                 .perform(post("/project/create").param("projectName", "test6"));
         result.andExpect(status().isOk());
         String jsonStr2 = result.andReturn().getResponse().getContentAsString();
-        Project project2 = new ObjectMapper().readValue(jsonStr2, Project.class);
+        Project project2 = new ObjectMapper().readValue(jsonStr2,
+                Project.class);
         String idStr2 = project2.id.toString();
         Long version2 = project2.version;
 
-        result = mock.perform(post("/project/update")
-                .param("id", idStr2)
+        result = mock.perform(post("/project/update").param("id", idStr2)
                 .param("projectName", "test5")
                 .param("version", version2.toString()));
         result.andExpect(status().isConflict());
 
-        removeProject(mock, idStr, version);
+        removeProject(mock, project1);
 
-        removeProject(mock, idStr2, version);
+        removeProject(mock, project2);
 
     }
 }

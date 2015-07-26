@@ -5,9 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import personal.spring.SpringDevConfig;
@@ -50,13 +45,9 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].accountName").value("test"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num"));
 
-
-
-        result = mock.perform(post("/account/update")
-                .param("id", idStr)
-                .param("accountName", "test2")
-                .param("accountNumber", "num2")
-                .param("version", version.toString() ));
+        result = mock.perform(post("/account/update").param("id", idStr)
+                .param("accountName", "test2").param("accountNumber", "num2")
+                .param("version", version.toString()));
         result.andExpect(status().isOk());
 
         result = mock.perform(get("/account/list"));
@@ -64,8 +55,8 @@ public class AccountServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].accountName").value("test2"));
         result.andExpect(jsonPath("$[0].accountNumber").value("num2"));
-
-        removeAccount(mock, idStr, version + 1);
+        account.version = account.version + 1;
+        removeAccount(mock, account);
 
         result = mock.perform(get("/account/list"));
         result.andExpect(status().isOk());
@@ -73,22 +64,19 @@ public class AccountServiceTest {
 
     }
 
-    public static void removeAccount(MockMvc mock, String idStr, Long version)
+    public static void removeAccount(MockMvc mock, Account account)
             throws Exception {
         ResultActions result;
-        result = mock
-                .perform(post("/account/remove")
-                        .param("id", idStr)
-                        .param("version", version.toString()));
+        result = mock.perform(
+                post("/account/remove").param("id", account.id.toString())
+                        .param("version", account.version.toString()));
         result.andExpect(status().isOk());
     }
 
-    public static Account createAccount(MockMvc mock)
-            throws Exception {
+    public static Account createAccount(MockMvc mock) throws Exception {
         ResultActions result;
         result = mock.perform(post("/account/create")
-                .param("accountName", "test")
-                .param("accountNumber", "num"));
+                .param("accountName", "test").param("accountNumber", "num"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
         String jsonStr = result.andReturn().getResponse().getContentAsString();
@@ -100,15 +88,12 @@ public class AccountServiceTest {
     public void testAccountsExceptions() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
-        result = mock.perform(post("/account/update")
-                .param("id", "-1")
-                .param("accountName", "test2")
-                .param("accountNumber", "num2")
+        result = mock.perform(post("/account/update").param("id", "-1")
+                .param("accountName", "test2").param("accountNumber", "num2")
                 .param("version", "-1"));
         result.andExpect(status().isNotFound());
 
-        result = mock.perform(post("/account/remove")
-                .param("id", "-1")
+        result = mock.perform(post("/account/remove").param("id", "-1")
                 .param("version", "-1"));
         result.andExpect(status().isNotFound());
     }

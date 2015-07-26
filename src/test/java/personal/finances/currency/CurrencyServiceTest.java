@@ -5,9 +5,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +17,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import personal.spring.SpringDevConfig;
@@ -64,19 +59,19 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].currencyName").value("test2"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code2"));
-
-        removeCurrency(mock, idStr, version + 1);
+        currency.version = currency.version + 1;
+        removeCurrency(mock, currency);
 
         result = mock.perform(get("/currency/list"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").doesNotExist());
     }
 
-    public static void removeCurrency(MockMvc mock, String idStr, Long version) throws Exception {
+    public static void removeCurrency(MockMvc mock, Currency currency) throws Exception {
         ResultActions result;
         result = mock.perform(post("/currency/remove")
-                .param("id", idStr)
-                .param("version", version.toString()));
+                .param("id", currency.id.toString())
+                .param("version", currency.version.toString()));
         result.andExpect(status().isOk());
     }
 

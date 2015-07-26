@@ -36,22 +36,19 @@ public class TransactionServiceTest {
     @Autowired
     private WebApplicationContext wac;
 
-    private String projectId = null;
-    private String accountId = null;
-    private String currencyId = null;
+    private Project project = null;
+    private Account account = null;
+    private Currency currency = null;
 
     @Before
     public void prepareLibs() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
 
-        Account account = AccountServiceTest.createAccount(mock);
-        accountId = account.id.toString();
+        account = AccountServiceTest.createAccount(mock);
 
-        Currency currency = CurrencyServiceTest.createCurrency(mock);
-        currencyId = currency.id.toString();
+        currency = CurrencyServiceTest.createCurrency(mock);
 
-        Project project = ProjectServiceTest.createProject(mock);
-        projectId = project.id.toString();
+        project = ProjectServiceTest.createProject(mock);
     }
 
     @Test
@@ -59,8 +56,8 @@ public class TransactionServiceTest {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
         ResultActions result;
         result = mock.perform(post("/transaction/create").param("amount", "10")
-                .param("projectId", projectId).param("accountId", accountId)
-                .param("currencyId", currencyId).param("direction", "1")
+                .param("projectId", project.id.toString()).param("accountId", account.id.toString())
+                .param("currencyId", currency.id.toString()).param("direction", "1")
                 .param("date", "2015-07-20").param("note", "test"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
@@ -70,11 +67,11 @@ public class TransactionServiceTest {
         result = mock.perform(get("/transaction/search"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$.list[0].id").value(id));
-        
+
         result = mock.perform(get("/transaction/rests/currencies"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$[0]").exists());
-        
+
     }
 
     @After
@@ -82,8 +79,8 @@ public class TransactionServiceTest {
 
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
 
-//        AccountServiceTest.removeAccount(mock, accountId);
-//        CurrencyServiceTest.removeCurrency(mock, currencyId);
-//        ProjectServiceTest.removeProject(mock, projectId);
+        AccountServiceTest.removeAccount(mock, account);
+        CurrencyServiceTest.removeCurrency(mock, currency);
+        ProjectServiceTest.removeProject(mock, project);
     }
 }
