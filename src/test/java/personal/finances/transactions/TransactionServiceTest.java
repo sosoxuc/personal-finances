@@ -168,8 +168,6 @@ public class TransactionServiceTest {
             }
         }
         
-        assertNotNull(usdRest);
-        assertEquals(usdRest.transactionRest.intValue(), 1500);
         
         // Cleanup
         for (Transaction tr : trs) {
@@ -178,6 +176,9 @@ public class TransactionServiceTest {
                             .param("version", ((Long)(tr.version+1)).toString()));
             result.andExpect(status().isOk());
         }
+        
+        assertNotNull(usdRest);
+        assertEquals(usdRest.transactionRest.intValue(), 1500);
     }
 
     @Test
