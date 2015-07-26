@@ -50,8 +50,8 @@ public class CurrencyServiceTest {
         result.andExpect(jsonPath("$[0].id").value(id));
         result.andExpect(jsonPath("$[0].currencyName").value("test"));
         result.andExpect(jsonPath("$[0].currencyCode").value("code"));
-
-        version = version + 1;
+        result.andExpect(jsonPath("$[0].version").value(version.intValue()));
+        
         result = mock.perform(post("/currency/update")
                 .param("id", idStr)
                 .param("currencyName", "test2")

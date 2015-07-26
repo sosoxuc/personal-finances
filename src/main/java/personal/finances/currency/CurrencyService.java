@@ -65,7 +65,7 @@ public class CurrencyService {
             @RequestParam Integer id,
             @RequestParam String currencyName,
             @RequestParam String currencyCode,
-            @RequestParam String version) {
+            @RequestParam Long version) {
 
         Currency currency = em.find(Currency.class, id);
         if (currency != null && currency.isActive.equals(ACTIVE)) {
@@ -88,7 +88,7 @@ public class CurrencyService {
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> remove(
             @RequestParam("id") Integer id,
-            @RequestParam String version) {
+            @RequestParam Long version) {
         Currency currency = em.find(Currency.class, id);
 
         if (currency != null && currency.isActive.equals(ACTIVE)) {
