@@ -13,10 +13,12 @@ Ext.define("TR.view.projects.ProjectsGrid", {
         }, {
             text : 'რედაქტირება',
             name : 'edit',
+            disabled: true,
             handler : edit
         }, {
             text : 'წაშლა',
             name : 'remove',
+            disabled: true,
             handler : remove
         } ];
 

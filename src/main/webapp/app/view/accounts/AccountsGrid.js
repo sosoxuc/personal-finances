@@ -13,10 +13,12 @@ Ext.define("TR.view.accounts.AccountsGrid", {
         }, {
             text : 'რედაქტირება',
             name : 'edit',
+            disabled: true,
             handler : edit
         }, {
             text : 'წაშლა',
             name : 'remove',
+            disabled: true,
             handler : remove
         } ];
 
