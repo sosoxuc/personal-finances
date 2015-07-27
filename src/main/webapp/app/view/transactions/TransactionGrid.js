@@ -1,6 +1,12 @@
 Ext.define("TR.view.transactions.TransactionGrid", {
     extend : "Ext.grid.Panel",
     border : false,
+    viewConfig: { 
+        stripeRows: false, 
+        getRowClass: function(record) { 
+            return record.get('transactionAmount') > 0 ? 'income-row' : 'outcome-row'; 
+        } 
+    }, 
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;

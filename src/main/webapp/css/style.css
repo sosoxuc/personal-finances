@@ -2,6 +2,14 @@
 	width: 100% !important;
 }
 
+
+.income-row .x-grid-cell { 
+} 
+ 
+.outcome-row .x-grid-cell { 
+    color: #900; 
+}
+
 /* Chrome bug fix */
 .x-form-text {
     display: inherit !important;
