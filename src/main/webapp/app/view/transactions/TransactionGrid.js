@@ -122,7 +122,8 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                     myRequest({
                         url : 'rest/transaction/remove',
                         params : {
-                            id : sel[0].get('id')
+                            id : sel[0].get('id'),
+                            version : sel[0].get('version')
                         },
                         callback : function(res) {
                             me.store.load();

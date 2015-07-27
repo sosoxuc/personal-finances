@@ -97,7 +97,6 @@ Ext.define("TR.view.transactions.AddWindow", {
                 format: 'd-m-Y',
                 fieldLabel : 'თარიღი',
                 allowBlank : false,
-                disabled: cfg.edit,
                 value: cfg.data ? cfg.data.transactionDate : now.ddmmyyyy()
             }, {
                 name: 'note',
