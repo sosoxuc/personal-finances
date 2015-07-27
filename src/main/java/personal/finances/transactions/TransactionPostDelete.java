@@ -22,12 +22,14 @@ public class TransactionPostDelete {
         //Project
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
                 "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
-                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate" +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.projectId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.PROJECT)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
 
 
@@ -36,32 +38,38 @@ public class TransactionPostDelete {
 
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
                 "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
-                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate " +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.accountId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.ACCOUNT)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
         //All
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
                 "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
-                " and r.referenceId is null and r.transactionDate >= :transactionDate ")
+                " and r.referenceId is null and r.transactionDate >= :transactionDate " +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.ALL)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
 
         //Currency
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
                 "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
-                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate " +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.currencyId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.CURRENCY)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
     }
 }
