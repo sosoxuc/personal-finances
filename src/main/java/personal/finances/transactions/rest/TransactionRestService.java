@@ -14,10 +14,9 @@ import personal.finances.transactions.Transaction;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static personal.finances.transactions.TransactionService.df;
 /**
@@ -171,6 +170,7 @@ public class TransactionRestService {
     @RequestMapping("calculate")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> calculate(){
+        Map<RestDescriptor, BigDecimal> rests = new HashMap<>();
         //Delete Transaction rests
         em.createQuery("delete from TransactionRest").executeUpdate();
 
@@ -179,7 +179,6 @@ public class TransactionRestService {
                 " order by e.transactionDate asc, e.transactionOrder asc ", Transaction.class)
                 .setParameter("isActive", 1)
                 .getResultList();
-        Transaction prev = null;
         for (Transaction transaction : transactions) {
             List<TransactionRest> transactionRests = new ArrayList<>(3);
             TransactionRest tr;
@@ -189,19 +188,18 @@ public class TransactionRestService {
             tr.referenceId = transaction.projectId;
             transactionRests.add(tr);
 
-                //Project
-            if (prev != null ) {
-                TransactionRest projectRest = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.PROJECT);
+            RestDescriptor descriptor = new RestDescriptor();
+            descriptor.transactionRestType = TransactionRestType.PROJECT;
+            descriptor.referenceId = transaction.projectId;
 
-                if (tr.referenceId.equals(projectRest.referenceId)) {
-                    tr.transactionRest = transaction.transactionAmount.add(projectRest.transactionRest);
-                } else {
-                    tr.transactionRest = transaction.transactionAmount;
-                }
-
+            //Project
+            if (rests.containsKey(descriptor)) {
+                BigDecimal rest = rests.get(descriptor);
+                tr.transactionRest = transaction.transactionAmount.add(rest);
             } else {
                 tr.transactionRest = transaction.transactionAmount;
             }
+            rests.put(descriptor, tr.transactionRest);
 
             //Account
             tr = new TransactionRest(transaction.transactionDate);
@@ -209,29 +207,32 @@ public class TransactionRestService {
             tr.referenceId = transaction.accountId;
             transactionRests.add(tr);
 
-            if (prev != null) {
-                TransactionRest accScope = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.ACCOUNT);
-                if (tr.referenceId.equals(accScope.referenceId)) {
-                    tr.transactionRest = transaction.transactionAmount.add(accScope.transactionRest);
-                } else {
-                    tr.transactionRest = transaction.transactionAmount;
-                }
+            descriptor = new RestDescriptor();
+            descriptor.transactionRestType = TransactionRestType.ACCOUNT;
+            descriptor.referenceId = transaction.accountId;
+            if (rests.containsKey(descriptor)) {
+                BigDecimal rest = rests.get(descriptor);
+                tr.transactionRest = transaction.transactionAmount.add(rest);
             } else {
                 tr.transactionRest = transaction.transactionAmount;
             }
+            rests.put(descriptor, tr.transactionRest);
 
             //All
             tr = new TransactionRest(transaction.transactionDate);
             tr.transactionRestType = TransactionRestType.ALL;
             transactionRests.add(tr);
 
+            descriptor = new RestDescriptor();
+            descriptor.transactionRestType = TransactionRestType.ALL;
 
-            if (prev != null) {
-                TransactionRest all = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.ALL);
-                tr.transactionRest = transaction.transactionAmount.add(all.transactionRest);
+            if (rests.containsKey(descriptor)) {
+                BigDecimal rest = rests.get(descriptor);
+                tr.transactionRest = transaction.transactionAmount.add(rest);
             } else {
                 tr.transactionRest = transaction.transactionAmount;
             }
+            rests.put(descriptor, tr.transactionRest);
 
             //Currency
             tr = new TransactionRest(transaction.transactionDate);
@@ -239,20 +240,17 @@ public class TransactionRestService {
             tr.referenceId = transaction.currencyId;
             transactionRests.add(tr);
 
-            if (prev != null) {
-                TransactionRest currencyScoped = TransactionRestCalculator.extract(prev.transactionRests, TransactionRestType.CURRENCY);
-                if (tr.referenceId.equals(currencyScoped.referenceId)) {
-                    tr.transactionRest = transaction.transactionAmount.add(currencyScoped.transactionRest);
-                } else {
-                    tr.transactionRest = transaction.transactionAmount;
-                }
+            descriptor = new RestDescriptor();
+            descriptor.transactionRestType = TransactionRestType.ALL;
+            descriptor.referenceId = transaction.currencyId;
+            if (rests.containsKey(descriptor)) {
+                BigDecimal rest = rests.get(descriptor);
+                tr.transactionRest = transaction.transactionAmount.add(rest);
             } else {
                 tr.transactionRest = transaction.transactionAmount;
             }
-
+            rests.put(descriptor, tr.transactionRest);
             transaction.transactionRests = transactionRests;
-
-            prev = transaction;
 
             em.merge(transaction);
         }
