@@ -1,16 +1,15 @@
 package personal.finances.tools;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import personal.finances.accounts.AccountService;
 import personal.finances.currency.CurrencyService;
 import personal.finances.projects.ProjectService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 @RestController
 @RequestMapping("/init")

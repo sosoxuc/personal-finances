@@ -4,7 +4,6 @@ import personal.States;
 import personal.finances.transactions.Transaction;
 
 import javax.persistence.EntityManager;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,12 +94,15 @@ public class TransactionRestCalculator {
             tr.transactionRest = transaction.transactionAmount;
         }
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate" +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.projectId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.PROJECT)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
 
 
@@ -120,12 +122,15 @@ public class TransactionRestCalculator {
             tr.transactionRest = transaction.transactionAmount;
         }
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate" +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.accountId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.ACCOUNT)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
         //All
         tr = new TransactionRest(transaction.transactionDate);
@@ -140,11 +145,16 @@ public class TransactionRestCalculator {
             tr.transactionRest = transaction.transactionAmount;
         }
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId is null and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId is null and r.transactionDate >= :transactionDate" +
+                " and r.transactionId not in (" +
+                    "select t.id from Transaction t where t.isActive = :isActive" +
+                    " and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.ALL)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
 
         //Currency
@@ -161,12 +171,15 @@ public class TransactionRestCalculator {
             tr.transactionRest = transaction.transactionAmount;
         }
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest + :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate" +
+                " and r.transactionId not in (select t.id from Transaction t where t.isActive = :isActive and t.transactionDate = :transactionDate and t.transactionOrder <= :transactionOrder)")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.currencyId)
                 .setParameter("transactionDate", transaction.transactionDate)
                 .setParameter("transactionRestType", TransactionRestType.CURRENCY)
+                .setParameter("transactionOrder", transaction.transactionOrder)
                 .executeUpdate();
         return transactionRests;
     }

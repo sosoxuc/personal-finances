@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import personal.States;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyService;
 import personal.finances.transactions.Transaction;
