@@ -30,7 +30,7 @@ Ext.define("TR.view.rests.MainPanel", {
         });
         
         function load() {
-            panel.mask();
+            panel.mask('განახლება...');
             myRequest({
                 url : 'rest/transaction/rests/currencies',
                 method : 'GET',
