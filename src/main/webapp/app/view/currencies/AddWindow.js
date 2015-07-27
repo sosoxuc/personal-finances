@@ -60,6 +60,8 @@ Ext.define("TR.view.currencies.AddWindow", {
                 callback : function(id) {
                     cfg.grid.store.load();
                     cfg.grid.getSelectionModel().deselectAll();
+                    cfg.grid.down('button[name=edit]').disable();
+                    cfg.grid.down('button[name=remove]').disable();
                     me.close();
                 }
             });
@@ -77,7 +79,6 @@ Ext.define("TR.view.currencies.AddWindow", {
                 params : values,
                 callback : function(id) {
                     cfg.grid.store.load();
-                    cfg.grid.getSelectionModel().deselectAll();
                     me.close();
                 }
             });

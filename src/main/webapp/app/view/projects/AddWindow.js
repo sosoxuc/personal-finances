@@ -61,6 +61,9 @@ Ext.define("TR.view.projects.AddWindow", {
                     if (cfg.grid) {
                         cfg.grid.store.load();
                         cfg.grid.getSelectionModel().deselectAll();
+                        cfg.grid.down('button[name=edit]').disable();
+                        cfg.grid.down('button[name=remove]').disable();
+
                     }
                     me.close();
                 }
@@ -78,7 +81,6 @@ Ext.define("TR.view.projects.AddWindow", {
                 params : values,
                 callback : function(id) {
                     cfg.grid.store.load();
-                    cfg.grid.getSelectionModel().deselectAll();
                     me.close();
                 }
             });

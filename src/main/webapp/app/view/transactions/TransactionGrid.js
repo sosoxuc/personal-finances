@@ -20,18 +20,22 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         }, {
             text : 'რედაქტირება',
             name : 'edit',
+            disabled: true,
             handler : edit
         }, {
             text : 'წაშლა',
             name : 'remove',
+            disabled: true,
             handler : remove
         },'-',{
             text : 'ზევით',
             handler : up,
+            disabled: true,
             name : 'up'
         },{
             text : 'ქვევით',
             handler : down,
+            disabled: true,
             name : 'down'
         },'-', {
             text : 'რეკალკულაცია',
@@ -91,6 +95,14 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         
         me.callParent(arguments);
 
+        me.on('select', function(view, rec){
+            me.down('button[name=edit]').enable();
+            me.down('button[name=remove]').enable();
+            me.down('button[name=down]').enable();
+            me.down('button[name=up]').enable();
+        });
+
+        
         function recalcualte() {
             myRequest({
                 url : 'rest/transaction/rests/calculate',
@@ -134,6 +146,10 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                         callback : function(res) {
                             me.store.load();
                             me.getSelectionModel().deselectAll();
+                            me.down('button[name=edit]').disable();
+                            me.down('button[name=remove]').disable();
+                            me.down('button[name=down]').disable();
+                            me.down('button[name=up]').disable();
                         }
                     });
                 }

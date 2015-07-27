@@ -27,6 +27,11 @@ Ext.define("TR.view.projects.ProjectsGrid", {
         } ];
 
         me.callParent(arguments);
+        
+        me.on('select', function(view, rec){
+            me.down('button[name=edit]').enable();
+            me.down('button[name=remove]').enable();
+        });
 
         function add() {
             Ext.create('TR.view.projects.AddWindow', {
@@ -62,6 +67,8 @@ Ext.define("TR.view.projects.ProjectsGrid", {
                         callback : function(res) {
                             me.store.load();
                             me.getSelectionModel().deselectAll();
+                            me.down('button[name=edit]').disable();
+                            me.down('button[name=remove]').disable();
                         }
                     });
                 }
