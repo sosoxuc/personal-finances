@@ -21,7 +21,8 @@ public class TransactionPostDelete {
 
         //Project
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.projectId)
@@ -34,7 +35,8 @@ public class TransactionPostDelete {
         //Account
 
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.accountId)
@@ -43,7 +45,8 @@ public class TransactionPostDelete {
                 .executeUpdate();
         //All
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId is null and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId is null and r.transactionDate >= :transactionDate ")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("transactionDate", transaction.transactionDate)
@@ -52,7 +55,8 @@ public class TransactionPostDelete {
 
         //Currency
         em.createQuery("UPDATE TransactionRest r set r.transactionRest = r.transactionRest - :rest" +
-                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType and r.referenceId = :referenceId and r.transactionDate > :transactionDate")
+                "  WHERE r.isActive = :isActive and r.transactionRestType = :transactionRestType" +
+                " and r.referenceId = :referenceId and r.transactionDate >= :transactionDate ")
                 .setParameter("rest", transaction.transactionAmount)
                 .setParameter("isActive", States.ACTIVE)
                 .setParameter("referenceId", transaction.currencyId)
