@@ -193,6 +193,55 @@ public class TransactionService {
 
     }
 
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Transaction> update(
+          @RequestParam                   Integer transactionId,
+          @RequestParam(required = false) BigDecimal amount,
+          @RequestParam(required = false) Integer projectId,
+          @RequestParam(required = false) String date,
+          @RequestParam(required = false) String note,
+          @RequestParam(required = false) Integer direction,
+          @RequestParam(required = false) Integer accountId,
+          @RequestParam(required = false) Integer currencyId) throws ParseException {
+
+        Transaction transaction = em.find(Transaction.class, transactionId);
+        if (amount == null) {
+            amount = transaction.transactionAmount;
+        }
+        if (projectId == null) {
+            projectId = transaction.projectId;
+        }
+
+        if (date == null) {
+            date = df.format(transaction.transactionDate);
+        }
+
+        if (note == null) {
+            note = transaction.transactionNote;
+        }
+
+        if (direction == null) {
+            direction = transaction.direction;
+        }
+        if (accountId == null) {
+            accountId = transaction.accountId;
+        }
+
+        if (currencyId == null) {
+            currencyId = transaction.currencyId;
+        }
+
+        ResponseEntity<Transaction> remove = remove(transactionId, transaction.version);
+        if (remove.getStatusCode().equals(HttpStatus.OK)) {
+            Transaction created = create(amount, projectId, date, note, direction, accountId, currencyId);
+            return new ResponseEntity<>(created, HttpStatus.OK);
+        } else {
+            return remove;
+        }
+
+    }
+
     @UserRole
     @AdminRole
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
