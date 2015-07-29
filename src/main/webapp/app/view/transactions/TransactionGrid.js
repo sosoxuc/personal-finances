@@ -41,6 +41,11 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             text : 'რეკალკულაცია',
             name : 'recalcualte',
             handler : recalcualte
+        }, '-', {
+            text : 'ექსპორტი',
+            href : '#',
+            name : 'export',
+            hrefTarget: '_blank'
         }];
 
         me.load = function(params) {
@@ -102,6 +107,11 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             me.down('button[name=up]').enable();
         });
 
+        me.exporthref = exporthref;
+        
+        function exporthref(values) {
+            me.down('button[name=export]').url = 'rest/transaction/export/excel?'+serialize(values);
+        }
         
         function recalcualte() {
             myRequest({

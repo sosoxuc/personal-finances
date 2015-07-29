@@ -90,6 +90,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             items: [projectsCombo, directionCombo]
         };
         
+        
         var filterButton =  {
             xtype: 'button',
             text: 'ფილტრი',
@@ -110,7 +111,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         function filter(){
             var values = me.getForm().getValues(false,false,false,false);
-
+            me.down
             for (var property in values) {
                 if (values.hasOwnProperty(property)) {
                     if (values[property] == '') {
@@ -120,6 +121,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             }
             me.searchedValues = values;
             cfg.grid.load(values);
+            cfg.grid.exporthref(values);
         }
         
         function reset(){
