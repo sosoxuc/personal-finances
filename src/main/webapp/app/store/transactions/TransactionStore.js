@@ -43,6 +43,9 @@ Ext.define("TR.store.transactions.TransactionStore", {
         reader : {
             type : 'json',
             rootProperty: 'list'
+        },
+        actionMethods: {
+            read: 'POST'
         }
     }
 });

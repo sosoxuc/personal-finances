@@ -72,7 +72,11 @@ Ext.define("TR.view.transactions.SearchForm", {
             fieldLabel: 'დასასრული',
             name: 'endDate',
             format: 'd-m-Y'
-        } ];
+        }, {
+            xtype: 'textfield',
+            fieldLabel: 'დანიშნულება',
+            name: 'note'
+        }];
         
         var controls2 =  { 
             layout: 'vbox',
