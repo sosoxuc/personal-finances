@@ -203,6 +203,7 @@ public class TransactionService {
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> update(
           @RequestParam                   Integer transactionId,
+          @RequestParam                   Long version,
           @RequestParam(required = false) BigDecimal amount,
           @RequestParam(required = false) Integer projectId,
           @RequestParam(required = false) String date,
@@ -212,6 +213,10 @@ public class TransactionService {
           @RequestParam(required = false) Integer currencyId) throws ParseException {
 
         Transaction transaction = em.find(Transaction.class, transactionId);
+        if ( ! version.equals(transaction.version)) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+
         if (amount == null) {
             amount = transaction.transactionAmount;
         }
