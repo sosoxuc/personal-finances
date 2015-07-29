@@ -122,7 +122,7 @@ public class TransactionService {
                 .getResultList();
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<ListPage<Transaction>> search(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
