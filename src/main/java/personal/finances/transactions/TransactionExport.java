@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  * Created by niko on 7/30/15.
  */
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/transaction/export")
 public class TransactionExport {
 
     @RequestMapping(value = "/excel", method = {RequestMethod.GET, RequestMethod.POST})
