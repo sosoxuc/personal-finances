@@ -135,8 +135,8 @@ Ext.define("TR.view.transactions.AddWindow", {
             myRequest({
                 url : 'rest/transaction/create',
                 params : values,
-                callback : function(id) {
-                    cfg.searchForm.filter();
+                callback : function() {
+                    cfg.grid.store.load();
                     me.close();
                 }
             });
@@ -146,12 +146,14 @@ Ext.define("TR.view.transactions.AddWindow", {
             if (!form.getForm().isValid())
                 return;
             var values = form.getForm().getValues();
-
+            values.transactionId = cfg.data.id;
+            values.version = cfg.data.version;
+            
             myRequest({
                 url : 'rest/transaction/update',
                 params : values,
-                callback : function(id) {
-                    cfg.searchForm.filter();
+                callback : function() {
+                    cfg.grid.store.load();
                     me.close();
                 }
             });
