@@ -130,6 +130,7 @@ public class TransactionService {
             @RequestParam(required = false) Integer projectId,
             @RequestParam(required = false) Integer currencyId,
             @RequestParam(required = false) Integer direction,
+            @RequestParam(required = false) String note,
             @RequestParam(required = false) Integer start,
             @RequestParam(required = false) Integer limit) throws ParseException {
 
@@ -168,6 +169,11 @@ public class TransactionService {
         if (direction != null) {
             queryBuilder.append(" and t.direction = :direction");
             queryParams.put("direction", direction);
+        }
+
+        if (note != null) {
+            queryBuilder.append(" and t.transactionNote like :transactionNote");
+            queryParams.put("transactionNote", note + "%");
         }
 
         javax.persistence.Query countQuery = em.createQuery(String.format(queryBuilder.toString(), "select count(t) from Transaction t" ));
@@ -238,7 +244,7 @@ public class TransactionService {
             return new ResponseEntity<>(created, HttpStatus.OK);
         } else {
             return remove;
-        }
+     }
 
     }
 
