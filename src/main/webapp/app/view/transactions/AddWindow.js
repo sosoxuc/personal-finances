@@ -90,7 +90,7 @@ Ext.define("TR.view.transactions.AddWindow", {
                 fieldLabel : 'თანხა',
                 allowBlank : false,
                 format : '0.00',
-                value: cfg.data ? cfg.data.transactionAmount : ''
+                value: cfg.data ? (-1) * cfg.data.transactionAmount : ''
             }, currenciesCombo, accountsCombo, projectsInput, {
                 xtype: 'datefield',
                 name: 'date',
@@ -109,7 +109,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : 'დამატება',
+            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
             handler : cfg.edit ? edit : add
         }];
 
