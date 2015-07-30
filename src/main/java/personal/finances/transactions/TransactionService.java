@@ -18,6 +18,7 @@ import personal.States;
 import personal.UploadResponse;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
+import personal.finances.operations.OperationType;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
@@ -57,7 +58,9 @@ public class TransactionService {
             @RequestParam String note,
             @RequestParam Integer direction,
             @RequestParam Integer accountId,
-            @RequestParam Integer currencyId
+            @RequestParam Integer currencyId,
+            @RequestParam(required = false) Integer operationTypeId
+
             ) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
@@ -94,6 +97,11 @@ public class TransactionService {
             transaction.transactionOrder = 0;
         }
 
+        if (operationTypeId != null) {
+            OperationType operationType = em.find(OperationType.class, operationTypeId);
+            transaction.operationTypeId = operationType.operationTypeId;
+            transaction.operationType = operationType.operationType;
+        }
         //set rest
         List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
@@ -245,7 +253,7 @@ public class TransactionService {
 
         ResponseEntity<Transaction> remove = remove(transactionId, transaction.version);
         if (remove.getStatusCode().equals(HttpStatus.OK)) {
-            Transaction created = create(amount, projectId, date, note, direction, accountId, currencyId);
+            Transaction created = create(amount, projectId, date, note, direction, accountId, currencyId, null);
             return new ResponseEntity<>(created, HttpStatus.OK);
         } else {
             return remove;
@@ -415,7 +423,7 @@ public class TransactionService {
             }
 
             create(transaction.transactionAmount, transaction.projectId, dateText, noteText,
-                   transaction.direction, transaction.accountId, transaction.currencyId);
+                   transaction.direction, transaction.accountId, transaction.currencyId, null);
         }
     }
 }
