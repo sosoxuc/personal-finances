@@ -14,35 +14,35 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         me.store = Ext.create('TR.store.transactions.TransactionStore');
 
         me.tbar = [ {
-            text : 'დამატება',
+            text : LANG.ADD,
             name : 'add',
             handler : add
         }, {
-            text : 'რედაქტირება',
+            text : LANG.EDIT,
             name : 'edit',
             disabled: true,
             handler : edit
         }, {
-            text : 'წაშლა',
+            text : LANG.REMOVE,
             name : 'remove',
             disabled: true,
             handler : remove
         },'-',{
-            text : 'ზევით',
+            text : LANG.UP,
             handler : up,
             disabled: true,
             name : 'up'
         },{
-            text : 'ქვევით',
+            text : LANG.DOWN,
             handler : down,
             disabled: true,
             name : 'down'
         },'-', {
-            text : 'რეკალკულაცია',
-            name : 'recalcualte',
-            handler : recalcualte
+            text : LANG.CALCULATE,
+            name : 'calcualte',
+            handler : calcualte
         }, '-', {
-            text : 'ექსპორტი',
+            text : LANG.EXPORT,
             href : '#',
             name : 'export',
             hrefTarget: '_blank'
@@ -55,7 +55,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
 
         me.columns = [ {
             xtype : 'datecolumn',
-            header : 'თარიღი',
+            header : LANG.DATE,
             dataIndex : 'transactionDate',
             flex : 1,
             format : 'd-m-Y',
@@ -68,30 +68,30 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             dataIndex : 'transactionAmount',
             flex : 1
         }, {
-            header : 'ვალუტა',
+            header : LANG.CURRENCY,
             dataIndex : 'currencyCode',
             flex : 1
         }, {
-            header : 'ანგარიში',
+            header : LANG.ACCOUNT,
             dataIndex : 'accountName',
             flex : 1
         }, {
-            header : 'ნაშთი',
+            header : LANG.REST,
             xtype : 'numbercolumn',
             format : '0.00',
             align : 'right',
             dataIndex : 'transactionRestValue',
             flex : 1
         }, {
-            header : 'ვალუტა',
+            header : LANG.CURRENCY,
             dataIndex : 'currencyCode',
             flex : 1
         }, {
-            header : 'პროექტი',
+            header : LANG.PROJECT,
             dataIndex : 'projectName',
             flex : 1.5
         }, {
-            header : 'დანიშნულება',
+            header : LANG.DESTINATION,
             dataIndex : 'transactionNote',
             flex : 2.5
         } ];
@@ -113,7 +113,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             me.down('button[name=export]').url = 'rest/transaction/export/excel?'+serialize(values);
         }
         
-        function recalcualte() {
+        function calcualte() {
             myRequest({
                 url : 'rest/transaction/rests/calculate',
                 callback : function(res) {

@@ -109,7 +109,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : 'დამატება',
             handler : cfg.edit ? edit : add
         }];
 
