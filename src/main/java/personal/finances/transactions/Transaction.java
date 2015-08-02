@@ -50,6 +50,10 @@ public class Transaction implements Serializable {
 
     public Integer direction;
 
+    public Integer operationTypeId;
+
+    public String operationType;
+
     @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "transactionId")
     public List<TransactionRest> transactionRests;
