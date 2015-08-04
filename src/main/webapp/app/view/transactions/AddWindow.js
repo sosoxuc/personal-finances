@@ -41,7 +41,7 @@ Ext.define("TR.view.transactions.AddWindow", {
             items: [ currenciesCombo, {
                 xtype: 'button',
                 text: '+',
-                handler: addProject
+                handler: addCurrency
             } ]
         };
 
@@ -63,7 +63,7 @@ Ext.define("TR.view.transactions.AddWindow", {
             items: [ accountsCombo, {
                 xtype: 'button',
                 text: '+',
-                handler: addProject
+                handler: addAccount
             } ]
         };
 
@@ -154,6 +154,18 @@ Ext.define("TR.view.transactions.AddWindow", {
             }
         });
 
+        function addAccount(){
+            Ext.create('TR.view.accounts.AddWindow', {
+                combo : accountsCombo
+            }).show();
+        }
+        
+        function addCurrency(){
+            Ext.create('TR.view.currencies.AddWindow', {
+                combo : currenciesCombo
+            }).show();
+        }
+        
         function addProject(){
             Ext.create('TR.view.projects.AddWindow', {
                 combo : projectsCombo

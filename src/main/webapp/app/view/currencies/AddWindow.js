@@ -53,10 +53,16 @@ Ext.define("TR.view.currencies.AddWindow", {
                 url : 'rest/currency/create',
                 params : values,
                 callback : function(id) {
-                    cfg.grid.store.load();
-                    cfg.grid.getSelectionModel().deselectAll();
-                    cfg.grid.down('button[name=edit]').disable();
-                    cfg.grid.down('button[name=remove]').disable();
+                    if (cfg.combo) {
+                        cfg.combo.setValue(parseInt(id));
+                        cfg.combo.store.load();
+                    }
+                    if (cfg.grid) {
+                        cfg.grid.store.load();
+                        cfg.grid.getSelectionModel().deselectAll();
+                        cfg.grid.down('button[name=edit]').disable();
+                        cfg.grid.down('button[name=remove]').disable();
+                    }
                     me.close();
                 }
             });
