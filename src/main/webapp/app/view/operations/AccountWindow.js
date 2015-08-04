@@ -1,4 +1,4 @@
-Ext.define("TR.view.operations.ProjectWindow", {
+Ext.define("TR.view.operations.AccountWindow", {
     extend : "Ext.window.Window",
     modal : true,
     width : 500,
@@ -62,7 +62,7 @@ Ext.define("TR.view.operations.ProjectWindow", {
             valueField: 'id'
         });
         
-        var accountsInput = {
+        var accountsInput2 = {
             xtype: 'fieldcontainer',
             fieldLabel: LANG.ACCOUNT,
             layout: 'hbox',

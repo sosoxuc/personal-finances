@@ -33,7 +33,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                 handler : add
             }, {
                 text: LANG.MOVE_ACCOUNT,
-                handler : add
+                handler : moveAccount
             }]
         }, {
             text : LANG.EDIT,
