@@ -21,7 +21,8 @@ Ext.define("TR.view.transactions.AddWindow", {
             store: directionsStore,
             displayField: 'label',
             valueField: 'value',
-            value: cfg.data ? Math.sign(cfg.data.transactionAmount) : ''
+            hidden: !cfg.data && cfg.direction,
+            value: cfg.data ? cfg.data.direction : (cfg.direction ? cfg.direction : '') 
         });
 
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -157,7 +158,12 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         me.on({
             show: function() {
-                form.getForm().findField('amount').focus(true, 10);
+                if (cfg.direction) {
+                    form.getForm().findField('amount').focus(true, 10);
+                } else {
+                    form.getForm().findField('direction').focus(true, 10);
+                }
+                
             },
         });
 

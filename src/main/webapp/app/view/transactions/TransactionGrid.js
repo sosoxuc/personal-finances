@@ -18,10 +18,10 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             name : 'add',
             menu: [{
                 text: LANG.INCOME,
-                handler : add
+                handler : addIncome
             }, {
                 text: LANG.EXPENCE,
-                handler : add
+                handler : addExpence
             }, '-', {
                 text: LANG.TRANSACTION,
                 handler : add
@@ -34,9 +34,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             }, {
                 text: LANG.MOVE_ACCOUNT,
                 handler : add
-            }
-            
-            ]
+            }]
         }, {
             text : LANG.EDIT,
             name : 'edit',
@@ -138,6 +136,22 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                     me.store.load();
                 }
             });
+        }
+        
+        function addIncome() {
+            Ext.create('TR.view.transactions.AddWindow', {
+                grid : me,
+                searchForm : me.searchForm,
+                direction: 1
+            }).show();
+        }
+        
+        function addExpence() {
+            Ext.create('TR.view.transactions.AddWindow', {
+                grid : me,
+                searchForm : me.searchForm,
+                direction: -1
+            }).show();
         }
         
         function add() {
