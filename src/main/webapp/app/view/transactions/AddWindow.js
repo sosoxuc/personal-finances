@@ -15,7 +15,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'currencyId',
-            fieldLabel : 'ვალუტა',
+            fieldLabel : LANG.CURRENCY,
             queryMode: 'local',
             store: currenciesStore,
             displayField: 'currencyCode',
@@ -25,7 +25,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'accountId',
-            fieldLabel : 'ანგარიში',
+            fieldLabel : LANG.ACCOUNT,
             queryMode: 'local',
             store: accountsStore,
             displayField: 'accountName',
@@ -44,7 +44,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         var projectsInput = {
             xtype: 'fieldcontainer',
-            fieldLabel: 'პროექტი',
+            fieldLabel: LANG.PROJECT,
             layout: 'hbox',
             items: [ projectsCombo, {
                 xtype: 'splitter'
@@ -57,7 +57,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         
         var directionCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'direction',
-            fieldLabel : 'მიმართულება',
+            fieldLabel : LANG.DIRECTION,
             queryMode: 'local',
             store: directionsStore,
             displayField: 'label',
@@ -65,7 +65,7 @@ Ext.define("TR.view.transactions.AddWindow", {
             value: cfg.data ? Math.sign(cfg.data.transactionAmount) : ''
         });
         
-        me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
+        me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         
         var now = new Date();
 
@@ -87,7 +87,7 @@ Ext.define("TR.view.transactions.AddWindow", {
                 keyNavEnabled : false,
                 mouseWheelEnabled : false,
                 name : 'amount',
-                fieldLabel : 'თანხა',
+                fieldLabel : LANG.SUM,
                 allowBlank : false,
                 format : '0.00',
                 value: cfg.data ? (-1) * cfg.data.transactionAmount : ''
@@ -95,12 +95,12 @@ Ext.define("TR.view.transactions.AddWindow", {
                 xtype: 'datefield',
                 name: 'date',
                 format: 'd-m-Y',
-                fieldLabel : 'თარიღი',
+                fieldLabel : LANG.DATE,
                 allowBlank : false,
                 value: cfg.data ? cfg.data.transactionDate : now.ddmmyyyy()
             }, {
                 name: 'note',
-                fieldLabel : 'დანიშნულება',
+                fieldLabel : LANG.DESTINATION,
                 allowBlank : false,
                 value: cfg.data ? cfg.data.transactionNote : ''
             }]
@@ -109,7 +109,7 @@ Ext.define("TR.view.transactions.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? LANG.EDIT : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : LANG.ADD,
             handler : cfg.edit ? edit : add
         }];
 

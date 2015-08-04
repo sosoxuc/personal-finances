@@ -34,11 +34,11 @@ Ext.define('TR.view.MainPanel', {
             xtype : 'label',
             html : '<p style="font-size:16px; margin:0;color:#3892d4;font-weight:bold;"><i style="color:#000000;font-weight:normal;">Personal</i> FINANCES</p>'
         }, '->', geokb, {
-            text : 'გამოსვლა',
+            text : LANG.LOGOUT,
             handler : logout
         } ];
 
-        var employees = Ext.create('TR.view.employees.MainPanel');
+        //var employees = Ext.create('TR.view.employees.MainPanel');
         var transactions = Ext.create('TR.view.transactions.MainPanel');
         var projects = Ext.create('TR.view.projects.MainPanel');
         var rests = Ext.create('TR.view.rests.MainPanel');
@@ -47,7 +47,13 @@ Ext.define('TR.view.MainPanel', {
         var imports = Ext.create('TR.view.imports.MainPanel');
         var tabPanel = Ext.create('Ext.tab.Panel', {
             border : false,
-            items : [ rests, transactions, employees, projects, accounts, currencies, imports ]
+            items : [ rests, 
+                      transactions, 
+                      //employees, 
+                      projects, 
+                      accounts, 
+                      currencies, 
+                      imports ]
         });
 
         me.items = [ tabPanel ];

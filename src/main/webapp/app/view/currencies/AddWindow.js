@@ -9,7 +9,7 @@ Ext.define("TR.view.currencies.AddWindow", {
         cfg = cfg || {};
         var me = this;
 
-        me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
+        me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         var form = Ext.create('Ext.form.Panel', {
             border: false,
             split: true,
@@ -23,11 +23,11 @@ Ext.define("TR.view.currencies.AddWindow", {
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'დასახელება',
+                fieldLabel : LANG.NAME,
                 name : 'currencyName',
                 value: cfg.data ? cfg.data.currencyName : ''
             }, {
-                fieldLabel : 'კოდი',
+                fieldLabel : LANG.CODE,
                 name : 'currencyCode',
                 value: cfg.data ? cfg.data.currencyCode : ''
             }]
@@ -37,7 +37,7 @@ Ext.define("TR.view.currencies.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : LANG.ADD,
             handler : cfg.edit ? edit : add
         }];
         

@@ -2,7 +2,7 @@ Ext.define("TR.view.projects.MainPanel", {
     extend : "Ext.panel.Panel",
     border: false,
     layout: 'border',
-    title : 'პროექტები',
+    title : LANG.PROJECTS,
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;

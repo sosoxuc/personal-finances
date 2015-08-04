@@ -2,7 +2,7 @@ Ext.define("TR.view.imports.MainPanel", {
     extend : "Ext.panel.Panel",
     border: false,
     layout: 'border',
-    title : 'იმპორტი',
+    title : LANG.IMPORT,
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;

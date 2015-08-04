@@ -143,7 +143,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             var sel = me.getSelectionModel().getSelection();
             if (sel.length == 0)
                 return;
-            Ext.Msg.confirm('სტატუსი', 'დაადასტურეთ წაშლა!', function(ans) {
+            Ext.Msg.confirm(LANG.CONFIRM, LANG.CONFIRM_REMOVAL, function(ans) {
                 if (ans === 'yes') {
                     myRequest({
                         url : 'rest/transaction/remove',

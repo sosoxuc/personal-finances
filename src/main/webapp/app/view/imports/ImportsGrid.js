@@ -4,25 +4,16 @@ Ext.define("TR.view.imports.ImportsGrid", {
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
-        //me.store = Ext.StoreManager.lookup('importsStore') || Ext.create('TR.store.imports.Store');
         
         me.tbar = [ {
-            text : 'ატვირთვა',
+            text : LANG.UPLOAD,
             name : 'upload',
             handler : upload
-        }, {
-            text : 'რედაქტირება',
-            name : 'edit',
-            handler : edit
-        }, {
-            text : 'წაშლა',
-            name : 'remove',
-            handler : remove
         } ];
 
         me.columns = [ {
-            header : 'დასახელება',
-            dataIndex : 'projectName',
+            header : LANG.NAME,
+            dataIndex : 'fileName',
             flex : 1
         } ];
 
@@ -33,40 +24,5 @@ Ext.define("TR.view.imports.ImportsGrid", {
                 grid : me
             });
         }
-        
-        function edit() {
-            var sel = me.getSelectionModel().getSelection();
-            if (sel.length == 0)
-                return;
-
-            var addWindow = Ext.create('TR.view.imports.AddWindow', {
-                grid : me,
-                edit : true,
-                data : sel[0].getData()
-            });
-        }
-
-        function remove() {
-            var sel = me.getSelectionModel().getSelection();
-            if (sel.length == 0)
-                return;
-            Ext.Msg.confirm('გაფრთხილება', 'დაადასტურეთ წაშლა!', function(ans) {
-                if (ans === 'yes') {
-                    var rec = sel[0];
-                    myRequest({
-                        url : 'rest/import/remove',
-                        params : {
-                            id : rec.get('id'),
-                            version: rec.get('version')
-                        },
-                        callback : function(res) {
-                            me.store.load();
-                            me.getSelectionModel().deselectAll();
-                        }
-                    });
-                }
-            });
-        }
-
     }
 });

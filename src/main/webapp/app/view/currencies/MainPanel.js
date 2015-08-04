@@ -2,7 +2,7 @@ Ext.define("TR.view.currencies.MainPanel", {
     extend : "Ext.panel.Panel",
     border: false,
     layout: 'border',
-    title : 'ვალუტები',
+    title : LANG.CURRENCIES,
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;

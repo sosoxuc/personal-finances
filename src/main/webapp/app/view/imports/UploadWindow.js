@@ -3,7 +3,7 @@ Ext.define('TR.view.imports.UploadWindow', {
 	modal : true,
 	width : 500,
 	autoShow : true,
-	title : 'ფაილის ატვირთვა',
+	title : LANG.UPLOAD_FILE,
 	layout : 'fit',
 	constructor : function(cfg) {
 		cfg = cfg || {};
@@ -14,7 +14,7 @@ Ext.define('TR.view.imports.UploadWindow', {
 
         var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'accountId',
-            fieldLabel : 'ანგარიში',
+            fieldLabel : LANG.ACCOUNT,
             queryMode: 'local',
             store: accountsStore,
             displayField: 'accountName',
@@ -27,7 +27,7 @@ Ext.define('TR.view.imports.UploadWindow', {
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
-            fieldLabel : 'პროექტი',
+            fieldLabel : LANG.PROJECT,
             valueField: 'id',
             value: cfg.data ? cfg.data.projectId : ''
         });
@@ -43,9 +43,9 @@ Ext.define('TR.view.imports.UploadWindow', {
 			},
 			items : [ {
 				xtype : 'filefield',
-				fieldLabel : 'ფაილი',
+				fieldLabel : LANG.FILE,
 				name : 'file',
-				buttonText : 'აირჩიეთ...',
+				buttonText : LANG.CHOOSE,
 				isEng : true
 			}, accountsCombo, projectsCombo ]
 		});
@@ -53,10 +53,10 @@ Ext.define('TR.view.imports.UploadWindow', {
 		me.items = [ form ];
 
 		me.buttons = [ {
-			text : 'ატვირთვა',
+			text : LANG.UPLOAD,
 			handler : cfg.edit ? edit : save
 		}, {
-			text : 'გაუქმება',
+			text : LANG.CANCEL,
 			handler : close
 		} ];
 
@@ -67,10 +67,10 @@ Ext.define('TR.view.imports.UploadWindow', {
 			
 			form.submit({
 				url : 'rest/transaction/upload',
-				waitMsg : 'მიმდინარეობს ატვირთვა...',
+				waitMsg : LANG.UPLOADING,
 				success : function(fp, o) {
 					close();
-					Ext.Msg.alert('სტატუსი', 'ფაილი წარმატებით აიტვირთა!');
+					Ext.Msg.alert(LANG.STATUS, LANG.FILE_UPLOADED);
 				},
 				failure : function(fp, o) {
 					var errTxt = drawErrorText(o.result);
@@ -81,7 +81,7 @@ Ext.define('TR.view.imports.UploadWindow', {
 						autoShow: true,
 						bodyPadding: 5,
 						html: errTxt,
-						title: 'შეცდომა',
+						title: LANG.ERROR,
 						maxWidth: 600,
 						maxHeight: 600,
 						autoScroll: true,

@@ -7,27 +7,27 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
         me.store = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
         
         me.tbar = [ {
-            text : 'დამატება',
+            text : LANG.ADD,
             name : 'add',
             handler : add
         }, {
-            text : 'რედაქტირება',
+            text : LANG.EDIT,
             name : 'edit',
             disabled: true,
             handler : edit
         }, {
-            text : 'წაშლა',
+            text : LANG.REMOVE,
             name : 'remove',
             disabled: true,
             handler : remove
         } ];
 
         me.columns = [ {
-            header : 'დასახელება',
+            header : LANG.NAME,
             dataIndex : 'currencyName',
             flex : 1
         }, {
-            header : 'კოდი',
+            header : LANG.CODE,
             dataIndex : 'currencyCode',
             flex : 1
         } ];
@@ -61,7 +61,7 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
             var sel = me.getSelectionModel().getSelection();
             if (sel.length == 0)
                 return;
-            Ext.Msg.confirm('გაფრთხილება', 'დაადასტურეთ წაშლა!', function(ans) {
+            Ext.Msg.confirm(LANG.CONFIRM, LANG.CONFIRM_REMOVAL, function(ans) {
                 if (ans === 'yes') {
                     var rec = sel[0];
                     myRequest({

@@ -14,12 +14,12 @@ Ext.define('TR.view.LoginPanel', {
                 labelAlign : 'right',
                 anchor : '100%',
                 allowBlank : false,
-                blankText: 'აუცილებელი ველი',
+                blankText: LANG.REQUIRDE_FIELD,
                 msgTarget: 'side'
             },
             items : [ {
                 xtype : 'textfield',
-                fieldLabel : 'მომხმარებელი',
+                fieldLabel : LANG.USERNAME,
                 name : 'username',
                 isEng : true,
                 value : localStorage.turnicetUserName || '',

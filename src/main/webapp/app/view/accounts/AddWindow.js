@@ -9,7 +9,7 @@ Ext.define("TR.view.accounts.AddWindow", {
         cfg = cfg || {};
         var me = this;
 
-        me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
+        me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         var form = Ext.create('Ext.form.Panel', {
             border: false,
             split: true,
@@ -22,12 +22,12 @@ Ext.define("TR.view.accounts.AddWindow", {
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'ანგარიშის დასახელება',
+                fieldLabel : LANG.NAME,
                 name : 'accountName',
                 value: cfg.data ? cfg.data.accountName : '',
                 allowBlank: false
             }, {
-                fieldLabel : 'ანგარიშის ნომერი',
+                fieldLabel : LANG.NUMBER,
                 name : 'accountNumber',
                 value: cfg.data ? cfg.data.accountNumber : '',
                 allowBlank: true
@@ -37,7 +37,7 @@ Ext.define("TR.view.accounts.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : LANG.ADD,
             handler : cfg.edit ? edit : add
         }];
         

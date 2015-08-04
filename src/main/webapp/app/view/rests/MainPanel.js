@@ -1,7 +1,7 @@
 Ext.define("TR.view.rests.MainPanel", {
     extend : "Ext.panel.Panel",
     border: false,
-    title: 'ნაშთები',
+    title: LANG.RESTS,
     layout : {
         type : 'vbox',
         align : 'stretch'
@@ -13,10 +13,10 @@ Ext.define("TR.view.rests.MainPanel", {
         var panel = Ext.create('Ext.panel.Panel',{
             defaultType : 'textfield',
             id: 'rests-panel',
-            title : 'მიმდინარე ნაშთები',
+            title : LANG.CURRENT_RESTS,
             buttonAlign: 'left',
             buttons: [{
-                text : 'განახლება',
+                text : LANG.REFRESH,
                 handler : load
             }]
         });
@@ -30,7 +30,7 @@ Ext.define("TR.view.rests.MainPanel", {
         });
         
         function load() {
-            panel.mask('განახლება...');
+            panel.mask(LANG.LOADING);
             myRequest({
                 url : 'rest/transaction/rests/currencies',
                 method : 'GET',

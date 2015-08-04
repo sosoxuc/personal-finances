@@ -9,7 +9,7 @@ Ext.define("TR.view.projects.AddWindow", {
         cfg = cfg || {};
         var me = this;
 
-        me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
+        me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         var form = Ext.create('Ext.form.Panel', {
             border: false,
             split: true,
@@ -23,7 +23,7 @@ Ext.define("TR.view.projects.AddWindow", {
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'დასახელება',
+                fieldLabel : LANG.NAME,
                 name : 'projectName',
                 value: cfg.data ? cfg.data.projectName : ''
             }]
@@ -33,7 +33,7 @@ Ext.define("TR.view.projects.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : LANG.ADD,
             handler : cfg.edit ? edit : add
         }];
         

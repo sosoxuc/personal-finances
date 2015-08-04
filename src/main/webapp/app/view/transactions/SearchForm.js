@@ -19,7 +19,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'currencyId',
-            fieldLabel : 'ვალუტა',
+            fieldLabel : LANG.CURRENCY,
             queryMode: 'local',
             store: currenciesStore,
             displayField: 'currencyCode',
@@ -28,7 +28,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'accountId',
-            fieldLabel : 'ანგარიში',
+            fieldLabel : LANG.ACCOUNT,
             queryMode: 'local',
             store: accountsStore,
             displayField: 'accountName',
@@ -37,7 +37,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'projectId',
-            fieldLabel : 'პროექტი',
+            fieldLabel : LANG.PROJECT,
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
@@ -46,7 +46,7 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         var directionCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'direction',
-            fieldLabel : 'მიმართულება',
+            fieldLabel : LANG.DIRECTION,
             queryMode: 'local',
             store: directionsStore,
             displayField: 'label',
@@ -64,17 +64,17 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         controls1.items = [{
             xtype: 'datefield',
-            fieldLabel: 'დასაწყისი',
+            fieldLabel: LANG.DATE_FROM,
             name: 'startDate',
             format: 'd-m-Y'
         }, {
             xtype: 'datefield',
-            fieldLabel: 'დასასრული',
+            fieldLabel: LANG.DATE_FROM,
             name: 'endDate',
             format: 'd-m-Y'
         }, {
             xtype: 'textfield',
-            fieldLabel: 'დანიშნულება',
+            fieldLabel: LANG.DESTINATION,
             name: 'note'
         }];
         
@@ -93,13 +93,13 @@ Ext.define("TR.view.transactions.SearchForm", {
         
         var filterButton =  {
             xtype: 'button',
-            text: 'ფილტრი',
+            text: LANG.FILTER,
             handler: filter
         };
         
         var resetButton =  {
             xtype: 'button',
-            text: 'გასუფთავება',
+            text: LANG.CLEAR,
             handler: reset
         };
         
