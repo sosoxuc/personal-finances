@@ -1,5 +1,16 @@
 package personal.finances.operations;
 
+import static personal.finances.operations.OperationType.PROJECT;
+import static personal.finances.transactions.Direction.IN;
+import static personal.finances.transactions.Direction.OUT;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,14 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import personal.finances.transactions.Direction;
-import personal.finances.transactions.TransactionService;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.List;
+import personal.finances.transactions.TransactionService;
 
 /**
  * Created by niko on 7/30/15.
@@ -23,15 +28,12 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/operations")
 public class OperationService {
-    public static final Integer OPERATION_TYPE_PROJECT = 1;
-    public static final Integer OPERATION_TYPE_ACCOUNT = 2;
-    public static final Integer OPERATION_TYPE_CURRENCY_EXCHANGE = 3;
-
+    
     @PersistenceContext
     private EntityManager em;
 
     @Autowired
-    private TransactionService transactionService;
+    private TransactionService transactions;
 
     @RequestMapping(value = "/list", method = {RequestMethod.GET})
     public ResponseEntity<List<OperationType>> operationTypes() {
@@ -41,6 +43,7 @@ public class OperationService {
 
         return new ResponseEntity<>(operationTypes, HttpStatus.OK);
     }
+    
     @RequestMapping(value = "/project", method = {RequestMethod.POST})
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> project(
@@ -49,17 +52,35 @@ public class OperationService {
             @RequestParam Integer currencyId,
             @RequestParam Integer from,
             @RequestParam Integer to,
-            @RequestParam BigDecimal amount) throws ParseException {
+            @RequestParam BigDecimal amount,
+            @RequestParam String note) throws ParseException {
 
-        OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
 
-        transactionService.create(amount, from, date,
-                operationType.operationType, Direction.OUT,
-                accountId, currencyId, OPERATION_TYPE_PROJECT);
+        transactions.create(amount, from, date, note, OUT, accountId, currencyId,PROJECT);
 
-        transactionService.create(amount, to, date,
-                operationType.operationType, Direction.IN,
-              accountId, currencyId, OPERATION_TYPE_PROJECT);
+        transactions.create(amount, to, date, note, IN, accountId, currencyId, PROJECT);
+
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/account", method = {RequestMethod.POST})
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Boolean> account(
+            @RequestParam String date,
+            @RequestParam Integer projectId,
+            @RequestParam Integer currencyId,
+            @RequestParam Integer from,
+            @RequestParam Integer to,
+            @RequestParam BigDecimal amount,
+            @RequestParam String note) throws ParseException {
+
+        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+
+        transactions.create(amount, projectId, date, note, OUT, from, currencyId,PROJECT);
+
+        transactions.create(amount, projectId, date, note, IN, to, currencyId, PROJECT);
+
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
 }

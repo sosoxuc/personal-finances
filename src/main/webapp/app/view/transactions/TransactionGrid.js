@@ -27,7 +27,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                 handler : add
             },'-', {
                 text: LANG.MOVE_PROJECT,
-                handler : add
+                handler : moveProject
             }, {
                 text: LANG.MOVE_CURRENCY,
                 handler : add
@@ -136,6 +136,20 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                     me.store.load();
                 }
             });
+        }
+        
+        function moveAccount() {
+            Ext.create('TR.view.operations.AccountWindow',{
+                grid : me,
+                searchForm : me.searchForm
+            }).show();
+        }
+        
+        function moveProject() {
+            Ext.create('TR.view.operations.ProjectWindow',{
+                grid : me,
+                searchForm : me.searchForm
+            }).show();
         }
         
         function addIncome() {

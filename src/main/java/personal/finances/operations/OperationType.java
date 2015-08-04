@@ -11,6 +11,11 @@ import javax.persistence.Table;
 @Table(name = "OPERATION_TYPE")
 public class OperationType {
 
+    public static final Integer PROJECT = 1;
+    public static final Integer ACCOUNT = 2;
+    public static final Integer CURRENCY= 3;
+
+    
     @Id
     public Integer operationTypeId;
 

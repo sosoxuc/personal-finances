@@ -97,11 +97,11 @@ public class TransactionService {
             transaction.transactionOrder = 0;
         }
 
-        if (operationTypeId != null) {
-            OperationType operationType = em.find(OperationType.class, operationTypeId);
-            transaction.operationTypeId = operationType.operationTypeId;
-            transaction.operationType = operationType.operationType;
-        }
+//        if (operationTypeId != null) {
+//            OperationType operationType = em.find(OperationType.class, operationTypeId);
+//            transaction.operationTypeId = operationType.operationTypeId;
+//            transaction.operationType = operationType.operationType;
+//        }
         //set rest
         List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
