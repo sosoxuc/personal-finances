@@ -38,7 +38,7 @@ Ext.define("TR.view.projects.ProjectsGrid", {
         function add() {
             Ext.create('TR.view.projects.AddWindow', {
                 grid : me
-            });
+            }).show();
         }
         
         function edit() {
@@ -46,11 +46,11 @@ Ext.define("TR.view.projects.ProjectsGrid", {
             if (sel.length == 0)
                 return;
 
-            var addWindow = Ext.create('TR.view.projects.AddWindow', {
+            Ext.create('TR.view.projects.AddWindow', {
                 grid : me,
                 edit : true,
                 data : sel[0].getData()
-            });
+            }).show();
         }
 
         function remove() {

@@ -124,7 +124,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
                 searchForm : me.searchForm
-            });
+            }).show();
         }
 
         function edit() {
@@ -136,7 +136,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                 grid : me,
                 edit : true,
                 data: sel[0].getData()
-            });
+            }).show();
         }
 
         function remove() {

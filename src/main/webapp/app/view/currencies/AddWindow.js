@@ -2,9 +2,6 @@ Ext.define("TR.view.currencies.AddWindow", {
     extend : "Ext.window.Window",
     modal : true,
     width : 400,
-    height: 350,
-    autoShow : true,
-    layout : 'border',
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
@@ -12,8 +9,6 @@ Ext.define("TR.view.currencies.AddWindow", {
         me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         var form = Ext.create('Ext.form.Panel', {
             border: false,
-            split: true,
-            region: 'center',
             bodyPadding: 5,
             fieldDefaults : {
                 labelWidth : 150,

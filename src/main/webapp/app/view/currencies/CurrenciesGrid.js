@@ -42,7 +42,7 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
         function add() {
             Ext.create('TR.view.currencies.AddWindow', {
                 grid : me
-            });
+            }).show();
         }
         
         function edit() {
@@ -54,7 +54,7 @@ Ext.define("TR.view.currencies.CurrenciesGrid", {
                 grid : me,
                 edit : true,
                 data : sel[0].getData()
-            });
+            }).show();
         }
 
         function remove() {

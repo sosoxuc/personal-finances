@@ -42,7 +42,7 @@ Ext.define("TR.view.accounts.AccountsGrid", {
         function add() {
             Ext.create('TR.view.accounts.AddWindow', {
                 grid : me
-            });
+            }).show();
         }
         
         function edit() {
@@ -54,7 +54,7 @@ Ext.define("TR.view.accounts.AccountsGrid", {
                 grid : me,
                 edit : true,
                 data : sel[0].getData()
-            });
+            }).show();
         }
 
         function remove() {

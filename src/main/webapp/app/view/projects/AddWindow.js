@@ -2,9 +2,6 @@ Ext.define("TR.view.projects.AddWindow", {
     extend : "Ext.window.Window",
     modal : true,
     width : 400,
-    height: 350,
-    autoShow : true,
-    layout : 'border',
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
@@ -12,8 +9,6 @@ Ext.define("TR.view.projects.AddWindow", {
         me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
         var form = Ext.create('Ext.form.Panel', {
             border: false,
-            split: true,
-            region: 'center',
             bodyPadding: 5,
             fieldDefaults : {
                 labelWidth : 150,
@@ -63,7 +58,6 @@ Ext.define("TR.view.projects.AddWindow", {
                         cfg.grid.getSelectionModel().deselectAll();
                         cfg.grid.down('button[name=edit]').disable();
                         cfg.grid.down('button[name=remove]').disable();
-
                     }
                     me.close();
                 }
