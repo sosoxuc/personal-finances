@@ -26,7 +26,7 @@ Ext.define('TR.view.LoginPanel', {
                 autoFocus : !localStorage.turnicetUserName
             }, {
                 xtype : 'textfield',
-                fieldLabel : 'პაროლი',
+                fieldLabel : LANG.PASSWORD,
                 isEng : true,
                 inputType : 'password',
                 name : 'password',
@@ -38,13 +38,13 @@ Ext.define('TR.view.LoginPanel', {
             modal : true,
             autoShow : true,
             width : 350,
-            title : 'ავტორიზაცია',
+            title : LANG.AUTH,
             closable : false,
             draggable : false,
             layout : 'fit',
             items : [ form ],
             buttons : [ {
-                text : 'შესვლა',
+                text : LANG.LOGIN,
                 handler : login
             } ]
         });

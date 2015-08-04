@@ -61,7 +61,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             format : 'd-m-Y',
             align : 'right'
         }, {
-            header : 'თანხა',
+            header : LANG.SUM,
             xtype : 'numbercolumn',
             format : '0.00',
             align : 'right',
@@ -96,8 +96,6 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             flex : 2.5
         } ];
 
-        
-        
         me.callParent(arguments);
 
         me.on('select', function(view, rec){
