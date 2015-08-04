@@ -142,16 +142,23 @@ Ext.define("TR.view.transactions.AddWindow", {
         me.items = [ form ];
 
         me.buttons = [{
-            text : cfg.edit ? LANG.EDIT : LANG.ADD,
-            handler : cfg.edit ? edit : add
+            text : cfg.edit ? LANG.EDIT : LANG.ADD_AND_CLOSE,
+            handler : cfg.edit ? edit : addClose
         }];
+        
+        if (!cfg.edit) {
+            me.buttons.push({
+                text : LANG.ADD,
+                handler : add
+            });
+        }
 
         me.callParent(arguments);
         
         me.on({
             show: function() {
                 form.getForm().findField('amount').focus(true, 10);
-            }
+            },
         });
 
         function addAccount(){
@@ -196,6 +203,9 @@ Ext.define("TR.view.transactions.AddWindow", {
                 url : 'rest/transaction/create',
                 params : values,
                 callback : function() {
+                    form.getForm().findField('amount').setValue('');
+                    form.getForm().findField('note').setValue('');
+                    form.getForm().findField('amount').focus(true, 10);
                     cfg.grid.store.load();
                 }
             });

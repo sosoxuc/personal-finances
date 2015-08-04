@@ -16,7 +16,27 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         me.tbar = [ {
             text : LANG.ADD,
             name : 'add',
-            handler : add
+            menu: [{
+                text: LANG.INCOME,
+                handler : add
+            }, {
+                text: LANG.EXPENCE,
+                handler : add
+            }, '-', {
+                text: LANG.TRANSACTION,
+                handler : add
+            },'-', {
+                text: LANG.MOVE_PROJECT,
+                handler : add
+            }, {
+                text: LANG.MOVE_CURRENCY,
+                handler : add
+            }, {
+                text: LANG.MOVE_ACCOUNT,
+                handler : add
+            }
+            
+            ]
         }, {
             text : LANG.EDIT,
             name : 'edit',
