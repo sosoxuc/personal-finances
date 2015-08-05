@@ -1,5 +1,6 @@
 package personal.finances.operations;
 
+import static personal.finances.operations.OperationType.ACCOUNT;
 import static personal.finances.operations.OperationType.PROJECT;
 import static personal.finances.transactions.Direction.IN;
 import static personal.finances.transactions.Direction.OUT;
@@ -77,9 +78,30 @@ public class OperationService {
 
         //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
 
-        transactions.create(amount, projectId, date, note, OUT, from, currencyId,PROJECT);
+        transactions.create(amount, projectId, date, note, OUT, from, currencyId,ACCOUNT);
 
-        transactions.create(amount, projectId, date, note, IN, to, currencyId, PROJECT);
+        transactions.create(amount, projectId, date, note, IN, to, currencyId, ACCOUNT);
+
+        return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/currency", method = {RequestMethod.POST})
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Boolean> currency(
+            @RequestParam String date,
+            @RequestParam Integer projectId,
+            @RequestParam Integer accountId,
+            @RequestParam BigDecimal fromAmount,
+            @RequestParam Integer fromCurrencyId,
+            @RequestParam BigDecimal toAmount,
+            @RequestParam Integer toCurrencyId,
+            @RequestParam String note) throws ParseException {
+
+        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+
+        transactions.create(fromAmount, projectId, date, note, OUT, accountId, fromCurrencyId,ACCOUNT);
+
+        transactions.create(toAmount, projectId, date, note, IN, accountId, toCurrencyId, ACCOUNT);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }

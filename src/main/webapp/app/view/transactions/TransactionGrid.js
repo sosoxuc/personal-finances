@@ -30,7 +30,7 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                 handler : moveProject
             }, {
                 text: LANG.MOVE_CURRENCY,
-                handler : add
+                handler : moveCurrency
             }, {
                 text: LANG.MOVE_ACCOUNT,
                 handler : moveAccount
@@ -136,6 +136,13 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                     me.store.load();
                 }
             });
+        }
+        
+        function moveCurrency() {
+            Ext.create('TR.view.operations.CurrencyWindow',{
+                grid : me,
+                searchForm : me.searchForm
+            }).show();
         }
         
         function moveAccount() {
