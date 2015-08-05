@@ -74,7 +74,7 @@ Ext.define("TR.view.operations.AccountWindow", {
         };
 
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
-            name: 'to',
+            name: 'projectId',
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',

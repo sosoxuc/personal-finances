@@ -28,9 +28,9 @@ Ext.define("TR.view.operations.CurrencyWindow", {
             keyNavEnabled : true,
             mouseWheelEnabled : false,
             name : 'fromAmount',
-            fieldLabel : LANG.SUM,
             allowBlank : false,
-            format : '0.00'
+            format : '0.00',
+            flex: 1
         };
         
         var currenciesInput = {
@@ -59,9 +59,9 @@ Ext.define("TR.view.operations.CurrencyWindow", {
             keyNavEnabled : true,
             mouseWheelEnabled : false,
             name : 'toAmount',
-            fieldLabel : LANG.SUM,
             allowBlank : false,
-            format : '0.00'
+            format : '0.00',
+            flex: 1
         };
         
         var currenciesInput2 = {
@@ -97,7 +97,7 @@ Ext.define("TR.view.operations.CurrencyWindow", {
         };
 
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
-            name: 'to',
+            name: 'projectId',
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
@@ -146,7 +146,6 @@ Ext.define("TR.view.operations.CurrencyWindow", {
             },
             defaultType : 'textfield',
             items : [ 
-                amountField,
                 currenciesInput,
                 currenciesInput2,
                 accountsInput,
