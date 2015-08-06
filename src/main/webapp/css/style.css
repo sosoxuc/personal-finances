@@ -5,9 +5,13 @@
 .income-row .x-grid-cell { 
     color: #090; 
 } 
- 
+
 .outcome-row .x-grid-cell { 
     color: #900; 
+}
+
+.bold {
+	font-weight: bold;
 }
 
 /* Chrome bug fix */

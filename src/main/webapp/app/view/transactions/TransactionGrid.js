@@ -79,20 +79,29 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             format : 'd-m-Y',
             align : 'right'
         }, {
+            header : LANG.PROJECT,
+            dataIndex : 'projectName',
+            flex : 1.5,
+            align : 'right'
+        }, {
+            header : LANG.DESTINATION,
+            dataIndex : 'transactionNote',
+            flex : 2.5
+        }, {
             header : LANG.SUM,
             xtype : 'numbercolumn',
             format : '0.00',
             align : 'right',
             dataIndex : 'transactionAmount',
-            flex : 1
+            flex : 1,
+            cls: 'bold',
+            tdCls: 'bold'
         }, {
             header : LANG.CURRENCY,
             dataIndex : 'currencyCode',
-            flex : 1
-        }, {
-            header : LANG.ACCOUNT,
-            dataIndex : 'accountName',
-            flex : 1
+            flex : 1,
+            cls: 'bold',
+            tdCls: 'bold'
         }, {
             header : LANG.REST,
             xtype : 'numbercolumn',
@@ -105,13 +114,9 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             dataIndex : 'currencyCode',
             flex : 1
         }, {
-            header : LANG.PROJECT,
-            dataIndex : 'projectName',
-            flex : 1.5
-        }, {
-            header : LANG.DESTINATION,
-            dataIndex : 'transactionNote',
-            flex : 2.5
+            header : LANG.ACCOUNT,
+            dataIndex : 'accountName',
+            flex : 1
         } ];
 
         me.callParent(arguments);
