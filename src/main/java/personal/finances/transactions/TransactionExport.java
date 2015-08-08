@@ -1,8 +1,10 @@
 package personal.finances.transactions;
 
+import jxl.CellView;
 import jxl.DateCell;
 import jxl.NumberCell;
 import jxl.Workbook;
+import jxl.format.UnderlineStyle;
 import jxl.write.*;
 import jxl.write.Number;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,42 +66,61 @@ public class TransactionExport {
 
         String[] sheetHeaders = {"Date", "Project", "Destination", "Sum", "Currency", "Rest", "Currency", "Account"};
         int[] sheetHeaderWidth = {10, 40, 50, 10, 10, 10, 10, 40};
+            WritableFont headerFont = new WritableFont(WritableFont.createFont("Arial"),
+                    WritableFont.DEFAULT_POINT_SIZE, WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.BLACK);
+            WritableCellFormat headerCellFormats = new WritableCellFormat(headerFont);
 
         for (int i = 0; i < sheetHeaders.length; i++) {
-            Label label = new Label(i, 0, sheetHeaders[i]);
+            Label label = new Label(i, 0, sheetHeaders[i], headerCellFormats);
             wsheet.setColumnView(i,sheetHeaderWidth[i]);
+
             wsheet.addCell(label);
         }
 
+
+        WritableCellFormat cellFormats = null;
+
         for (int i= 0; i < transactions.size(); i++) {
             Transaction transaction = transactions.get(i);
-            DateTime date = new DateTime(0, i + 1, transaction.transactionDate);
+            if (transaction.direction.equals(Direction.OUT)) {
+                WritableFont cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                        WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.RED);
+                cellFormats = new WritableCellFormat(cellFonts);
+            }
+
+            if (transaction.direction.equals(Direction.IN)) {
+                WritableFont cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                        WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.GREEN);
+                cellFormats = new WritableCellFormat(cellFonts);
+            }
+
+            DateTime date = new DateTime(0, i + 1, transaction.transactionDate, cellFormats);
             wsheet.addCell(date);
 
-            Label project = new Label(1, i + 1, transaction.projectName);
+            Label project = new Label(1, i + 1, transaction.projectName, cellFormats);
             wsheet.addCell(project);
 
-            Label destination = new Label(2, i + 1, transaction.transactionNote);
+            Label destination = new Label(2, i + 1, transaction.transactionNote, cellFormats);
             wsheet.addCell(destination);
 
-            jxl.write.Number sum = new Number(3, i + 1, transaction.transactionAmount.doubleValue());
+            jxl.write.Number sum = new Number(3, i + 1, transaction.transactionAmount.doubleValue(), cellFormats);
             wsheet.addCell(sum);
 
-            Label currency = new Label(4, i + 1, transaction.currencyCode);
+            Label currency = new Label(4, i + 1, transaction.currencyCode, cellFormats);
             wsheet.addCell(currency);
 
             List<TransactionRest> transactionRests = transaction.transactionRests;
             if (transactionRests != null && !transactionRests.isEmpty()) {
                 TransactionRest currencyRest = getRest(transactionRests, TransactionRestType.CURRENCY);
 
-                jxl.write.Number rest = new Number(5, i + 1, currencyRest.transactionRest.doubleValue());
+                jxl.write.Number rest = new Number(5, i + 1, currencyRest.transactionRest.doubleValue(), cellFormats);
                 wsheet.addCell(rest);
 
-                Label restCurrency = new Label(6, i + 1, transaction.currencyCode);
+                Label restCurrency = new Label(6, i + 1, transaction.currencyCode, cellFormats);
                 wsheet.addCell(restCurrency);
             }
 
-            Label account = new Label(7, i + 1, transaction.accountName);
+            Label account = new Label(7, i + 1, transaction.accountName, cellFormats);
             wsheet.addCell(account);
         }
 

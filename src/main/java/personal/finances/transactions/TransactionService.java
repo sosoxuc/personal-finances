@@ -194,11 +194,12 @@ public class TransactionService {
             countQuery.setParameter(key, queryParams.get(key));
         }
 
-        start = start == null? 0 : start ;
-        limit = limit == null? 50 : start ;
-
-        query.setFirstResult(start);
-        query.setMaxResults(limit);
+        if (start != null) {
+            query.setFirstResult(start);
+        }
+        if (limit != null) {
+            query.setMaxResults(limit);
+        }
 
         List<Transaction> transactions = query.getResultList();
         Long total = (Long)countQuery.getSingleResult();
