@@ -20,6 +20,7 @@ import personal.utils.SqlUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -151,14 +152,6 @@ public class EmployeesService {
         return em.find(Employee.class, id);
     }
 
-    @RequestMapping("/all")
-    public List<Employee> getAll() {
-
-        return em.createQuery(
-                "from Employee where state in (0,1)  order by lastName,firstName",
-                Employee.class).getResultList();
-    }
-
     @RequestMapping("/active")
     public List<Employee> getActive() {
 
@@ -258,6 +251,9 @@ public class EmployeesService {
         photo.id = id;
         photo.photo = file.getBytes();
 
+
+        BufferedImage bufferedImage = new BufferedImage(200, 300, 1);
+
         // TODO Resize to 200 pixel width
         em.merge(photo);
         return new UploadResponse(true);
@@ -292,7 +288,7 @@ public class EmployeesService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
         headers.add("Content-Type", "image/jpeg");
 
-        response = new ResponseEntity<byte[]>(photoData, headers,
+        response = new ResponseEntity<>(photoData, headers,
                 HttpStatus.OK);
 
         return response;

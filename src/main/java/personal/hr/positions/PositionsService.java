@@ -19,12 +19,12 @@ public class PositionsService {
     @PersistenceContext
     private EntityManager em;
 
-    @RequestMapping("/position/list")
+    @RequestMapping("/list")
     public List<Position> list() {
         return em.createQuery("from Position", Position.class).getResultList();
     }
 
-    @RequestMapping("/position/add")
+    @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
     public Integer add(@RequestParam String name) {
         Position position = new Position();
@@ -35,7 +35,7 @@ public class PositionsService {
         return position.id;
     }
     
-    @RequestMapping("/position/remove")
+    @RequestMapping("/remove")
     @Transactional(rollbackFor = Throwable.class)
     public void remove(@RequestParam Integer id) {
         Position position = em.find(Position.class, id);

@@ -22,17 +22,17 @@ public class WorkplacesService {
     @PersistenceContext
     private EntityManager em;
 
-    @RequestMapping("/workplace/list")
-    public ResponseEntity<List<Workplace>> getWorkplaces() {
+    @RequestMapping("/list")
+    public ResponseEntity<List<Workplace>> list() {
         List<Workplace> workplaces = em.createQuery("from Workplace", Workplace.class)
                 .getResultList();
 
         return new ResponseEntity<>(workplaces, HttpStatus.OK);
     }
 
-    @RequestMapping("/workplace/add")
+    @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Workplace> addWorkplace(@RequestParam String name) {
+    public ResponseEntity<Workplace> add(@RequestParam String name) {
         Workplace workplace = new Workplace();
         workplace.workplaceName = name;
         workplace.stateId=States.ACTIVE;
@@ -41,9 +41,9 @@ public class WorkplacesService {
         return new ResponseEntity<>(workplace, HttpStatus.OK);
     }
 
-    @RequestMapping("/workplace/remove")
+    @RequestMapping("/remove")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Workplace> removeWorkplace(@RequestParam Integer id) {
+    public ResponseEntity<Workplace> remove(@RequestParam Integer id) {
         Workplace workplace = em.find(Workplace.class, id);
         workplace.stateId=States.INACTIVE;
 
