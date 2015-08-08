@@ -1,5 +1,8 @@
 package personal.finances.accounts;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,7 @@ public class AccountService {
     @PersistenceContext
     private EntityManager em;
     
+    @CacheEvict(value="account", allEntries=true)
     public static void init(EntityManager em){
         AccountService service =new AccountService();
         service.em=em;
@@ -32,6 +36,7 @@ public class AccountService {
         service.create("საბანკო",null);
     }
 
+    @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Account> create(@RequestParam String accountName,
@@ -46,6 +51,7 @@ public class AccountService {
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
+    @Cacheable("account")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Account>> list() {
         List<Account> accounts = em
@@ -55,6 +61,7 @@ public class AccountService {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Account> update(
@@ -78,6 +85,7 @@ public class AccountService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Account> remove(

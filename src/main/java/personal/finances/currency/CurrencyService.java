@@ -1,5 +1,7 @@
 package personal.finances.currency;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,7 @@ public class CurrencyService {
     @PersistenceContext
     private EntityManager em;
     
+    @CacheEvict(value="currency", allEntries=true)
     public static void init(EntityManager em){
         CurrencyService service =new CurrencyService();
         service.em=em;
@@ -32,6 +35,7 @@ public class CurrencyService {
         service.create("დოლარი","USD");
     }
 
+    @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> create(
@@ -48,6 +52,7 @@ public class CurrencyService {
         return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 
+    @Cacheable(value="currency")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Currency>> list() {
         List<Currency> currencies = em
@@ -58,6 +63,7 @@ public class CurrencyService {
         return new ResponseEntity<>(currencies, HttpStatus.OK);
     }
 
+    @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> update(
@@ -83,6 +89,7 @@ public class CurrencyService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Currency> remove(
