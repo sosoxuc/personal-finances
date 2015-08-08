@@ -15,6 +15,7 @@ import personal.States;
 import personal.UploadResponse;
 import personal.hr.positions.Position;
 import personal.hr.workplaces.Workplace;
+import personal.utils.SecurityUtils;
 import personal.utils.SqlUtils;
 
 import javax.imageio.ImageIO;
@@ -31,10 +32,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import static personal.utils.SqlUtils.SqlStringContaining.NONE;
@@ -58,7 +57,9 @@ public class EmployeesService {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
             @RequestParam(required = false) Integer workplaceId,
-            @RequestParam(required = false) Integer positionId)
+            @RequestParam(required = false) Integer positionId,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String password)
                     throws ParseException {
 
         Employee employee = new Employee();
@@ -67,7 +68,7 @@ public class EmployeesService {
         employee.firstName = firstName;
         employee.lastName = lastName;
         employee.phone = phone;
-
+        employee.stateId = States.ACTIVE;
         employee.positionId = positionId;
         if (positionId != null) {
             Position position = em.find(Position.class, positionId);
@@ -82,6 +83,14 @@ public class EmployeesService {
 
         if (birthDate != null) {
             employee.birthDate = df.parse(birthDate);
+        }
+
+        if (username != null && password != null) {
+            String uuid = UUID.randomUUID().toString().substring(0, 8);
+            String passhash = SecurityUtils.sha512(password + uuid);
+            employee.userName = username;
+            employee.passwordHash = passhash;
+            employee.passwordSalt = uuid;
         }
 
         em.persist(employee);
@@ -98,7 +107,9 @@ public class EmployeesService {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
             @RequestParam(required = false) Integer workplaceId,
-            @RequestParam(required = false) Integer positionId)
+            @RequestParam(required = false) Integer positionId,
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String password)
                     throws ParseException {
 
         Employee employee = em.find(Employee.class, id);
@@ -107,6 +118,7 @@ public class EmployeesService {
         employee.firstName = firstName;
         employee.lastName = lastName;
         employee.phone = phone;
+        employee.stateId = States.ACTIVE;
 
         employee.positionId = positionId;
         if (positionId != null) {
@@ -122,6 +134,15 @@ public class EmployeesService {
 
         if (birthDate != null) {
             employee.birthDate = df.parse(birthDate);
+        }
+
+        if (username != null && password != null) {
+            String uuid = UUID.randomUUID().toString().substring(0, 8);
+            String passhash = SecurityUtils.sha512(password + uuid);
+
+            employee.userName = username;
+            employee.passwordHash = passhash;
+            employee.passwordSalt = uuid;
         }
 
         em.merge(employee);
