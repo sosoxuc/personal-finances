@@ -182,14 +182,11 @@ Ext.define("TR.view.employees.EmployeeGrid", {
                 me.btns.enable = me.down('button[name=enable]');
             if (!me.btns.remove)
                 me.btns.remove = me.down('button[name=remove]');
-            if (!me.btns.log)
-                me.btns.log = me.down('button[name=log]');
 
             me.btns.edit.disable();
             me.btns.disable.disable();
             me.btns.enable.disable();
             me.btns.remove.disable();
-            me.btns.log.disable();
         }
 
         function changeButtons(view, rec, ind) {
