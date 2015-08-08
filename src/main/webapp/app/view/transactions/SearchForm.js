@@ -23,7 +23,8 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: currenciesStore,
             displayField: 'currencyCode',
-            valueField: 'id'
+            valueField: 'id',
+            multiSelect: true
         });
         
         var accountsCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -32,7 +33,8 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: accountsStore,
             displayField: 'accountName',
-            valueField: 'id'
+            valueField: 'id',
+            multiSelect: true,
         });
         
         var projectsCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -41,7 +43,8 @@ Ext.define("TR.view.transactions.SearchForm", {
             queryMode: 'local',
             store: projectsStore,
             displayField: 'projectName',
-            valueField: 'id'
+            valueField: 'id',
+            multiSelect: true
         });
         
         var directionCombo = Ext.create('Ext.form.field.ComboBox', {
