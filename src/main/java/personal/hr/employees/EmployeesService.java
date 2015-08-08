@@ -252,7 +252,12 @@ public class EmployeesService {
 
         byte[] bytes = file.getBytes();
         BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
-        BufferedImage resizeImage = resizeImage(bufferedImage, 150, 200, 1);
+        int height = bufferedImage.getHeight();
+        int width = bufferedImage.getWidth();
+
+        int  newWidth = (200 * width) / height;
+
+        BufferedImage resizeImage = resizeImage(bufferedImage, newWidth, 200, 1);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(resizeImage, "jpg", baos);
