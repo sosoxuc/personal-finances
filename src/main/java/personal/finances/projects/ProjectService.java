@@ -1,5 +1,7 @@
 package personal.finances.projects;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,13 +27,15 @@ public class ProjectService {
     @PersistenceContext
     private EntityManager em;
     
+    @CacheEvict(value="project", allEntries=true)
     public static void init(EntityManager em){
         ProjectService service =new ProjectService();
         service.em=em;
         service.create("სამსახური");
         service.create("სხვა პროექტი");
     }
-
+    
+    @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> create(@RequestParam("projectName") String projectName) {
@@ -50,6 +54,7 @@ public class ProjectService {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @Cacheable(value="project")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Project>> list() {
         List<Project> projects = em.createQuery("from Project where isActive = :isActive", Project.class)
@@ -58,6 +63,7 @@ public class ProjectService {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> update(
@@ -85,7 +91,7 @@ public class ProjectService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-
+    @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Project> remove(
