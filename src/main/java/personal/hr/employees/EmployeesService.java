@@ -17,10 +17,14 @@ import personal.hr.positions.Position;
 import personal.hr.workplaces.Workplace;
 import personal.utils.SqlUtils;
 
+import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -247,15 +251,20 @@ public class EmployeesService {
     @Transactional(rollbackFor = Throwable.class)
     public UploadResponse updatePhoto(@RequestParam Integer id,
             @RequestParam MultipartFile file) throws IOException {
+
+        byte[] bytes = file.getBytes();
+        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
+        BufferedImage resizeImage = resizeImage(bufferedImage, 150, 200, 1);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(resizeImage, "jpg", baos);
+
         Photo photo = new Photo();
         photo.id = id;
-        photo.photo = file.getBytes();
+        photo.photo = baos.toByteArray();
 
-
-        BufferedImage bufferedImage = new BufferedImage(200, 300, 1);
-
-        // TODO Resize to 200 pixel width
         em.merge(photo);
+
         return new UploadResponse(true);
     }
 
@@ -292,5 +301,13 @@ public class EmployeesService {
                 HttpStatus.OK);
 
         return response;
+    }
+
+    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
+        BufferedImage resizedImage = new BufferedImage(width, height, type);
+        Graphics2D g = resizedImage.createGraphics();
+        g.drawImage(originalImage, 0, 0, width, height, null);
+        g.dispose();
+        return resizedImage;
     }
 }
