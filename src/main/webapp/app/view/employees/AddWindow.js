@@ -124,9 +124,13 @@ Ext.define("TR.view.employees.AddWindow", {
             if (!form.getForm().isValid())
                 return;
             var values = form.getForm().getValues();
-            delete values.id;
-            correctDates(values, [ 'birthDate', 'expireDate' ]);
-
+            for (var property in values) {
+                if (values.hasOwnProperty(property)) {
+                    if (!values[property] || values[property]==='') {
+                        delete values[property]
+                    }
+                }
+            }
             myRequest({
                 url : 'rest/hr/employee/add',
                 params : values,
