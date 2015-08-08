@@ -5,7 +5,7 @@ Ext.define('TR.store.employees.WorkplaceStore', {
 	autoLoad: true,
 	proxy: {
 		type: 'rest',
-		url: 'rest/employee/getWorkplaces',
+		url: 'rest/hr/workplace/list',
 		reader: {
 			type: 'json'
 		}

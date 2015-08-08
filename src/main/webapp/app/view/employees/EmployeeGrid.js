@@ -4,8 +4,7 @@ Ext.define("TR.view.employees.EmployeeGrid", {
         cfg = cfg || {};
         var me = this;
 
-        me.store = Ext.StoreManager.lookup('employeeStore')
-                || Ext.create('TR.store.employees.EmployeeStore');
+        me.store = Ext.StoreManager.lookup('employeeStore') || Ext.create('TR.store.employees.EmployeeStore');
 
         me.tbar = [ {
             text : 'დამატება',

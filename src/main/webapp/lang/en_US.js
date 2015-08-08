@@ -20,6 +20,7 @@ var LANG = {
     DIRECTION:      'Direction',
     DOWN :          'Down',
     EDIT :          'Edit',
+    EMPLOYEES :     'Employees',
     ERROR:          'Error',
     EXPENCE:        'Expence',
     EXPORT :        'Export',

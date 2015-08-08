@@ -49,11 +49,11 @@ Ext.define('TR.view.MainPanel', {
             border : false,
             items : [ rests, 
                       transactions, 
-                      //employees, 
-                      projects, 
+                      employees,             projects, 
                       accounts, 
                       currencies, 
-                      imports ]
+                      imports,
+                      employees ]
         });
 
         me.items = [ tabPanel ];

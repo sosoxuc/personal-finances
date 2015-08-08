@@ -42,7 +42,7 @@ Ext.define("TR.store.employees.EmployeeStore", {
     	}
     }],
     proxy: {
-    	url: 'rest/employee/search',
+    	url: 'rest/hr/employee/search',
     	type: 'rest',
     	reader: {
     		type: 'json',

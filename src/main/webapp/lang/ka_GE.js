@@ -21,6 +21,7 @@ var LANG = {
     DIRECTION:      'მიმართულება',
     DOWN :          'ქვევით',
     EDIT :          'რედაქტირება',
+    EMPLOYEES :     'თანამშრომლები',
     ERROR:          'შეცდომა',
     EXPENCE:        'გასავალი',
     EXPORT :        'ექსპორტი',
