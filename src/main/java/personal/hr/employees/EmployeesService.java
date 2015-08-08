@@ -199,12 +199,10 @@ public class EmployeesService {
         SqlUtils.sqlParam(positionId, params, sql,
                 " and c.positionId like :positionId");
 
-        SqlUtils.sqlParam(state, params, sql, " and c.state=:state");
+        SqlUtils.sqlParam(state, params, sql, " and c.stateId=:state");
 
         SqlUtils.sqlParam(personalNo, params, sql,
                 " and c.personalNo = :personalNo", NONE);
-
-        sql.append(" and c.state in (1,0) ");
 
         // Get count
         String cntText = "select count(c) from Employee c where 1=1 ";
