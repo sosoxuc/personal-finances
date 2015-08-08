@@ -58,8 +58,8 @@ Ext.define("TR.view.employees.AddWindow", {
                 fieldLabel : 'დაბ. თარიღი',
                 allowBlank : true,
                 name : 'birthDate',
-                emptyText : 'dd/mm/yyyy',
-                format : 'd/m/Y'
+                emptyText : 'dd-mm-yyyy',
+                format: 'd-m-Y',
             }, {
                 fieldLabel : 'პირადი ნომერი',
                 name : 'personalNo',

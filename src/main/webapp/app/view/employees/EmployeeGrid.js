@@ -7,23 +7,23 @@ Ext.define("TR.view.employees.EmployeeGrid", {
         me.store = Ext.StoreManager.lookup('employeeStore') || Ext.create('TR.store.employees.EmployeeStore');
 
         me.tbar = [ {
-            text : 'დამატება',
+            text : LANG.ADD,
             name : 'add',
             handler : add
         }, {
-            text : 'რედაქტირება',
+            text : LANG.EDIT,
             name : 'edit',
             handler : edit
         }, {
-            text : 'გაუქმება',
+            text : LANG.DISABLE,
             name : 'disable',
             handler : disable
         }, {
-            text : 'გააქტიურება',
+            text : LANG.ENABLE,
             name : 'enable',
             handler : enable
         }, {
-            text : 'წაშლა',
+            text : LANG.REMOVE,
             name : 'remove',
             handler : remove
         } ];
