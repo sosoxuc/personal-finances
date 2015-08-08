@@ -50,10 +50,6 @@ Ext.define("TR.view.employees.AddWindow", {
 	        },
 	        defaultType : 'textfield',
 	        items : [ {
-	            name : 'id',
-	            hidden : true,
-	            allowBlank: true
-	        }, {
 	            fieldLabel : 'გვარი',
 	            name : 'lastName'
 	        }, {
@@ -134,21 +130,10 @@ Ext.define("TR.view.employees.AddWindow", {
 			    return;
 		    var values = form.getForm().getValues();
 		    delete values.id;
-		    values.cards = getDataFromStore(cardGrid.store);
 		    correctDates(values, ['birthDate', 'expireDate']);
 		   
-		    values.userRole = values.userRole ? 2 : 1;
-		    
-		    for(var i in values.cards){
-		    	if(!values.cards[i].employee)
-		    		delete values.cards[i].id;
-		    	values.cards[i].enrollDate = values.cards[i].enrollDate ? values.cards[i].enrollDate.getTime() : '';
-		    	delete values.cards[i].stateName
-		    }
-		    
-		    log(values);
 		    myRequest({
-		        url : 'rest/employee/add',
+		        url : 'rest/hr/employee/add',
 		        jsonData : values,
 		        callback : function(id) {
 			        cfg.searchForm.search();
@@ -178,13 +163,13 @@ Ext.define("TR.view.employees.AddWindow", {
 	    	Ext.Msg.prompt("პოზიციის დამატება", "პოზიცია", function(ans, text){
 	    		if(ans == 'ok' && text){
 	    			myRequest({
-	    				url: 'rest/employee/addPosition',
+	    				url: 'rest/hr/position/add',
 	    				params: {
 	    					name: text
 	    				},
-	    				callback: function(id){
-	    					if(id) positionStore.load();
-	    					positionCombo.setValue(id);
+	    				callback: function(data){
+	    					positionStore.load();
+	    					positionCombo.setValue(data.id);
 	    				}
 	    			});
 	    		}
@@ -195,13 +180,13 @@ Ext.define("TR.view.employees.AddWindow", {
 	    	Ext.Msg.prompt("სამუშაო ადგილის დამატება", "სამუშაო ადგილი", function(ans, text){
 	    		if(ans == 'ok' && text){
 	    			myRequest({
-	    				url: 'rest/employee/addWorkplace',
+	    				url: 'rest/hr/workplace/add',
 	    				params: {
 	    					name: text
 	    				},
-	    				callback: function(id){
-	    					if(id) workplaceStore.load();
-	    					workplaceCombo.setValue(id);
+	    				callback: function(data){
+	    					workplaceStore.load();
+	    					workplaceCombo.setValue(data.id);
 	    				}
 	    			});
 	    		}
