@@ -1,4 +1,4 @@
-Ext.define("TR.store.employees.Store", {
+Ext.define("TR.store.employees.EmployeeStore", {
     extend : "Ext.data.Store",
     storeId: 'employeeStore',
 //    leadingBufferZone : 150,
