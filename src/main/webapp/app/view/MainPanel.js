@@ -49,7 +49,7 @@ Ext.define('TR.view.MainPanel', {
             border : false,
             items : [ rests, 
                       transactions, 
-                      employees,             projects, 
+                      projects, 
                       accounts, 
                       currencies, 
                       imports,

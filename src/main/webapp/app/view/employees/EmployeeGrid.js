@@ -60,22 +60,9 @@ Ext.define("TR.view.employees.EmployeeGrid", {
             flex : 1,
             hidden : true
         }, {
-            header : 'ტიპი',
-            dataIndex : 'type',
-            flex : 1,
-        }, {
             header : 'სტატუსი',
             dataIndex : 'stateName',
             flex : 1
-        }, {
-            header : 'ანაზღაურება',
-            dataIndex : 'hourlySalary',
-            flex : 1
-        }, {
-            header : 'ვადის გასვლის თარ.',
-            dataIndex : 'expireDate',
-            flex : 1,
-            renderer : Ext.util.Format.dateRenderer('d/m/Y')
         } ];
 
         me.callParent(arguments);

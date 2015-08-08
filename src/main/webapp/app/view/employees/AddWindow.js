@@ -2,9 +2,7 @@ Ext.define("TR.view.employees.AddWindow", {
     extend : "Ext.window.Window",
     modal : true,
     width : 400,
-    height : 350,
     autoShow : true,
-    layout : 'border',
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
@@ -40,8 +38,6 @@ Ext.define("TR.view.employees.AddWindow", {
 
         var form = Ext.create('Ext.form.Panel', {
             border : false,
-            split : true,
-            region : 'center',
             bodyPadding : 5,
             fieldDefaults : {
                 labelWidth : 150,
