@@ -1,4 +1,4 @@
-package personal.employees;
+package personal.hr.workplaces;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -15,4 +15,6 @@ public class Workplace implements Serializable {
     public Integer id;
 
     public String workplaceName;
+    
+    public Integer stateId;
 }

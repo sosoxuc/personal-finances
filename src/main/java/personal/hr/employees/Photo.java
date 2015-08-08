@@ -1,4 +1,4 @@
-package personal.employees;
+package personal.hr.employees;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,4 +1,4 @@
-package personal.employees;
+package personal.hr.employees;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 import personal.ListPage;
 import personal.States;
 import personal.UploadResponse;
+import personal.hr.positions.Position;
+import personal.hr.workplaces.Workplace;
 import personal.utils.SqlUtils;
 
 import javax.persistence.EntityManager;
@@ -34,44 +36,13 @@ import static personal.utils.SqlUtils.SqlStringContaining.NONE;
 import static personal.utils.SqlUtils.SqlStringContaining.START;
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/hr/employee")
 public class EmployeesService {
 
     @PersistenceContext
     private EntityManager em;
-    
+
     public static SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-
-    @RequestMapping("/workplace/list")
-    public List<Workplace> getWorkplaces() {
-        return em.createQuery("from Workplace", Workplace.class)
-                .getResultList();
-    }
-
-    @RequestMapping("/workplace/add")
-    @Transactional(rollbackFor = Throwable.class)
-    public Integer addWorkplace(@RequestParam String name) {
-        Workplace workplace = new Workplace();
-        workplace.workplaceName = name;
-        em.persist(workplace);
-
-        return workplace.id;
-    }
-
-    @RequestMapping("/position/list")
-    public List<Position> getPositions() {
-        return em.createQuery("from Position", Position.class).getResultList();
-    }
-
-    @RequestMapping("/position/add")
-    @Transactional(rollbackFor = Throwable.class)
-    public Integer addPositions(@RequestParam String name) {
-        Position position = new Position();
-        position.positionName = name;
-        em.persist(position);
-
-        return position.id;
-    }
 
     @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
@@ -81,7 +52,8 @@ public class EmployeesService {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
             @RequestParam(required = false) Integer workplaceId,
-            @RequestParam(required = false) Integer positionId) throws ParseException {
+            @RequestParam(required = false) Integer positionId)
+                    throws ParseException {
 
         Employee employee = new Employee();
         employee.personalNo = personalNo;
@@ -120,7 +92,8 @@ public class EmployeesService {
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
             @RequestParam(required = false) Integer workplaceId,
-            @RequestParam(required = false) Integer positionId) throws ParseException {
+            @RequestParam(required = false) Integer positionId)
+                    throws ParseException {
 
         Employee employee = em.find(Employee.class, id);
         employee.personalNo = personalNo;
@@ -178,16 +151,15 @@ public class EmployeesService {
         return em.find(Employee.class, id);
     }
 
-    @RequestMapping("/getAll")
+    @RequestMapping("/all")
     public List<Employee> getAll() {
 
-        return em
-                .createQuery(
-                        "from Employee where state in (0,1)  order by lastName,firstName",
-                        Employee.class).getResultList();
+        return em.createQuery(
+                "from Employee where state in (0,1)  order by lastName,firstName",
+                Employee.class).getResultList();
     }
 
-    @RequestMapping("/getActive")
+    @RequestMapping("/active")
     public List<Employee> getActive() {
 
         return em.createQuery(
@@ -278,7 +250,7 @@ public class EmployeesService {
         return resultList;
     }
 
-    @RequestMapping("/updatePhoto")
+    @RequestMapping("/photo/change")
     @Transactional(rollbackFor = Throwable.class)
     public UploadResponse updatePhoto(@RequestParam Integer id,
             @RequestParam MultipartFile file) throws IOException {
@@ -291,8 +263,7 @@ public class EmployeesService {
         return new UploadResponse(true);
     }
 
-    // TODO Security
-    @RequestMapping("/getPhoto")
+    @RequestMapping("/photo/get")
     public ResponseEntity<byte[]> getPhoto(@RequestParam Integer id)
             throws IOException {
 
@@ -321,7 +292,8 @@ public class EmployeesService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
         headers.add("Content-Type", "image/jpeg");
 
-        response = new ResponseEntity<byte[]>(photoData, headers, HttpStatus.OK);
+        response = new ResponseEntity<byte[]>(photoData, headers,
+                HttpStatus.OK);
 
         return response;
     }

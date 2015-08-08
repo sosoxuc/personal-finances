@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import personal.States;
-import personal.employees.Employee;
+import personal.hr.employees.Employee;
 import personal.spring.ConfigUtil;
 import personal.utils.SecurityUtils;
 

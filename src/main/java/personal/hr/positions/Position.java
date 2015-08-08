@@ -1,4 +1,4 @@
-package personal.employees;
+package personal.hr.positions;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,5 +17,6 @@ public class Position  implements Serializable {
     public String positionName;
     
     public Integer positionOrder;
-
+    
+    public Integer stateId;
 }
