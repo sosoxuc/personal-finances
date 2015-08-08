@@ -7,15 +7,13 @@ Ext.define("TR.view.employees.AddWindow", {
         cfg = cfg || {};
         var me = this;
 
-        me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
+        me.title = cfg.edit ? LANG.EDIT : LANG.ADD;
 
-        var positionStore = Ext.StoreManager.lookup('positionStore')
-                || Ext.create('TR.store.employees.PositionStore');
-        var workplaceStore = Ext.StoreManager.lookup('workplaceStore')
-                || Ext.create('TR.store.employees.WorkplaceStore');
+        var positionStore = Ext.StoreManager.lookup('positionStore') || Ext.create('TR.store.employees.PositionStore');
+        var workplaceStore = Ext.StoreManager.lookup('workplaceStore') || Ext.create('TR.store.employees.WorkplaceStore');
 
         var workplaceCombo = Ext.create('Ext.form.field.ComboBox', {
-            fieldLabel : 'სამუშაო ადგილი',
+            fieldLabel : LANG.WORKPLACE,
             name : 'workplaceId',
             store : workplaceStore,
             queryMode : 'local',
@@ -32,7 +30,7 @@ Ext.define("TR.view.employees.AddWindow", {
             flex : 1,
             displayField : 'positionName',
             valueField : 'id',
-            fieldLabel : 'პოზიცია',
+            fieldLabel : LANG.POSITION,
             name : 'positionId'
         });
 
@@ -46,22 +44,21 @@ Ext.define("TR.view.employees.AddWindow", {
             },
             defaultType : 'textfield',
             items : [ {
-                fieldLabel : 'გვარი',
+                fieldLabel : LANG.LASTNAME,
                 name : 'lastName',
                 allowBlank : false
             }, {
-                fieldLabel : 'სახელი',
+                fieldLabel : LANG.FIRSTNAME,
                 name : 'firstName',
                 allowBlank : false
             }, {
                 xtype : 'datefield',
-                fieldLabel : 'დაბ. თარიღი',
-                allowBlank : true,
+                fieldLabel : LANG.BIRTHDATE,
                 name : 'birthDate',
                 emptyText : 'dd-mm-yyyy',
                 format: 'd-m-Y',
             }, {
-                fieldLabel : 'პირადი ნომერი',
+                fieldLabel : LANG.PERSONAL_NUMBER,
                 name : 'personalNo',
                 isEng : true
             }, {
@@ -85,18 +82,12 @@ Ext.define("TR.view.employees.AddWindow", {
                     handler : addWorkplace
                 } ]
             }, {
-                fieldLabel : 'ტელეფონი',
-                name : 'phone',
-                regex : /^5\d{8}$/,
-                allowBlank : true,
-                enforceMaxLength : true,
-                maxLength : 9,
-                maskRe : /\d/
+                fieldLabel : LANG.PHONE,
+                name : 'phone'
             }, {
-                fieldLabel : 'ელ. ფოსტა',
+                fieldLabel : LANG.EMAIL,
                 vtype : 'email',
                 name : 'email',
-                allowBlank : true,
                 isEng : true
             } ]
         });
@@ -106,11 +97,15 @@ Ext.define("TR.view.employees.AddWindow", {
         me.buttons = [];
 
         me.buttons.push({
-            text : cfg.edit ? 'რედაქტირება' : 'დამატება',
+            text : cfg.edit ? LANG.EDIT : LANG.ADD,
             handler : cfg.edit ? edit : add
         });
 
         me.callParent(arguments);
+        
+        if(cfg.data) {
+            me.down('form').getForm().setValues(cfg.data);
+        }
 
         function add() {
             if (!form.getForm().isValid())
@@ -137,11 +132,17 @@ Ext.define("TR.view.employees.AddWindow", {
             if (!form.getForm().isValid())
                 return;
             var values = form.getForm().getValues();
-            values.userRole = values.userRole ? 2 : 1;
-            correctDates(values, [ 'birthDate', 'expireDate' ]);
+                values.id = cfg.data.id;
+            for (var property in values) {
+                if (values.hasOwnProperty(property)) {
+                    if (!values[property] || values[property]==='') {
+                        delete values[property]
+                    }
+                }
+            }
 
             myRequest({
-                url : 'rest/employee/update',
+                url : 'rest/hr/employee/update',
                 params : values,
                 callback : function(id) {
                     cfg.searchForm.search();
@@ -151,7 +152,7 @@ Ext.define("TR.view.employees.AddWindow", {
         }
 
         function addPosition() {
-            Ext.Msg.prompt("პოზიციის დამატება", "პოზიცია", function(ans, text) {
+            Ext.Msg.prompt(LANG.ADD, LANG.POSITION, function(ans, text) {
                 if (ans == 'ok' && text) {
                     myRequest({
                         url : 'rest/hr/position/add',
@@ -168,21 +169,21 @@ Ext.define("TR.view.employees.AddWindow", {
         }
 
         function addWorkplace() {
-            Ext.Msg.prompt("სამუშაო ადგილის დამატება", "სამუშაო ადგილი",
-                    function(ans, text) {
-                        if (ans == 'ok' && text) {
-                            myRequest({
-                                url : 'rest/hr/workplace/add',
-                                params : {
-                                    name : text
-                                },
-                                callback : function(data) {
-                                    workplaceStore.load();
-                                    workplaceCombo.setValue(data.id);
-                                }
-                            });
-                        }
-                    });
+            Ext.Msg.prompt(LANG.ADD, LANG.WORKPLACE,
+                function(ans, text) {
+                    if (ans == 'ok' && text) {
+                        myRequest({
+                            url : 'rest/hr/workplace/add',
+                            params : {
+                                name : text
+                            },
+                            callback : function(data) {
+                                workplaceStore.load();
+                                workplaceCombo.setValue(data.id);
+                            }
+                        });
+                    }
+                });
         }
     }
 });

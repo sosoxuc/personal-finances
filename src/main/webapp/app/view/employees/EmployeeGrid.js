@@ -29,38 +29,39 @@ Ext.define("TR.view.employees.EmployeeGrid", {
         } ];
 
         me.columns = [ {
-            header : 'პირადი ნომერი',
+            header : LANG.PERSONAL_NUMBER,
             dataIndex : 'personalNo',
             flex : 1
         }, {
-            header : 'გვარი, სახელი',
-            dataIndex : 'fullName',
+            header : LANG.LASTNAME,
+            dataIndex : 'lastName',
             flex : 1
         }, {
-            header : 'დაბ. თარიღი',
+            header : LANG.FIRSTNAME,
+            dataIndex : 'firstName',
+            flex : 1
+        }, {
+            header : LANG.BIRTHDATE,
             dataIndex : 'birthDate',
-            flex : 1,
-            renderer : Ext.util.Format.dateRenderer('d/m/Y')
-        }, {
-            header : 'სამუშაო ადგილი',
-            dataIndex : 'workplace',
             flex : 1
         }, {
-            header : 'პოზიცია',
-            dataIndex : 'position',
+            header : LANG.WORKPLACE,
+            dataIndex : 'workplaceName',
             flex : 1
         }, {
-            header : 'ტელეფონი',
+            header : LANG.POSITION,
+            dataIndex : 'positionName',
+            flex : 1
+        }, {
+            header : LANG.PHONE,
             dataIndex : 'phone',
-            flex : 1,
-            hidden : true
+            flex : 1
         }, {
-            header : 'ელ. ფოსტა',
+            header : LANG.EMAIL,
             dataIndex : 'email',
-            flex : 1,
-            hidden : true
+            flex : 1
         }, {
-            header : 'სტატუსი',
+            header : LANG.STATUS,
             dataIndex : 'stateName',
             flex : 1
         } ];
@@ -83,17 +84,13 @@ Ext.define("TR.view.employees.EmployeeGrid", {
             if (sel.length == 0)
                 return;
 
-            var win = Ext.create('TR.view.employees.AddWindow', {
+            Ext.create('TR.view.employees.AddWindow', {
                 grid : me,
                 edit : true,
                 employeeId : sel[0].get('id'),
-                searchForm : me.searchForm
+                searchForm : me.searchForm,
+                data: sel[0].getData()
             });
-            var values = sel[0].getData();
-
-            values.userRole = values.userRole == 2 ? 1 : 0;
-
-            win.down('form').getForm().setValues(values);
         }
 
         function disable() {
@@ -147,7 +144,7 @@ Ext.define("TR.view.employees.EmployeeGrid", {
                     function(ans) {
                         if (ans == 'yes') {
                             myRequest({
-                                url : 'rest/employee/remove',
+                                url : 'rest/hr/employee/remove',
                                 params : {
                                     id : sel[0].get('id')
                                 },
@@ -180,10 +177,9 @@ Ext.define("TR.view.employees.EmployeeGrid", {
             if (!me.btns)
                 resetButtons();
 
-            var state = rec.get('state');
+            var state = rec.get('stateId');
             me.btns.edit.enable();
-            me.btns.log.enable();
-            if (state == 1) {
+            if (!state || state == 1) {
                 me.btns.enable.disable();
                 me.btns.disable.enable();
                 me.btns.remove.enable();
