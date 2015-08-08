@@ -63,11 +63,7 @@ Ext.define("TR.view.employees.AddWindow", {
             }, {
                 fieldLabel : 'პირადი ნომერი',
                 name : 'personalNo',
-                regex : /[\d]{11}/,
-                maxLength : 11,
-                isEng : true,
-                enforceMaxLength : true,
-                maskRe : /[\d]/
+                isEng : true
             }, {
                 xtype : 'fieldcontainer',
                 layout : 'hbox',
