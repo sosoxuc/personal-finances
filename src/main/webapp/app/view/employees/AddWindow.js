@@ -11,10 +11,8 @@ Ext.define("TR.view.employees.AddWindow", {
 
 	    me.title = cfg.edit ? 'რედაქტირება' : 'დამატება';
 
-	    var positionStore = Ext.StoreManager.lookup('positionStore') 
-    	|| Ext.create('TR.store.employees.PositionStore');
-	    var workplaceStore = Ext.StoreManager.lookup('workplaceStore') 
-    	|| Ext.create('TR.store.employees.WorkplaceStore');
+	    var positionStore = Ext.StoreManager.lookup('positionStore') || Ext.create('TR.store.employees.PositionStore');
+	    var workplaceStore = Ext.StoreManager.lookup('workplaceStore') || Ext.create('TR.store.employees.WorkplaceStore');
     
 	    var workplaceCombo = Ext.create('Ext.form.field.ComboBox', {
             fieldLabel : 'სამუშაო ადგილი',
