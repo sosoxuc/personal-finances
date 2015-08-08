@@ -24,7 +24,8 @@ public class WorkplacesService {
 
     @RequestMapping("/list")
     public ResponseEntity<List<Workplace>> list() {
-        List<Workplace> workplaces = em.createQuery("from Workplace", Workplace.class)
+        List<Workplace> workplaces = em.createQuery("from Workplace where stateId = :stateId", Workplace.class)
+                .setParameter("stateId", States.ACTIVE)
                 .getResultList();
 
         return new ResponseEntity<>(workplaces, HttpStatus.OK);
