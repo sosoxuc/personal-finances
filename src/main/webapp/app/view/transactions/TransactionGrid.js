@@ -131,7 +131,8 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         me.exporthref = exporthref;
         
         function exporthref(values) {
-            me.down('button[name=export]').url = 'rest/transaction/export/excel?'+serialize(values);
+            var exportButton = me.down('button[name=export]');
+            exportButton.setHref('rest/transaction/export/excel?'+serialize(values));
         }
         
         function calcualte() {
