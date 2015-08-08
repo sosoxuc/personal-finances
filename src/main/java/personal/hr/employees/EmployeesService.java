@@ -52,7 +52,8 @@ public class EmployeesService {
     @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
     public Integer add(@RequestParam(required = false) String personalNo,
-            @RequestParam String firstName, @RequestParam String lastName,
+            @RequestParam String firstName,
+            @RequestParam String lastName,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
