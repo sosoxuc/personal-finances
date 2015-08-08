@@ -134,9 +134,9 @@ public class TransactionService {
     public ResponseEntity<ListPage<Transaction>> search(
             @RequestParam(required = false) String startDate,
             @RequestParam(required = false) String endDate,
-            @RequestParam(required = false) Integer accountId,
-            @RequestParam(required = false) Integer projectId,
-            @RequestParam(required = false) Integer currencyId,
+            @RequestParam(required = false) List<Integer> accountId,
+            @RequestParam(required = false) List<Integer> projectId,
+            @RequestParam(required = false) List<Integer> currencyId,
             @RequestParam(required = false) Integer direction,
             @RequestParam(required = false) String note,
             @RequestParam(required = false) Integer start,
@@ -159,18 +159,18 @@ public class TransactionService {
             queryParams.put("eDate", eDate);
         }
 
-        if (accountId != null) {
-            queryBuilder.append(" and t.accountId = :accountId");
+        if (accountId != null && !accountId.isEmpty()) {
+            queryBuilder.append(" and t.accountId in (:accountId)");
             queryParams.put("accountId", accountId);
         }
 
-        if (projectId != null) {
-            queryBuilder.append(" and t.projectId = :projectId");
+        if (projectId != null && !projectId.isEmpty()) {
+            queryBuilder.append(" and t.projectId in (:projectId)");
             queryParams.put("projectId", projectId);
         }
 
-        if (currencyId != null) {
-            queryBuilder.append(" and t.currencyId = :currencyId");
+        if (currencyId != null && !currencyId.isEmpty()) {
+            queryBuilder.append(" and t.currencyId in (:currencyId)");
             queryParams.put("currencyId", currencyId);
         }
 
