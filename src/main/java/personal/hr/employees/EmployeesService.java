@@ -136,15 +136,6 @@ public class EmployeesService {
             employee.birthDate = df.parse(birthDate);
         }
 
-        if (username != null && password != null) {
-            String uuid = UUID.randomUUID().toString().substring(0, 8);
-            String passhash = SecurityUtils.sha512(password + uuid);
-
-            employee.userName = username;
-            employee.passwordHash = passhash;
-            employee.passwordSalt = uuid;
-        }
-
         em.merge(employee);
     }
 
@@ -227,7 +218,7 @@ public class EmployeesService {
                 " and c.personalNo = :personalNo", NONE);
 
         // Get count
-        String cntText = "select count(c) from Employee c where 1=1 ";
+        String cntText = "select count(c) from Employee c where c.stateId =1 ";
         cntText = cntText.concat(sql.toString());
         TypedQuery<Long> cntQuery = em.createQuery(cntText, Long.class);
 
@@ -244,7 +235,7 @@ public class EmployeesService {
             results = new ArrayList<Employee>();
         } else {
 
-            String sqlText = "select c from Employee c where 1=1 ";
+            String sqlText = "select c from Employee c where c.stateId = 1 ";
             sqlText = sqlText.concat(sql.toString());
             sqlText = sqlText.concat(" order by c.lastName,c.firstName");
 
