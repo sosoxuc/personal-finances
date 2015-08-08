@@ -38,7 +38,7 @@ Ext.define('TR.view.MainPanel', {
             handler : logout
         } ];
 
-        //var employees = Ext.create('TR.view.employees.MainPanel');
+        var employees = Ext.create('TR.view.employees.MainPanel');
         var transactions = Ext.create('TR.view.transactions.MainPanel');
         var projects = Ext.create('TR.view.projects.MainPanel');
         var rests = Ext.create('TR.view.rests.MainPanel');
@@ -49,11 +49,11 @@ Ext.define('TR.view.MainPanel', {
             border : false,
             items : [ rests, 
                       transactions, 
-                      //employees, 
-                      projects, 
+                      employees,             projects, 
                       accounts, 
                       currencies, 
-                      imports ]
+                      imports,
+                      employees ]
         });
 
         me.items = [ tabPanel ];
