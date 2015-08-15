@@ -105,6 +105,7 @@ public class SecurityService {
     }
 
     @RequestMapping("/password/change")
+    @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> changePassword(
             @RequestParam String oldPass,
             @RequestParam String newPass,

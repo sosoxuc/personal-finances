@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
+import java.awt.font.TransformAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -291,6 +292,18 @@ public class TransactionService {
 
     }
 
+    @RequestMapping("/approve")
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<Boolean> approve(@RequestParam Integer transactionId) {
+        Transaction transaction = em.find(Transaction.class, transactionId);
+        if (transaction.transactionType.equals(TransactionType.PLANNED)) {
+            if (transaction.transactionDate.after(new Date())) {
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+            transaction.transactionType = null;
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> remove(@RequestParam Integer id, @RequestParam Long version) {
