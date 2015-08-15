@@ -4,6 +4,7 @@ import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -108,6 +109,7 @@ public class EmployeeConfigService {
     }
 
     @RequestMapping("/appearance/change")
+    @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> changeAppearance(
             @RequestParam String appearance,
             HttpSession session){
@@ -122,6 +124,7 @@ public class EmployeeConfigService {
     }
 
     @RequestMapping("/language/change")
+    @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> changeLanguage(
             @RequestParam String language,
             HttpSession session){
