@@ -130,4 +130,31 @@ public class EmployeeConfigService {
         g.dispose();
         return resizedImage;
     }
+
+    @RequestMapping("/appearance/change")
+    public ResponseEntity<Boolean> changeAppearance(
+            @RequestParam String appearance,
+            HttpSession session){
+
+        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Employee employee = em.find(Employee.class, passport.getEmployee().id);
+
+        employee.appearance = appearance;
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @RequestMapping("/language/change")
+    public ResponseEntity<Boolean> changeLanguage(
+            @RequestParam String language,
+            HttpSession session){
+
+        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Employee employee = em.find(Employee.class, passport.getEmployee().id);
+
+        employee.language = language;
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
