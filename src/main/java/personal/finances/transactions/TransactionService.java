@@ -75,6 +75,8 @@ public class TransactionService {
             if (! transactionDate.after(new Date())) {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
             }
+        } else if (transactionDate.after(new Date())) {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
         // set direction to amount
         transaction.direction = direction;
