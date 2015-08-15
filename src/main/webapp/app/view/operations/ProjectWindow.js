@@ -187,6 +187,7 @@ Ext.define("TR.view.operations.ProjectWindow", {
                 url : 'rest/operations/project',
                 params : values,
                 callback : function() {
+                    Ext.toast("Operation successed");
                     cfg.grid.store.load();
                     me.close();
                 }
@@ -202,6 +203,7 @@ Ext.define("TR.view.operations.ProjectWindow", {
                 url : 'rest/operations/project',
                 params : values,
                 callback : function() {
+                    Ext.toast("Operation successed");
                     form.getForm().findField('amount').setValue('');
                     form.getForm().findField('note').setValue('');
                     form.getForm().findField('amount').focus(true, 10);

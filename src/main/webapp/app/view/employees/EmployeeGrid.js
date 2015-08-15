@@ -64,7 +64,11 @@ Ext.define("TR.view.employees.EmployeeGrid", {
             header : LANG.STATUS,
             dataIndex : 'stateName',
             flex : 1
-        } ];
+        }, {
+            header : LANG.USERNAME,
+            dataIndex : 'userName',
+            flex : 1
+        }];
 
         me.callParent(arguments);
 

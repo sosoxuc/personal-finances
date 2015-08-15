@@ -14,12 +14,13 @@ Ext.define("TR.store.employees.EmployeeStore", {
             'birthDate',
             'phone',
             'email',
+            'username',
             'workplaceId',
             'workplaceName',
             'stateId',
             'positionId',
             'positionName',
-            'username',
+            'userName',
             {
                 name : 'createDate',
                 convert : function(v) {

@@ -34,8 +34,7 @@ public class EmployeesService {
     @RequestMapping("/add")
     @Transactional(rollbackFor = Throwable.class)
     public Integer add(@RequestParam(required = false) String personalNo,
-            @RequestParam String firstName,
-            @RequestParam String lastName,
+            @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) String birthDate,
@@ -68,14 +67,17 @@ public class EmployeesService {
             employee.birthDate = df.parse(birthDate);
         }
 
-        if (username != null && password != null) {
+        if (username != null) {
+            employee.userName = username.toUpperCase();
+        }
+
+        if (password!=null){
             String salt = UUID.randomUUID().toString().substring(0, 8);
             String passHash = SecurityUtils.sha512(password.concat(salt));
-            employee.userName = username;
             employee.passwordHash = passHash;
             employee.passwordSalt = salt;
         }
-
+        
         em.persist(employee);
 
         return employee.id;
@@ -117,6 +119,17 @@ public class EmployeesService {
 
         if (birthDate != null) {
             employee.birthDate = df.parse(birthDate);
+        }
+
+        if (username != null) {
+            employee.userName = username.toUpperCase();
+        }
+
+        if (password != null) {
+            String salt = UUID.randomUUID().toString().substring(0, 8);
+            String passHash = SecurityUtils.sha512(password.concat(salt));
+            employee.passwordHash = passHash;
+            employee.passwordSalt = salt;
         }
 
         em.merge(employee);
@@ -240,6 +253,5 @@ public class EmployeesService {
 
         return resultList;
     }
-
 
 }

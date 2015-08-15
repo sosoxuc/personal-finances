@@ -31,7 +31,7 @@ public class SecurityService {
 
     public static final int SALT_LENGHT = 8;
 
-    private static final String USQL = "select e from Employee e where (e.userName=:username) and e.state=1";
+    private static final String USQL = "select e from Employee e where (e.userName=:username) and e.stateId=1";
 
     @PersistenceContext
     private EntityManager em;

@@ -89,6 +89,14 @@ Ext.define("TR.view.employees.AddWindow", {
                 vtype : 'email',
                 name : 'email',
                 isEng : true
+            }, {
+                fieldLabel : LANG.USERNAME,
+                name : 'username',
+                isEng : true
+            }, {
+                fieldLabel : LANG.PASSWORD,
+                name : 'password',
+                isEng : true
             } ]
         });
 

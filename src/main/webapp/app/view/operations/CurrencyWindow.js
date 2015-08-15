@@ -200,6 +200,7 @@ Ext.define("TR.view.operations.CurrencyWindow", {
                 url : 'rest/operations/currency',
                 params : values,
                 callback : function() {
+                    Ext.toast("Operation successed");
                     cfg.grid.store.load();
                     me.close();
                 }
@@ -215,6 +216,7 @@ Ext.define("TR.view.operations.CurrencyWindow", {
                 url : 'rest/operations/currency',
                 params : values,
                 callback : function() {
+                    Ext.toast("Operation successed");
                     form.getForm().findField('fromAmount').setValue('');
                     form.getForm().findField('toAmount').setValue('');
                     form.getForm().findField('note').setValue('');

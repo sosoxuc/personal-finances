@@ -20,13 +20,13 @@ Ext.define("TR.view.profile.ChangePassword", {
             },
             defaultType : 'textfield',
             items : [{
-                name: 'oldPassword',
+                name: 'oldPass',
                 fieldLabel : LANG.OLD_PASSWORD,
             },{
-                name: 'newPassword',
+                name: 'newPass',
                 fieldLabel : LANG.NEW_PASSWORD,
             },{
-                name: 'newPassword2',
+                name: 'newPass2',
                 fieldLabel : LANG.NEW_PASSWORD2,
             }]
         });
@@ -34,9 +34,25 @@ Ext.define("TR.view.profile.ChangePassword", {
         me.items = [ form ];
         
         me.buttons = [{
-            text: LANG.CHANGE_PASSWORD
+            text: LANG.CHANGE_PASSWORD,
+            handler: changePassword
         }];
         
         me.callParent(arguments);
+        
+        function changePassword(){
+            if (!form.getForm().isValid())
+                return;
+            
+            var values = form.getForm().getValues();
+            
+            myRequest({
+                url : 'rest/security/password/change',
+                params : values,
+                callback : function() {
+                    Ext.toast("Password change successful");
+                }
+            });
+        }
     }
 });
