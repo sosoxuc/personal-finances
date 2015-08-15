@@ -25,7 +25,14 @@ Ext.define('TR.view.MainPanel', {
             hidden : true
         };
         changeVal(geokbField, geokb);
-
+        
+        var languageMenu = [];
+        Ext.each(languages, function(language){
+            languageMenu.push({
+                text: language.name
+            });
+        });
+        
         me.tbar = [{
             xtype : 'image',
             src : './images/icon.png',
@@ -37,14 +44,17 @@ Ext.define('TR.view.MainPanel', {
         }, '->', geokb, {
             text : employee.lastName + ' ' + employee.firstName,
             menu : [{
-                text : LANG.PROFILE,
+                text : LANG.PROFILE_IMAGE,
                 handler : logout
+            }, {
+                text : LANG.CHANGE_PASSWORD,
+                handler : changePassword
             }, {
                 text : LANG.APPEARENCE,
                 handler : logout
             }, {
                 text : LANG.LANGUAGE,
-                handler : logout
+                menu : languageMenu
             }, '-' , {
                 text : LANG.LOGOUT,
                 handler : logout
@@ -73,5 +83,9 @@ Ext.define('TR.view.MainPanel', {
         me.items = [ tabPanel ];
 
         me.callParent(arguments);
+        
+        function changePassword(){
+            Ext.create('TR.view.profile.ChangePassword').show();
+        }
     }
 });
