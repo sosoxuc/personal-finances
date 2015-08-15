@@ -17,6 +17,20 @@ Ext.define("TR.view.transactions.SearchForm", {
         var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
         var directionsStore = Ext.StoreManager.lookup('directionsStore') || Ext.create('TR.store.directions.Store');
         
+        var ordinaryCheck = Ext.create('Ext.form.field.Checkbox', {
+            xtype: 'checkbox',
+            name: 'ordinary',
+            submitValue: true,
+            fieldLabel : 'Ordinary',
+        });
+        
+        var plannedCheck = Ext.create('Ext.form.field.Checkbox', {
+            xtype: 'checkbox',
+            name: 'planned',
+            submitValue: true,
+            fieldLabel : 'Planned',
+        });
+        
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
             name: 'currencyId',
             fieldLabel : LANG.CURRENCY,
@@ -84,13 +98,13 @@ Ext.define("TR.view.transactions.SearchForm", {
         var controls2 =  { 
             layout: 'vbox',
             xtype: 'fieldcontainer',
-            items: [currenciesCombo, accountsCombo]
+            items: [currenciesCombo, accountsCombo, ordinaryCheck]
         };
         
         var controls3 =  { 
             layout: 'vbox',
             xtype: 'fieldcontainer',
-            items: [projectsCombo, directionCombo]
+            items: [projectsCombo, directionCombo, plannedCheck]
         };
         
         

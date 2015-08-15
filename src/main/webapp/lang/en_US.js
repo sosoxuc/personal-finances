@@ -52,6 +52,7 @@ var LANG = {
     PASSWORD:       'Password',
     PERSONAL_NUMBER:'Personal ID',
     PHONE :         'Phone',
+    PLANNED_TRANSACTION:'Planned transaction',
     POSITION :      'Position',
     PROFILE_IMAGE:  'Profile image',
     PROJECT :       'Project',

@@ -34,6 +34,9 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             }, {
                 text: LANG.MOVE_ACCOUNT,
                 handler : moveAccount
+            }, '-', {
+                text: LANG.PLANNED_TRANSACTION,
+                handler : plannedTransaction
             }]
         }, {
             text : LANG.EDIT,
@@ -187,7 +190,14 @@ Ext.define("TR.view.transactions.TransactionGrid", {
                 searchForm : me.searchForm
             }).show();
         }
-
+        
+        function plannedTransaction() {
+            Ext.create('TR.view.transactions.AddPlannedWindow', {
+                grid : me,
+                searchForm : me.searchForm
+            }).show();
+        }
+        
         function edit() {
             var sel = me.getSelectionModel().getSelection();
             if (sel.length == 0)

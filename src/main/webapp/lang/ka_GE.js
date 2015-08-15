@@ -53,6 +53,7 @@ var LANG = {
     PASSWORD:       'პაროლი',
     PERSONAL_NUMBER:'პირადი ნომერი',
     PHONE :         'ტელეფონი',
+    PLANNED_TRANSACTION:'დაგეგმილი ტრანზაქცია',
     POSITION :      'პოზიცია',
     PROFILE_IMAGE:  'პროფილი სურათი',
     PROJECT:        'პროეტი',

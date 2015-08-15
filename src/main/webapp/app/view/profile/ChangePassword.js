@@ -50,6 +50,7 @@ Ext.define("TR.view.profile.ChangePassword", {
                 url : 'rest/security/password/change',
                 params : values,
                 callback : function() {
+                    me.close();
                     Ext.toast("Password change successful");
                 }
             });
