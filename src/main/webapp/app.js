@@ -25,7 +25,8 @@ Ext.application({
 					if(passport.valid){
 						tr.employee = passport.employee;
 						viewport.add(Ext.create('TR.view.MainPanel', {
-							employee: passport.employee
+							employee: passport.employee,
+							passport: passport
 						}));
 					}else{
 						location.href = 'login.html';

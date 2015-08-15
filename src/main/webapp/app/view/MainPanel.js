@@ -5,6 +5,7 @@ Ext.define('TR.view.MainPanel', {
     constructor : function(cfg) {
         cfg = cfg || {};
         var me = this;
+        var employee = cfg.employee;
 
         window.geokb = Ext.create('Ext.button.Button', {
             text : 'KA',
@@ -34,8 +35,12 @@ Ext.define('TR.view.MainPanel', {
             xtype : 'label',
             html : '<p style="font-size:16px; margin:0;color:#3892d4;font-weight:bold;"><i style="color:#000000;font-weight:normal;">Personal</i> FINANCES</p>'
         }, '->', geokb, {
-            text : LANG.LOGOUT,
-            handler : logout
+            text : employee.lastName + ' ' + employee.firstName,
+            menu : [{
+                text : LANG.LOGOUT,
+               handler : logout
+            }]
+            
         } ];
 
         var employees = Ext.create('TR.view.employees.MainPanel');

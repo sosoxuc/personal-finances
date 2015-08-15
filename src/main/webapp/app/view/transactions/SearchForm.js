@@ -72,7 +72,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             format: 'd-m-Y'
         }, {
             xtype: 'datefield',
-            fieldLabel: LANG.DATE_FROM,
+            fieldLabel: LANG.DATE_TO,
             name: 'endDate',
             format: 'd-m-Y'
         }, {
