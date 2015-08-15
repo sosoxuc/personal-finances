@@ -15,8 +15,10 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,8 +40,7 @@ import personal.finances.currency.Currency;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
-import personal.security.AdminRole;
-import personal.security.UserRole;
+import personal.security.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -49,6 +50,9 @@ public class TransactionService {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    HttpSession session;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -60,9 +64,7 @@ public class TransactionService {
             @RequestParam Integer direction,
             @RequestParam Integer accountId,
             @RequestParam Integer currencyId,
-            @RequestParam(required = false) Integer operationTypeId
-
-            ) throws ParseException {
+            @RequestParam(required = false) Integer operationTypeId) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
         transaction.userDate = new Date();
@@ -108,6 +110,10 @@ public class TransactionService {
 
         transaction.transactionRests = transactionRests;
 
+        //set user info
+        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        transaction.employeeId = passport.getEmployee().id;
+        transaction.employeeFullName = passport.getEmployee().firstName.concat(" ").concat(passport.getEmployee().lastName);
         transaction.isActive = States.ACTIVE;
         em.persist(transaction);
 
@@ -220,7 +226,8 @@ public class TransactionService {
           @RequestParam(required = false) String note,
           @RequestParam(required = false) Integer direction,
           @RequestParam(required = false) Integer accountId,
-          @RequestParam(required = false) Integer currencyId) throws ParseException {
+          @RequestParam(required = false) Integer currencyId,
+          HttpSession session) throws ParseException {
 
         Transaction transaction = em.find(Transaction.class, transactionId);
         if ( ! version.equals(transaction.version)) {

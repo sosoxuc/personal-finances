@@ -28,7 +28,7 @@ public class Transaction implements Serializable {
 
     public Integer employeeId;
 
-    public Integer employeeName;
+    public String employeeFullName;
 
     @Temporal(TemporalType.TIMESTAMP)
     public Date userDate;
