@@ -37,8 +37,17 @@ Ext.define('TR.view.MainPanel', {
         }, '->', geokb, {
             text : employee.lastName + ' ' + employee.firstName,
             menu : [{
+                text : LANG.PROFILE,
+                handler : logout
+            }, {
+                text : LANG.APPEARENCE,
+                handler : logout
+            }, {
+                text : LANG.LANGUAGE,
+                handler : logout
+            }, '-' , {
                 text : LANG.LOGOUT,
-               handler : logout
+                handler : logout
             }]
             
         } ];
