@@ -1,6 +1,7 @@
 package personal.hr.employees;
 
 import org.apache.commons.io.FileUtils;
+import org.h2.engine.SessionInterface;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,8 @@ import personal.States;
 import personal.UploadResponse;
 import personal.hr.positions.Position;
 import personal.hr.workplaces.Workplace;
+import personal.security.Passport;
+import personal.security.SessionUtils;
 import personal.utils.SecurityUtils;
 import personal.utils.SqlUtils;
 
@@ -22,6 +25,7 @@ import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -321,11 +325,12 @@ public class EmployeesService {
 
     @RequestMapping("/password/change")
     public ResponseEntity<Boolean> changePassword(
-            @RequestParam Integer employeeId,
             @RequestParam String oldPass,
-            @RequestParam String newPass){
+            @RequestParam String newPass,
+            HttpSession session){
 
-        Employee employee = em.find(Employee.class, employeeId);
+        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Employee employee = em.find(Employee.class, passport.getEmployee().id);
 
         String oldPassHash = SecurityUtils.sha512(oldPass + employee.passwordSalt);
         if (oldPassHash.equals(employee.passwordHash)) {

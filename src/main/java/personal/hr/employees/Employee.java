@@ -59,4 +59,8 @@ public class Employee implements Serializable {
 
     @Temporal(TemporalType.DATE)
     public Date expireDate;
+
+    public String appearance;
+
+    public String language;
 }
