@@ -1,5 +1,7 @@
 package personal.security;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,13 +15,15 @@ import personal.utils.SecurityUtils;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.UUID;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static personal.security.Passport.invalidPassport;
-import static personal.security.SessionUtils.*;
+import static personal.security.SessionUtils.SESSION_DATA_KEY;
+import static personal.security.SessionUtils.getSession;
 import static personal.utils.SecurityUtils.sha512;
-import static personal.utils.StringUtils.generateString;
 
 @RestController
 @RequestMapping("/security")
@@ -100,18 +104,28 @@ public class SecurityService {
         getSession().invalidate();
     }
 
-    @AdminRole
-    @UserRole
-    @RequestMapping(value = "/changePass", method = RequestMethod.POST)
-    @Transactional(rollbackFor = Throwable.class)
-    public void change(String password) {
-        Employee user = em.find(Employee.class, getEmployeeId());
+    @RequestMapping("/password/change")
+    public ResponseEntity<Boolean> changePassword(
+            @RequestParam String oldPass,
+            @RequestParam String newPass,
+            HttpSession session){
 
-        String salt = generateString("0123456789ABCDEF", SALT_LENGHT);
-        String hash = SecurityUtils.sha512(password.concat(salt));
+        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Employee employee = em.find(Employee.class, passport.getEmployee().id);
 
-        user.passwordHash = hash;
-        user.passwordSalt = salt;
+        String oldPassHash = SecurityUtils.sha512(oldPass + employee.passwordSalt);
+        if (oldPassHash.equals(employee.passwordHash)) {
+            String salt = UUID.randomUUID().toString().substring(0, 8);
+            String passHash = SecurityUtils.sha512(newPass.concat(salt));
+
+            employee.passwordHash = passHash;
+            employee.passwordSalt = salt;
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
     }
 
 }

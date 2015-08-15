@@ -1,17 +1,5 @@
 package personal.finances.operations;
 
-import static personal.finances.operations.OperationType.ACCOUNT;
-import static personal.finances.operations.OperationType.PROJECT;
-import static personal.finances.transactions.Direction.IN;
-import static personal.finances.transactions.Direction.OUT;
-
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import personal.finances.transactions.TransactionService;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
+
+import static personal.finances.operations.OperationType.ACCOUNT;
+import static personal.finances.operations.OperationType.PROJECT;
+import static personal.finances.transactions.Direction.IN;
+import static personal.finances.transactions.Direction.OUT;
 
 /**
  * Created by niko on 7/30/15.
@@ -56,11 +54,9 @@ public class OperationService {
             @RequestParam BigDecimal amount,
             @RequestParam String note) throws ParseException {
 
-        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+        transactions.create(amount, from, date, note, OUT, accountId, currencyId, PROJECT, false);
 
-        transactions.create(amount, from, date, note, OUT, accountId, currencyId,PROJECT);
-
-        transactions.create(amount, to, date, note, IN, accountId, currencyId, PROJECT);
+        transactions.create(amount, to, date, note, IN, accountId, currencyId, PROJECT, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
@@ -76,11 +72,9 @@ public class OperationService {
             @RequestParam BigDecimal amount,
             @RequestParam String note) throws ParseException {
 
-        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+        transactions.create(amount, projectId, date, note, OUT, from, currencyId, ACCOUNT, false);
 
-        transactions.create(amount, projectId, date, note, OUT, from, currencyId,ACCOUNT);
-
-        transactions.create(amount, projectId, date, note, IN, to, currencyId, ACCOUNT);
+        transactions.create(amount, projectId, date, note, IN, to, currencyId, ACCOUNT, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
@@ -97,11 +91,9 @@ public class OperationService {
             @RequestParam Integer toCurrencyId,
             @RequestParam String note) throws ParseException {
 
-        //OperationType operationType = em.find(OperationType.class, OPERATION_TYPE_PROJECT);
+        transactions.create(fromAmount, projectId, date, note, OUT, accountId, fromCurrencyId, ACCOUNT, false);
 
-        transactions.create(fromAmount, projectId, date, note, OUT, accountId, fromCurrencyId,ACCOUNT);
-
-        transactions.create(toAmount, projectId, date, note, IN, accountId, toCurrencyId, ACCOUNT);
+        transactions.create(toAmount, projectId, date, note, IN, accountId, toCurrencyId, ACCOUNT, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }

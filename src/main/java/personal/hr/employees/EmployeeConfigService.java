@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 import personal.UploadResponse;
 import personal.security.Passport;
 import personal.security.SessionUtils;
-import personal.utils.SecurityUtils;
 
 import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
@@ -27,7 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.UUID;
 
 /**
  * Created by niko on 8/15/15.
@@ -99,29 +97,7 @@ public class EmployeeConfigService {
         return response;
     }
 
-    @RequestMapping("/password/change")
-    public ResponseEntity<Boolean> changePassword(
-            @RequestParam String oldPass,
-            @RequestParam String newPass,
-            HttpSession session){
 
-        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
-        Employee employee = em.find(Employee.class, passport.getEmployee().id);
-
-        String oldPassHash = SecurityUtils.sha512(oldPass + employee.passwordSalt);
-        if (oldPassHash.equals(employee.passwordHash)) {
-            String salt = UUID.randomUUID().toString().substring(0, 8);
-            String passHash = SecurityUtils.sha512(newPass.concat(salt));
-
-            employee.passwordHash = passHash;
-            employee.passwordSalt = salt;
-
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-
-    }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
         BufferedImage resizedImage = new BufferedImage(width, height, type);

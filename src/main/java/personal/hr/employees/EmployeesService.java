@@ -1,43 +1,22 @@
 package personal.hr.employees;
 
-import org.apache.commons.io.FileUtils;
-import org.h2.engine.SessionInterface;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import personal.ListPage;
 import personal.States;
-import personal.UploadResponse;
 import personal.hr.positions.Position;
 import personal.hr.workplaces.Workplace;
-import personal.security.Passport;
-import personal.security.SessionUtils;
 import personal.utils.SecurityUtils;
 import personal.utils.SqlUtils;
 
-import javax.imageio.ImageIO;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.List;
 import java.util.Map.Entry;
 
 import static personal.utils.SqlUtils.SqlStringContaining.NONE;

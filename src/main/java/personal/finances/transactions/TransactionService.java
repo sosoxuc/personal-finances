@@ -1,5 +1,34 @@
 package personal.finances.transactions;
 
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.read.biff.BiffException;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import personal.ListPage;
+import personal.States;
+import personal.UploadResponse;
+import personal.finances.accounts.Account;
+import personal.finances.currency.Currency;
+import personal.finances.projects.Project;
+import personal.finances.transactions.rest.TransactionRest;
+import personal.finances.transactions.rest.TransactionRestCalculator;
+import personal.security.Passport;
+import personal.security.SessionUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -11,36 +40,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import personal.ListPage;
-import personal.States;
-import personal.UploadResponse;
-import personal.finances.accounts.Account;
-import personal.finances.currency.Currency;
-import personal.finances.projects.Project;
-import personal.finances.transactions.rest.TransactionRest;
-import personal.finances.transactions.rest.TransactionRestCalculator;
-import personal.security.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -56,7 +55,7 @@ public class TransactionService {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public Transaction create(
+    public ResponseEntity<Transaction> create(
             @RequestParam BigDecimal amount,
             @RequestParam Integer projectId,
             @RequestParam String date,
@@ -64,11 +63,18 @@ public class TransactionService {
             @RequestParam Integer direction,
             @RequestParam Integer accountId,
             @RequestParam Integer currencyId,
-            @RequestParam(required = false) Integer operationTypeId) throws ParseException {
+            @RequestParam(required = false) Integer operationTypeId,
+            @RequestParam(required = false) boolean planned) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
         transaction.userDate = new Date();
 
+        if (planned) {
+            //check planned transaction date
+            if (! transactionDate.after(new Date())) {
+                return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+            }
+        }
         // set direction to amount
         transaction.direction = direction;
         transaction.transactionAmount = amount.multiply(new BigDecimal(direction));
@@ -100,11 +106,6 @@ public class TransactionService {
             transaction.transactionOrder = 0;
         }
 
-//        if (operationTypeId != null) {
-//            OperationType operationType = em.find(OperationType.class, operationTypeId);
-//            transaction.operationTypeId = operationType.operationTypeId;
-//            transaction.operationType = operationType.operationType;
-//        }
         //set rest
         List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
@@ -117,7 +118,7 @@ public class TransactionService {
         transaction.isActive = States.ACTIVE;
         em.persist(transaction);
 
-        return transaction;
+        return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
     private List<Transaction> getLastTransactions(Date transactionDate) {
@@ -226,8 +227,7 @@ public class TransactionService {
           @RequestParam(required = false) String note,
           @RequestParam(required = false) Integer direction,
           @RequestParam(required = false) Integer accountId,
-          @RequestParam(required = false) Integer currencyId,
-          HttpSession session) throws ParseException {
+          @RequestParam(required = false) Integer currencyId) throws ParseException {
 
         Transaction transaction = em.find(Transaction.class, transactionId);
         if ( ! version.equals(transaction.version)) {
@@ -262,16 +262,22 @@ public class TransactionService {
 
         ResponseEntity<Transaction> remove = remove(transactionId, transaction.version);
         if (remove.getStatusCode().equals(HttpStatus.OK)) {
-            Transaction created = create(amount, projectId, date, note, direction, accountId, currencyId, null);
-            return new ResponseEntity<>(created, HttpStatus.OK);
+            boolean planned = false;
+            if (transaction.transactionType != null && transaction.transactionType.equals(TransactionType.PLANNED)){
+                planned = true;
+            }
+            ResponseEntity<Transaction> created = create(amount, projectId, date, note, direction, accountId, currencyId, null, planned);
+
+            if (created.getStatusCode().equals(HttpStatus.OK)) {
+                return created;
+            }
+            throw new RuntimeException();
         } else {
             return remove;
      }
 
     }
 
-    @UserRole
-    @AdminRole
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> remove(@RequestParam Integer id, @RequestParam Long version) {
@@ -432,7 +438,7 @@ public class TransactionService {
             }
 
             create(transaction.transactionAmount, transaction.projectId, dateText, noteText,
-                   transaction.direction, transaction.accountId, transaction.currencyId, null);
+                   transaction.direction, transaction.accountId, transaction.currencyId, null, false);
         }
     }
 }

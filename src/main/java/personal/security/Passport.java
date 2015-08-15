@@ -1,8 +1,8 @@
 package personal.security;
 
-import java.io.Serializable;
-
 import personal.hr.employees.Employee;
+
+import java.io.Serializable;
 
 public class Passport implements Serializable {
 

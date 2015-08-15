@@ -1,8 +1,5 @@
 package personal.finances.transactions;
 
-import jxl.CellView;
-import jxl.DateCell;
-import jxl.NumberCell;
 import jxl.Workbook;
 import jxl.format.UnderlineStyle;
 import jxl.write.*;
@@ -19,7 +16,6 @@ import personal.ListPage;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestType;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.net.URLEncoder;
