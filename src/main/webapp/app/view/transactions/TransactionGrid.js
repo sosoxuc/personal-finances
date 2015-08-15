@@ -4,7 +4,11 @@ Ext.define("TR.view.transactions.TransactionGrid", {
     viewConfig: { 
         stripeRows: false, 
         getRowClass: function(record) { 
-            return record.get('transactionAmount') > 0 ? 'income-row' : 'outcome-row'; 
+            if (record.get('transactionType')===1) {
+                return record.get('transactionAmount') > 0 ? 'income-row-planned' : 'outcome-row-planned';
+            } else {
+                return record.get('transactionAmount') > 0 ? 'income-row' : 'outcome-row'; 
+            }
         } 
     }, 
     constructor : function(cfg) {

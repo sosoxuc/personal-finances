@@ -2,8 +2,18 @@
 	width: 100% !important;
 }
 
+.income-row-planned .x-grid-cell { 
+    color: #6C6;
+    font-weight: normal !important;
+} 
+
+.outcome-row-planned .x-grid-cell { 
+    color: #C66;
+    font-weight: normal !important;
+}
+
 .income-row .x-grid-cell { 
-    color: #090; 
+    color: #090;
 } 
 
 .outcome-row .x-grid-cell { 
