@@ -195,12 +195,13 @@ public class TransactionService {
             queryParams.put("direction", direction);
         }
 
-        if (planned) {
+
+        if (planned && ordinary == false) {
             queryBuilder.append(" and t.transactionType = :transactionType");
             queryParams.put("transactionType", TransactionType.PLANNED);
         }
 
-        if (ordinary) {
+        if (ordinary && planned == false) {
             queryBuilder.append(" and t.transactionType is null");
         }
 
