@@ -86,11 +86,11 @@ public class EmployeesService {
         }
 
         if (username != null && password != null) {
-            String uuid = UUID.randomUUID().toString().substring(0, 8);
-            String passhash = SecurityUtils.sha512(password + uuid);
+            String salt = UUID.randomUUID().toString().substring(0, 8);
+            String passHash = SecurityUtils.sha512(password.concat(salt));
             employee.userName = username;
-            employee.passwordHash = passhash;
-            employee.passwordSalt = uuid;
+            employee.passwordHash = passHash;
+            employee.passwordSalt = salt;
         }
 
         em.persist(employee);
@@ -317,6 +317,29 @@ public class EmployeesService {
                 HttpStatus.OK);
 
         return response;
+    }
+
+    @RequestMapping("/password/change")
+    public ResponseEntity<Boolean> changePassword(
+            @RequestParam Integer employeeId,
+            @RequestParam String oldPass,
+            @RequestParam String newPass){
+
+        Employee employee = em.find(Employee.class, employeeId);
+
+        String oldPassHash = SecurityUtils.sha512(oldPass + employee.passwordSalt);
+        if (oldPassHash.equals(employee.passwordHash)) {
+            String salt = UUID.randomUUID().toString().substring(0, 8);
+            String passHash = SecurityUtils.sha512(newPass.concat(salt));
+
+            employee.passwordHash = passHash;
+            employee.passwordSalt = salt;
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+
     }
 
     private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
