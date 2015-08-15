@@ -38,6 +38,8 @@ public class TransactionExport {
             @RequestParam(required = false) List<Integer> accountId,
             @RequestParam(required = false) List<Integer> projectId,
             @RequestParam(required = false) List<Integer> currencyId,
+            @RequestParam(required = false) boolean ordinary,
+            @RequestParam(required = false) boolean planned,
             @RequestParam(required = false) Integer direction,
             @RequestParam(required = false) String note,
             HttpServletResponse response) throws Exception {
@@ -52,7 +54,7 @@ public class TransactionExport {
                         + URLEncoder
                         .encode("ტრანზაქციის-ექსპორტი.xls", "UTF-8"));
 
-        ResponseEntity<ListPage<Transaction>> resp = transactionService.search(startDate, endDate, accountId, projectId, currencyId, direction, note, null, null);
+        ResponseEntity<ListPage<Transaction>> resp = transactionService.search(startDate, endDate, accountId, projectId, currencyId, ordinary, planned, direction, note, null, null);
         List<Transaction> transactions =(List)resp.getBody().getList();
 
         WritableWorkbook wworkbook;

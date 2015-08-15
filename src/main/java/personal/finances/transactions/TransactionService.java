@@ -106,6 +106,8 @@ public class TransactionService {
             transaction.transactionOrder = 0;
         }
 
+        transaction.operationTypeId = operationTypeId;
+
         //set rest
         List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
 
@@ -145,6 +147,8 @@ public class TransactionService {
             @RequestParam(required = false) List<Integer> accountId,
             @RequestParam(required = false) List<Integer> projectId,
             @RequestParam(required = false) List<Integer> currencyId,
+            @RequestParam(required = false) boolean ordinary,
+            @RequestParam(required = false) boolean planned,
             @RequestParam(required = false) Integer direction,
             @RequestParam(required = false) String note,
             @RequestParam(required = false) Integer start,
@@ -185,6 +189,15 @@ public class TransactionService {
         if (direction != null) {
             queryBuilder.append(" and t.direction = :direction");
             queryParams.put("direction", direction);
+        }
+
+        if (planned) {
+            queryBuilder.append(" and t.transactionType = :transactionType");
+            queryParams.put("transactionType", TransactionType.PLANNED);
+        }
+
+        if (ordinary) {
+            queryBuilder.append(" and t.transactionType is null");
         }
 
         if (note != null) {
