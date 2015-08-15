@@ -75,6 +75,7 @@ public class TransactionService {
             if (! transactionDate.after(new Date())) {
                 return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
             }
+            transaction.transactionType = TransactionType.PLANNED;
         } else if (transactionDate.after(new Date())) {
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         }
