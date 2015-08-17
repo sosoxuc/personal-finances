@@ -37,10 +37,10 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @RequestMapping("/transaction")
@@ -53,6 +53,61 @@ public class TransactionService {
 
     @Autowired
     HttpSession session;
+
+    @RequestMapping(value = "/createMultiple", method = RequestMethod.POST)
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<List<Transaction>> createMultiple(
+            @RequestParam BigDecimal amount,
+            @RequestParam Integer projectId,
+            @RequestParam String note,
+            @RequestParam Integer direction,
+            @RequestParam Integer accountId,
+            @RequestParam Integer currencyId,
+            @RequestParam Integer intervalType,
+            @RequestParam Integer intervalTypeValue,
+            @RequestParam String dateFrom,
+            @RequestParam String dateTo) throws ParseException {
+
+        LocalDate localDateFrom = LocalDate.parse(dateFrom, DateTimeFormatter.ofPattern(df.toPattern()));
+        LocalDate localDateTo = LocalDate.parse(dateTo, DateTimeFormatter.ofPattern(df.toPattern()));
+
+        if (localDateTo.isAfter(localDateFrom)) {
+
+            Period period = null;
+            if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_DAY)) {
+                period = Period.ofDays(intervalTypeValue);
+            } else if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_MONTH)) {
+                period = Period.ofMonths(intervalTypeValue);
+            } else if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_YEAR)) {
+                period = Period.ofYears(intervalTypeValue);
+            }
+
+            LocalDate newDate = localDateFrom;
+            ResponseEntity<Transaction> transactionResponseEntity =
+                    create(amount, projectId, dateFrom, note, direction, accountId, currencyId, null, Boolean.TRUE);
+            if (transactionResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
+                List<Transaction> addedTransactions = new ArrayList<>();
+                addedTransactions.add(transactionResponseEntity.getBody());
+
+                while ( ! (newDate = newDate.plus(period)).isAfter(localDateTo)) {
+                    ResponseEntity<Transaction> resp =
+                            create(amount, projectId, newDate.format(DateTimeFormatter.ofPattern(df.toPattern())),
+                                   note, direction, accountId, currencyId, null, Boolean.TRUE);
+                    if (resp.getStatusCode().equals(HttpStatus.OK)) {
+                        addedTransactions.add(resp.getBody());
+                        continue;
+                    }
+                    throw new RuntimeException();
+                }
+                return new ResponseEntity<>(addedTransactions, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(transactionResponseEntity.getStatusCode());
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
+        }
+    }
+
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
