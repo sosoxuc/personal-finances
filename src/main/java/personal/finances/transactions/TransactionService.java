@@ -29,7 +29,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpSession;
-import java.awt.font.TransformAttribute;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -74,11 +73,11 @@ public class TransactionService {
         if (localDateTo.isAfter(localDateFrom)) {
 
             Period period = null;
-            if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_DAY)) {
+            if (intervalType.equals(TransactionIntervalType.INTERVAL_TYPE_DAY)) {
                 period = Period.ofDays(intervalTypeValue);
-            } else if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_MONTH)) {
+            } else if (intervalType.equals(TransactionIntervalType.INTERVAL_TYPE_MONTH)) {
                 period = Period.ofMonths(intervalTypeValue);
-            } else if (intervalType.equals(TransactionIntervaType.INTERVAL_TYPE_YEAR)) {
+            } else if (intervalType.equals(TransactionIntervalType.INTERVAL_TYPE_YEAR)) {
                 period = Period.ofYears(intervalTypeValue);
             }
 
