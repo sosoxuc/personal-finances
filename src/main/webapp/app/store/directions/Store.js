@@ -6,7 +6,7 @@ Ext.define('TR.store.directions.Store', {
         {name: 'value', type: 'int'}
     ], 
     data: [
-        {label: 'გასავალი', value: -1},
-        {label: 'შემოსავალი', value: 1}
+        {label: LANG.EXPENCE, value: -1},
+        {label: LANG.INCOME, value: 1}
     ]
 });

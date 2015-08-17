@@ -41,6 +41,9 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             }, '-', {
                 text: LANG.PLANNED_TRANSACTION,
                 handler : plannedTransaction
+            }, {
+                text: LANG.PERIODIC_TRANSACTIONS,
+                handler : periodicTransaction
             }]
         }, {
             text : LANG.EDIT,
@@ -190,6 +193,13 @@ Ext.define("TR.view.transactions.TransactionGrid", {
         
         function add() {
             Ext.create('TR.view.transactions.AddWindow', {
+                grid : me,
+                searchForm : me.searchForm
+            }).show();
+        }
+        
+        function periodicTransaction() {
+            Ext.create('TR.view.transactions.AddPeriodicWindow', {
                 grid : me,
                 searchForm : me.searchForm
             }).show();
