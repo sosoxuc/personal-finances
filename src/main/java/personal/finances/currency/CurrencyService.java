@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import personal.security.Secured;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -35,6 +37,7 @@ public class CurrencyService {
         service.create("დოლარი","USD");
     }
 
+    @Secured
     @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -52,6 +55,7 @@ public class CurrencyService {
         return new ResponseEntity<>(currency, HttpStatus.OK);
     }
 
+    @Secured
     @Cacheable(value="currency")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Currency>> list() {
@@ -63,6 +67,7 @@ public class CurrencyService {
         return new ResponseEntity<>(currencies, HttpStatus.OK);
     }
 
+    @Secured
     @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -89,6 +94,7 @@ public class CurrencyService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Secured
     @CacheEvict(value="currency", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)

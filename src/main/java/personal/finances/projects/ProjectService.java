@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import personal.security.Secured;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -35,6 +37,7 @@ public class ProjectService {
         service.create("სხვა პროექტი");
     }
     
+    @Secured
     @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -54,6 +57,7 @@ public class ProjectService {
         return new ResponseEntity<>(project, HttpStatus.OK);
     }
 
+    @Secured
     @Cacheable(value="project")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Project>> list() {
@@ -63,6 +67,7 @@ public class ProjectService {
         return new ResponseEntity<>(projects, HttpStatus.OK);
     }
 
+    @Secured
     @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -91,6 +96,7 @@ public class ProjectService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Secured
     @CacheEvict(value="project", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)

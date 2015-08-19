@@ -17,11 +17,9 @@ public class SecurityInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
-            boolean admin = method.isAnnotationPresent(AdminRole.class);
+            boolean secured = method.isAnnotationPresent(Secured.class);
 
-            boolean user = method.isAnnotationPresent(UserRole.class);
-
-            if (admin || user) {
+            if (secured) {
 
                 Passport passport = SessionUtils.getPassport();
                 if (passport != null) {
@@ -46,7 +44,7 @@ public class SecurityInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request,
             HttpServletResponse response, Object handler, Exception ex)
-            throws Exception {
+                    throws Exception {
     }
 
 }

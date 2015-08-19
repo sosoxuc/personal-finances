@@ -23,6 +23,7 @@ import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
 import personal.security.Passport;
+import personal.security.Secured;
 import personal.security.SessionUtils;
 
 import javax.persistence.EntityManager;
@@ -53,6 +54,7 @@ public class TransactionService {
     @Autowired
     HttpSession session;
 
+    @Secured
     @RequestMapping(value = "/createMultiple", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<List<Transaction>> createMultiple(
@@ -109,7 +111,7 @@ public class TransactionService {
         }
     }
 
-
+    @Secured
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> create(
@@ -200,6 +202,7 @@ public class TransactionService {
                 .getResultList();
     }
 
+    @Secured
     @RequestMapping(value = "/search", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<ListPage<Transaction>> search(
             @RequestParam(required = false) String startDate,
@@ -290,6 +293,7 @@ public class TransactionService {
 
     }
 
+    @Secured
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> update(
@@ -352,6 +356,7 @@ public class TransactionService {
 
     }
 
+    @Secured
     @RequestMapping("/approve")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> approve(@RequestParam Integer transactionId) {
@@ -380,6 +385,7 @@ public class TransactionService {
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
+    @Secured
     @RequestMapping(value = "/shift", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> shift(@RequestParam Integer transactionId, @RequestParam Integer direction) {
@@ -454,6 +460,7 @@ public class TransactionService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("/upload")
     @Transactional(rollbackFor = Throwable.class)
     public UploadResponse uploadTransactions(

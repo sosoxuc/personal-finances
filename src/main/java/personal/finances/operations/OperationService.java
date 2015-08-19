@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import personal.finances.transactions.TransactionService;
+import personal.security.Secured;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,6 +35,7 @@ public class OperationService {
     @Autowired
     private TransactionService transactions;
 
+    @Secured
     @RequestMapping(value = "/list", method = {RequestMethod.GET})
     public ResponseEntity<List<OperationType>> operationTypes() {
         List<OperationType> operationTypes = em.createQuery("select t from OperationType t where t.isActive = :isActive order by t.operationType asc", OperationType.class)
@@ -43,6 +45,7 @@ public class OperationService {
         return new ResponseEntity<>(operationTypes, HttpStatus.OK);
     }
     
+    @Secured
     @RequestMapping(value = "/project", method = {RequestMethod.POST})
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> project(
@@ -61,6 +64,7 @@ public class OperationService {
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
     
+    @Secured
     @RequestMapping(value = "/account", method = {RequestMethod.POST})
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> account(
@@ -79,6 +83,7 @@ public class OperationService {
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
     
+    @Secured
     @RequestMapping(value = "/currency", method = {RequestMethod.POST})
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> currency(

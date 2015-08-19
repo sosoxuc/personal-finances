@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import personal.security.Secured;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -35,6 +37,7 @@ public class AccountService {
         service.create("საბანკო",null);
     }
 
+    @Secured
     @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -50,6 +53,7 @@ public class AccountService {
         return new ResponseEntity<>(account, HttpStatus.OK);
     }
 
+    @Secured
     @Cacheable("account")
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public ResponseEntity<List<Account>> list() {
@@ -60,6 +64,7 @@ public class AccountService {
         return new ResponseEntity<>(accounts, HttpStatus.OK);
     }
 
+    @Secured
     @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
@@ -84,6 +89,7 @@ public class AccountService {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    @Secured
     @CacheEvict(value="account", allEntries=true)
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)

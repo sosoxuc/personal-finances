@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import personal.ListPage;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestType;
+import personal.security.Secured;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
@@ -31,6 +32,7 @@ public class TransactionExport {
     @Autowired
     TransactionService transactionService;
 
+    @Secured
     @RequestMapping(value = "/excel", method = {RequestMethod.GET, RequestMethod.POST})
     ResponseEntity<byte[]> excel(
             @RequestParam(required = false) String startDate,

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyService;
 import personal.finances.transactions.Transaction;
+import personal.security.Secured;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,6 +32,7 @@ public class TransactionRestService {
     @Autowired
     CurrencyService currencyService;
 
+    @Secured
     @RequestMapping("/account")
     public ResponseEntity<TransactionRest> account(
             @RequestParam Integer accountId,
@@ -60,6 +62,7 @@ public class TransactionRestService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("/project")
     public ResponseEntity<TransactionRest> project(
             @RequestParam Integer projectId,
@@ -89,6 +92,7 @@ public class TransactionRestService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("/currency")
     public ResponseEntity<TransactionRest> currency(
             @RequestParam Integer currencyId,
@@ -118,6 +122,7 @@ public class TransactionRestService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("/currencies")
     public ResponseEntity<List<TransactionRest>> currencies(@RequestParam(required = false) String transactionDate) throws ParseException {
         ResponseEntity<List<Currency>> responseEntity = currencyService.list();
@@ -140,6 +145,7 @@ public class TransactionRestService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("/global")
     public ResponseEntity<TransactionRest> global(@RequestParam(required = false) String transactionDate) throws ParseException {
 
@@ -166,6 +172,7 @@ public class TransactionRestService {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @Secured
     @RequestMapping("calculate")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> calculate(){

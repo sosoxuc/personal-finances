@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static personal.security.Passport.invalidPassport;
 import static personal.security.SessionUtils.SESSION_DATA_KEY;
 import static personal.security.SessionUtils.getSession;
@@ -38,18 +39,20 @@ public class SecurityService {
 
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
-    public Passport signin(@RequestParam String username,
+    public ResponseEntity<Passport> signin(@RequestParam String username,
             @RequestParam String password) {
 
         if (isBlank(username) || isBlank(password)) {
-            return invalidPassport("EMPTY_USER_PASSWORD");
+            Passport passport = invalidPassport("EMPTY_USER_PASSWORD");
+            return new ResponseEntity<>(passport, HttpStatus.FORBIDDEN);
         }
 
         username = username.trim().toUpperCase();
 
         if (username.equals("ADMIN")
                 && password.equals(ConfigUtil.getConfig("AdminPassword"))) {
-            return adminPassport();
+            Passport passport = adminPassport();
+            return new ResponseEntity<>(passport, HttpStatus.OK);
         }
 
         TypedQuery<Employee> usersSql = em.createQuery(USQL, Employee.class);
@@ -57,16 +60,19 @@ public class SecurityService {
         List<Employee> users = usersSql.getResultList();
 
         if (users.size() != 1) {
-            return invalidPassport("BAD_USER");
+            Passport passport = invalidPassport("BAD_USER");
+            return new ResponseEntity<>(passport, FORBIDDEN);
         }
 
         Employee user = users.iterator().next();
         String hash = sha512(password.concat(user.passwordSalt));
 
         if (hash.equals(user.passwordHash)) {
-            return buildPassport(user);
+            Passport passport = buildPassport(user);
+            return new ResponseEntity<>(passport, HttpStatus.OK);
         } else {
-            return invalidPassport("BAD_PASSWORD");
+            Passport passport = invalidPassport("BAD_PASSWORD");
+            return new ResponseEntity<>(passport, FORBIDDEN);
         }
     }
 
@@ -94,6 +100,7 @@ public class SecurityService {
         return passport;
     }
 
+    @Secured
     @RequestMapping(value = "/passport", method = RequestMethod.GET)
     public Passport passport() {
         return SessionUtils.getPassport();
@@ -104,17 +111,18 @@ public class SecurityService {
         getSession().invalidate();
     }
 
+    @Secured
     @RequestMapping("/password/change")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<Boolean> changePassword(
-            @RequestParam String oldPass,
-            @RequestParam String newPass,
-            HttpSession session){
+    public ResponseEntity<Boolean> changePassword(@RequestParam String oldPass,
+            @RequestParam String newPass, HttpSession session) {
 
-        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Passport passport = (Passport) session
+                .getAttribute(SessionUtils.SESSION_DATA_KEY);
         Employee employee = em.find(Employee.class, passport.getEmployee().id);
 
-        String oldPassHash = SecurityUtils.sha512(oldPass + employee.passwordSalt);
+        String oldPassHash = SecurityUtils
+                .sha512(oldPass + employee.passwordSalt);
         if (oldPassHash.equals(employee.passwordHash)) {
             String salt = UUID.randomUUID().toString().substring(0, 8);
             String passHash = SecurityUtils.sha512(newPass.concat(salt));
@@ -125,8 +133,7 @@ public class SecurityService {
             return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-
+        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 
 }

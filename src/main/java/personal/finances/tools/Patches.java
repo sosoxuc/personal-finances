@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import personal.finances.transactions.Transaction;
+import personal.security.Secured;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,6 +18,7 @@ public class Patches {
     @PersistenceContext
     private EntityManager em;
 
+    @Secured
     @RequestMapping(value = "/1", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public void patch1() {
@@ -42,6 +44,7 @@ public class Patches {
 
     }
 
+    @Secured
     @RequestMapping(value = "/2", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public void patch2() {

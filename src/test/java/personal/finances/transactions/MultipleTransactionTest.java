@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -23,6 +24,7 @@ import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyServiceTest;
 import personal.finances.projects.Project;
 import personal.finances.projects.ProjectServiceTest;
+import personal.security.SecurityServiceTest;
 import personal.spring.SpringConfig;
 
 /**
@@ -33,10 +35,11 @@ import personal.spring.SpringConfig;
 @WebAppConfiguration
 public class MultipleTransactionTest {
 
-
-
     @Autowired
     private WebApplicationContext wac;
+
+    @Autowired
+    private MockHttpSession session;
 
     private Project project = null;
     private Account account = null;
@@ -46,46 +49,43 @@ public class MultipleTransactionTest {
     @Before
     public void prepareLibs() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
+        SecurityServiceTest.signin(mock, session);
 
-        account = AccountServiceTest.createAccount(mock);
+        account = AccountServiceTest.createAccount(mock, session);
 
-        currencyGel = CurrencyServiceTest.createCurrency(mock, "GEL");
+        currencyGel = CurrencyServiceTest.createCurrency(mock, "GEL", session);
 
-        currencyUsd = CurrencyServiceTest.createCurrency(mock, "USD");
+        currencyUsd = CurrencyServiceTest.createCurrency(mock, "USD", session);
 
-        project = ProjectServiceTest.createProject(mock);
+        project = ProjectServiceTest.createProject(mock, session);
     }
 
     @Test
     public void testTransactionInsert() throws Exception {
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
+        SecurityServiceTest.signin(mock, session);
 
         ResultActions result;
-        result = mock.perform(post("/transaction/createMultiple")
-                .param("amount", "10")
-                .param("projectId", project.id.toString())
+        result = mock.perform(post("/transaction/createMultiple").session(session)
+                .param("amount", "10").param("projectId", project.id.toString())
                 .param("accountId", account.id.toString())
                 .param("currencyId", currencyGel.id.toString())
-                .param("direction", "1")
-                .param("intervalType", "1")
-                .param("intervalTypeValue", "5")
-                .param("dateFrom", "01-10-2015")
-                .param("dateTo", "16-10-2015")
-                .param("note", "test"));
+                .param("direction", "1").param("intervalType", "1")
+                .param("intervalTypeValue", "5").param("dateFrom", "01-10-2015")
+                .param("dateTo", "16-10-2015").param("note", "test"));
         result.andExpect(status().isOk());
         result.andExpect(jsonPath("$").exists());
         String json = result.andReturn().getResponse().getContentAsString();
-        }
+    }
 
     @After
     public void cleanupLibs() throws Exception {
 
         MockMvc mock = MockMvcBuilders.webAppContextSetup(wac).build();
-
-        AccountServiceTest.removeAccount(mock, account);
-        CurrencyServiceTest.removeCurrency(mock, currencyGel);
-        CurrencyServiceTest.removeCurrency(mock, currencyUsd);
-        ProjectServiceTest.removeProject(mock, project);
+        SecurityServiceTest.signin(mock, session);
+        AccountServiceTest.removeAccount(mock, account, session);
+        CurrencyServiceTest.removeCurrency(mock, currencyGel, session);
+        CurrencyServiceTest.removeCurrency(mock, currencyUsd, session);
+        ProjectServiceTest.removeProject(mock, project, session);
     }
 }
-
