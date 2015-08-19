@@ -1,5 +1,20 @@
 package personal.security;
 
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static personal.security.Passport.invalidPassport;
+import static personal.security.SessionUtils.SESSION_DATA_KEY;
+import static personal.security.SessionUtils.getSession;
+import static personal.utils.SecurityUtils.sha512;
+
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,24 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import personal.States;
 import personal.hr.employees.Employee;
 import personal.spring.ConfigUtil;
 import personal.utils.SecurityUtils;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-import java.util.UUID;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static personal.security.Passport.invalidPassport;
-import static personal.security.SessionUtils.SESSION_DATA_KEY;
-import static personal.security.SessionUtils.getSession;
-import static personal.utils.SecurityUtils.sha512;
 
 @RestController
 @RequestMapping("/security")

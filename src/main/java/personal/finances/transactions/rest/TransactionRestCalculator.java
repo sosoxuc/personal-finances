@@ -1,11 +1,12 @@
 package personal.finances.transactions.rest;
 
-import personal.States;
-import personal.finances.transactions.Transaction;
-
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
+
+import personal.States;
+import personal.finances.transactions.Transaction;
 
 /**
  * Created by niko on 7/15/15.

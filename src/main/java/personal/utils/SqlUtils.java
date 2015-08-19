@@ -1,8 +1,8 @@
 package personal.utils;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 public class SqlUtils {
 

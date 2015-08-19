@@ -1,5 +1,17 @@
 package personal.finances.operations;
 
+import static personal.finances.operations.OperationType.ACCOUNT;
+import static personal.finances.operations.OperationType.PROJECT;
+import static personal.finances.transactions.Direction.IN;
+import static personal.finances.transactions.Direction.OUT;
+
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,19 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import personal.finances.transactions.TransactionService;
 import personal.security.Secured;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.math.BigDecimal;
-import java.text.ParseException;
-import java.util.List;
-
-import static personal.finances.operations.OperationType.ACCOUNT;
-import static personal.finances.operations.OperationType.PROJECT;
-import static personal.finances.transactions.Direction.IN;
-import static personal.finances.transactions.Direction.OUT;
 
 /**
  * Created by niko on 7/30/15.
