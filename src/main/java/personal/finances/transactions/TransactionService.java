@@ -79,6 +79,8 @@ public class TransactionService {
                 period = Period.ofMonths(intervalTypeValue);
             } else if (intervalType.equals(TransactionIntervalType.INTERVAL_TYPE_YEAR)) {
                 period = Period.ofYears(intervalTypeValue);
+            } else if (intervalType.equals(TransactionIntervalType.INTERVAL_TYPE_WEEK)){
+                period = Period.ofWeeks(intervalTypeValue);
             }
 
             LocalDate newDate = localDateFrom;

@@ -7,4 +7,5 @@ public interface TransactionIntervalType {
     Integer INTERVAL_TYPE_DAY = 1;
     Integer INTERVAL_TYPE_MONTH = 2;
     Integer INTERVAL_TYPE_YEAR = 3;
+    Integer INTERVAL_TYPE_WEEK = 4;
 }
