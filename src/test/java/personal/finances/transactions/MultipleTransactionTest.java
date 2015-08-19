@@ -1,11 +1,14 @@
 package personal.finances.transactions;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -13,24 +16,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import personal.finances.accounts.Account;
 import personal.finances.accounts.AccountServiceTest;
 import personal.finances.currency.Currency;
 import personal.finances.currency.CurrencyServiceTest;
 import personal.finances.projects.Project;
 import personal.finances.projects.ProjectServiceTest;
-import personal.spring.SpringDevConfig;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import personal.spring.SpringConfig;
 
 /**
  * Created by niko on 8/17/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({ "dev" })
-@ContextConfiguration(classes = { SpringDevConfig.class })
+@ContextConfiguration(classes = { SpringConfig.class })
 @WebAppConfiguration
 public class MultipleTransactionTest {
 

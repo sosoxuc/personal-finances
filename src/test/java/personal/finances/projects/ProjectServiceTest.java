@@ -5,12 +5,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,16 +18,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import personal.spring.SpringDevConfig;
+import personal.spring.SpringConfig;
 
 /**
  * Created by Niko on 7/10/15.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({ "dev" })
-@ContextConfiguration(classes = { SpringDevConfig.class })
+@ContextConfiguration(classes = { SpringConfig.class })
 @WebAppConfiguration
-@FixMethodOrder(MethodSorters.JVM)
 public class ProjectServiceTest {
 
     @Autowired

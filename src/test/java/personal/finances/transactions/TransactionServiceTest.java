@@ -1,13 +1,12 @@
 package personal.finances.transactions;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +14,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.omg.CORBA.TRANSACTION_MODE;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -26,9 +23,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import personal.finances.accounts.Account;
@@ -38,11 +33,10 @@ import personal.finances.currency.CurrencyServiceTest;
 import personal.finances.projects.Project;
 import personal.finances.projects.ProjectServiceTest;
 import personal.finances.transactions.rest.TransactionRest;
-import personal.spring.SpringDevConfig;
+import personal.spring.SpringConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({ "dev" })
-@ContextConfiguration(classes = { SpringDevConfig.class })
+@ContextConfiguration(classes = { SpringConfig.class })
 @WebAppConfiguration
 public class TransactionServiceTest {
 
