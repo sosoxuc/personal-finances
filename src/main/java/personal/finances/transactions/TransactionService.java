@@ -391,7 +391,7 @@ public class TransactionService {
     @RequestMapping("/unfulfilled")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<List<Transaction>> unfulfilled() {
-        Date now = Date.from(Instant.from(LocalDate.now()));
+        Date now = new Date(); //TODO java.time bla bla
 
         List<Transaction> unfulfilled = em.createQuery(
                 "select t from Transaction t where t.transactionType = :transactionType" +
