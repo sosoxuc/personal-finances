@@ -10,18 +10,14 @@ Ext.define("TR.view.rests.MainPanel", {
         cfg = cfg || {};
         var me = this;
         
-        var panel = Ext.create('Ext.panel.Panel',{
-            defaultType : 'textfield',
-            id: 'rests-panel',
-            title : LANG.CURRENT_RESTS,
-            buttonAlign: 'left',
-            buttons: [{
-                text : LANG.REFRESH,
-                handler : load
-            }]
+        var rests = Ext.create("TR.view.rests.RestsPanel",{
+            load: load
         });
         
-        me.items = [ panel ];
+        var outdateds = Ext.create("TR.view.rests.OutdatedsPanel",{
+        });
+        
+        me.items = [ rests, outdateds ];
         
         me.callParent(arguments);
         
@@ -30,22 +26,12 @@ Ext.define("TR.view.rests.MainPanel", {
         });
         
         function load() {
-            panel.mask(LANG.LOADING);
+            rests.mask(LANG.LOADING);
             myRequest({
                 url : 'rest/transaction/rests/currencies',
                 method : 'GET',
                 callback : function(data){
-                    panel.removeAll();
-                    Ext.Array.forEach(data, function(item){
-                        panel.add({
-                            fieldLabel : item.resourceName,
-                            labelAlign : 'right',
-                            labelWidth : 150,
-                            value: item.transactionRest,
-                            readOnly: true
-                        });
-                    });
-                    panel.unmask();
+                    rests.loadData(data);
                 }
             });
         }
