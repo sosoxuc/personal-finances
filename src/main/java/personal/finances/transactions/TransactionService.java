@@ -395,10 +395,9 @@ public class TransactionService {
             @RequestParam(required = false, defaultValue = "50") Integer limit) {
         Date now = new Date(); //TODO java.time bla bla
 
-        String queryStr ="select t from Transaction t where t.transactionType = :transactionType" +
+        List<Transaction> unfulfilled = em.createQuery("select t from Transaction t where t.transactionType = :transactionType" +
                 " and t.transactionDate <= :transactionDate and t.isActive = :isActive" +
-                " order by t.transactionDate desc, t.transactionOrder desc, t.id desc";
-        List<Transaction> unfulfilled = em.createQuery(queryStr
+                " order by t.transactionDate desc, t.transactionOrder desc, t.id desc"
                 , Transaction.class)
                 .setParameter("transactionType", TransactionType.PLANNED)
                 .setParameter("transactionDate", now)
@@ -407,7 +406,8 @@ public class TransactionService {
                 .setMaxResults(limit)
                 .getResultList();
 
-        Long count=(Long) em.createQuery(queryStr)
+        Long count=(Long) em.createQuery("select count(t) from Transaction t where t.transactionType = :transactionType" +
+                " and t.transactionDate <= :transactionDate and t.isActive = :isActive")
                 .setParameter("transactionType", TransactionType.PLANNED)
                 .setParameter("transactionDate", now)
                 .setParameter("isActive", States.ACTIVE)
