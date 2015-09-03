@@ -41,16 +41,18 @@ public class EmployeeConfigService {
     @RequestMapping("/photo/change")
     @Transactional(rollbackFor = Throwable.class)
     public UploadResponse updatePhoto(@RequestParam Integer id,
-                                      @RequestParam MultipartFile file) throws IOException {
+            @RequestParam MultipartFile file) throws IOException {
 
         byte[] bytes = file.getBytes();
-        BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(bytes));
+        BufferedImage bufferedImage = ImageIO
+                .read(new ByteArrayInputStream(bytes));
         int height = bufferedImage.getHeight();
         int width = bufferedImage.getWidth();
 
-        int  newWidth = (200 * width) / height;
+        int newWidth = (200 * width) / height;
 
-        BufferedImage resizeImage = resizeImage(bufferedImage, newWidth, 200, 1);
+        BufferedImage resizeImage = resizeImage(bufferedImage, newWidth, 200,
+                1);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(resizeImage, "jpg", baos);
@@ -93,15 +95,13 @@ public class EmployeeConfigService {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<String, String>();
         headers.add("Content-Type", "image/jpeg");
 
-        response = new ResponseEntity<>(photoData, headers,
-                HttpStatus.OK);
+        response = new ResponseEntity<>(photoData, headers, HttpStatus.OK);
 
         return response;
     }
 
-
-
-    private BufferedImage resizeImage(BufferedImage originalImage, int width, int height, int type) throws IOException {
+    private BufferedImage resizeImage(BufferedImage originalImage, int width,
+            int height, int type) throws IOException {
         BufferedImage resizedImage = new BufferedImage(width, height, type);
         Graphics2D g = resizedImage.createGraphics();
         g.drawImage(originalImage, 0, 0, width, height, null);
@@ -112,10 +112,10 @@ public class EmployeeConfigService {
     @RequestMapping("/appearance/change")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> changeAppearance(
-            @RequestParam String appearance,
-            HttpSession session){
+            @RequestParam String appearance, HttpSession session) {
 
-        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
+        Passport passport = (Passport) session
+                .getAttribute(SessionUtils.SESSION_DATA_KEY);
         Employee employee = em.find(Employee.class, passport.getEmployee().id);
 
         employee.appearance = appearance;
@@ -127,14 +127,14 @@ public class EmployeeConfigService {
     @RequestMapping("/language/change")
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Boolean> changeLanguage(
-            @RequestParam String language,
-            HttpSession session){
+            @RequestParam String language) {
 
-        Passport passport = (Passport)session.getAttribute(SessionUtils.SESSION_DATA_KEY);
-        Employee employee = em.find(Employee.class, passport.getEmployee().id);
+        Integer employeeId = SessionUtils.getEmployeeId();
+        Employee employee = em.find(Employee.class, employeeId);
 
         employee.language = language;
-
+        SessionUtils.getPassport().setEmployee(employee);
+        
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

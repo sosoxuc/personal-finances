@@ -6,7 +6,8 @@ Ext.define('TR.view.MainPanel', {
         cfg = cfg || {};
         var me = this;
         var employee = cfg.employee;
-
+        var passport = cfg.passport;
+        
         window.geokb = Ext.create('Ext.button.Button', {
             text : 'KA',
             tooltip : 'ქართული კლავიატურა',
@@ -25,11 +26,19 @@ Ext.define('TR.view.MainPanel', {
             hidden : true
         };
         changeVal(geokbField, geokb);
+
+        var userLanguage = employee.language ? employee.language : Config.SYSTEM_LANG;
         
         var languageMenu = [];
         Ext.each(languages, function(language){
             languageMenu.push({
-                text: language.name
+                text: language.name,
+                xtype: 'menucheckitem',
+                group: 'lang',
+                checked: language.code == userLanguage,
+                handler: function(){
+                    setLanguage(language.code);
+                }
             });
         });
         
@@ -83,6 +92,19 @@ Ext.define('TR.view.MainPanel', {
         me.items = [ tabPanel ];
 
         me.callParent(arguments);
+        
+        function setLanguage(code){
+            myRequest({
+                url: 'rest/hr/employee/config/language/change',
+                method: 'POST',
+                params: {
+                    language: code
+                },
+                callback: function(){
+                    location.href = '';
+                }
+            });
+        }
         
         function changePassword(){
             Ext.create('TR.view.profile.ChangePassword').show();
