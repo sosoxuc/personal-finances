@@ -214,6 +214,7 @@ public class TransactionService {
             @RequestParam(required = false) boolean ordinary,
             @RequestParam(required = false) boolean planned,
             @RequestParam(required = false) Integer direction,
+            @RequestParam(required = false) Integer employeeId,
             @RequestParam(required = false) String note,
             @RequestParam(required = false) Integer start,
             @RequestParam(required = false) Integer limit) throws ParseException {
@@ -255,6 +256,10 @@ public class TransactionService {
             queryParams.put("direction", direction);
         }
 
+        if (employeeId != null) {
+            queryBuilder.append(" and t.employeeId = :employeeId");
+            queryParams.put("employeeId", employeeId);
+        }
 
         if (planned && ordinary == false) {
             queryBuilder.append(" and t.transactionType = :transactionType");
