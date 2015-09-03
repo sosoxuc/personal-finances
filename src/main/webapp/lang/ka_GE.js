@@ -28,6 +28,7 @@ var LANG = {
     DOWN :          'ქვევით',
     EDIT :          'რედაქტირება',
     EMAIL :         'ელ. ფოსტა',
+    EMPLOYEE :     'თანამშრომელი',
     EMPLOYEES :     'თანამშრომლები',
     ENABLE:         'აღდგენა',
     ERROR:          'შეცდომა',

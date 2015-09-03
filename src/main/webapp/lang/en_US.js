@@ -27,6 +27,7 @@ var LANG = {
     DOWN :          'Down',
     EDIT :          'Edit',
     EMAIL :         'eMail',
+    EMPLOYEE :     'Employee',
     EMPLOYEES :     'Employees',
     ENABLE:         'Enable',
     ERROR:          'Error',

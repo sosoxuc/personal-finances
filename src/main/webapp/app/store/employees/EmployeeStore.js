@@ -1,12 +1,7 @@
 Ext.define("TR.store.employees.EmployeeStore", {
     extend : "Ext.data.Store",
     storeId : 'employeeStore',
-    // leadingBufferZone : 150,
-    // sortable: false,
-    // defaultSortable: false,
-    // buffered : true,
-    // remoteSort: false,
-    // pageSize : 50,
+    autoLoad: true,
     fields : [
             'id',
             'firstName',
@@ -21,6 +16,12 @@ Ext.define("TR.store.employees.EmployeeStore", {
             'positionId',
             'positionName',
             'userName',
+            {
+                name: 'fullName',
+                calculate: function (data) {
+                    return data.lastName + ' ' + data.firstName;
+                }
+            },
             {
                 name : 'createDate',
                 convert : function(v) {

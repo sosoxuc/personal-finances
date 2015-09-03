@@ -16,6 +16,17 @@ Ext.define("TR.view.transactions.SearchForm", {
         var currenciesStore = Ext.StoreManager.lookup('currenciesStore') || Ext.create('TR.store.currencies.Store');
         var accountsStore = Ext.StoreManager.lookup('accountsStore') || Ext.create('TR.store.accounts.Store');
         var directionsStore = Ext.StoreManager.lookup('directionsStore') || Ext.create('TR.store.directions.Store');
+        var employeesStore = Ext.StoreManager.lookup('employeeStore') || Ext.create('TR.store.employees.EmployeeStore');
+        
+        var employeesCombo = Ext.create('Ext.form.field.ComboBox', {
+            name: 'employeeId',
+            fieldLabel : LANG.EMPLOYEE,
+            queryMode: 'local',
+            store: employeesStore,
+            displayField: 'fullName',
+            valueField: 'id',
+            multiSelect: true,
+        });
         
         var ordinaryCheck = Ext.create('Ext.form.field.Checkbox', {
             xtype: 'checkbox',
@@ -93,7 +104,7 @@ Ext.define("TR.view.transactions.SearchForm", {
             xtype: 'textfield',
             fieldLabel: LANG.DESTINATION,
             name: 'note'
-        }];
+        }, employeesCombo];
         
         var controls2 =  { 
             layout: 'vbox',
