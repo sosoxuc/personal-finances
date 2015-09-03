@@ -37,7 +37,8 @@ Ext.define("TR.store.transactions.OutdatedsStore", {
                 return v ? new Date(v) : '';
             }
         },
-        'note' ],
+        'note',
+        'employeeFullName'],
     proxy : {
         url : 'rest/transaction/unfulfilled',
         type : 'rest',

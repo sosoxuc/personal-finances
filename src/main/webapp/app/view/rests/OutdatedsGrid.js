@@ -64,6 +64,10 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
             dataIndex : 'accountName',
             flex : 1
         }, {
+            header : LANG.USER,
+            dataIndex : 'employeeFullName',
+            flex : 1
+        }, {
             xtype : 'actioncolumn',
             header : LANG.ACTION,
             width : 100,

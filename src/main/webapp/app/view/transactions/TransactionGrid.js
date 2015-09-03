@@ -127,6 +127,10 @@ Ext.define("TR.view.transactions.TransactionGrid", {
             header : LANG.ACCOUNT,
             dataIndex : 'accountName',
             flex : 1
+        }, {
+            header : LANG.USER,
+            dataIndex : 'employeeFullName',
+            flex : 1
         } ];
 
         me.callParent(arguments);

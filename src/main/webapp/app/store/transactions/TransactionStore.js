@@ -36,7 +36,8 @@ Ext.define("TR.store.transactions.TransactionStore", {
                 return v ? new Date(v) : '';
             }
         },
-        'note' ],
+        'note',
+        'employeeFullName' ],
     proxy : {
         url : 'rest/transaction/search',
         type : 'rest',
