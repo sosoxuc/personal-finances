@@ -390,16 +390,16 @@ public class TransactionService {
     @Secured
     @RequestMapping("/unfulfilled")
     @Transactional(rollbackFor = Throwable.class)
-    public ResponseEntity<List<Transaction>> unfulfilled(
+    public ResponseEntity<ListPage<Transaction>> unfulfilled(
             @RequestParam(required = false, defaultValue = "0") Integer start,
             @RequestParam(required = false, defaultValue = "50") Integer limit) {
         Date now = new Date(); //TODO java.time bla bla
 
-
-        List<Transaction> unfulfilled = em.createQuery(
-                "select t from Transaction t where t.transactionType = :transactionType" +
+        String queryStr ="select t from Transaction t where t.transactionType = :transactionType" +
                 " and t.transactionDate <= :transactionDate and t.isActive = :isActive" +
-                " order by t.transactionDate desc, t.transactionOrder desc, t.id desc", Transaction.class)
+                " order by t.transactionDate desc, t.transactionOrder desc, t.id desc";
+        List<Transaction> unfulfilled = em.createQuery(queryStr
+                , Transaction.class)
                 .setParameter("transactionType", TransactionType.PLANNED)
                 .setParameter("transactionDate", now)
                 .setParameter("isActive", States.ACTIVE)
@@ -407,7 +407,14 @@ public class TransactionService {
                 .setMaxResults(limit)
                 .getResultList();
 
-        return new ResponseEntity<>(unfulfilled, HttpStatus.OK);
+        Long count=(Long) em.createQuery(queryStr)
+                .setParameter("transactionType", TransactionType.PLANNED)
+                .setParameter("transactionDate", now)
+                .setParameter("isActive", States.ACTIVE)
+                .getSingleResult();
+
+        ListPage<Transaction> listPage = new ListPage<>(unfulfilled, count.intValue());
+        return new ResponseEntity<>(listPage, HttpStatus.OK);
     }
 
     @Secured
