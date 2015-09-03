@@ -1,6 +1,7 @@
 var LANG = {
     ACCOUNT :       'Account',
     ACCOUNTS :      'Accounts',
+    ACTION :        'Action',
     ADD :           'Add',
     ADD_AND_CLOSE:  'Add & close',
     APPEARENCE:     'Appearence',

@@ -1,6 +1,7 @@
 var LANG = {
     ACCOUNT :       'ანგარიში',
     ACCOUNTS :      'ანგარიშები',
+    ACTION :        'ქმედება',
     ADD :           'დამატება',
     ADD_AND_CLOSE:  'დამატება და დახურვა',
     APPEARENCE:     'გარეგნობა',

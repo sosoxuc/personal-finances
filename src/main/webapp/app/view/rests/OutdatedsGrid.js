@@ -65,28 +65,28 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
             flex : 1
         }, {
             xtype : 'actioncolumn',
-            header : 'Delete',
-            width : 50,
+            header : LANG.ACTION,
+            width : 100,
             align : 'center',
             items : [{
                 icon:'some_icon.png',
                 tooltip : 'Accept',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
-                    //do your delete record function here
+                    approve(record.data.id, record.data.version);
                 },
                 scope : me
             }, {
                 icon:'some_icon.png',
                 tooltip : 'Edit',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
-                    //do your delete record function here
+                    edit(record.data.id, record.data.version);
                 },
                 scope : me
             }, {
                 icon:'some_icon.png',
                 tooltip : 'Remove',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
-                    //do your delete record function here
+                    remove(record.data.id, record.data.version);
                 },
                 scope : me
             } ]
@@ -94,6 +94,22 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
 
         me.callParent(arguments);
 
+        function approve(id, version) {
+            
+            myRequest({
+                url : 'rest/transaction/approve',
+                params : {
+                    transactionId: id,
+                    version : version
+                },
+                callback : function(res) {
+                    Ext.toast("Operation successed");
+                    me.store.load();
+                    me.getSelectionModel().deselectAll();
+                }
+            });
+        }
+        
         function edit(id, version) {
             Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
