@@ -64,7 +64,7 @@ public class TransactionExport {
                         + URLEncoder
                         .encode("ტრანზაქციის-ექსპორტი.xls", "UTF-8"));
 
-        ResponseEntity<ListPage<Transaction>> resp = transactionService.search(startDate, endDate, accountId, projectId, currencyId, ordinary, planned, direction, note, null, null);
+        ResponseEntity<ListPage<Transaction>> resp = transactionService.search(startDate, endDate, accountId, projectId, currencyId, ordinary, planned, direction,null, note, null, null);
         List<Transaction> transactions =(List)resp.getBody().getList();
 
         WritableWorkbook wworkbook;
