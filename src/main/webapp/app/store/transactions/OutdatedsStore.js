@@ -39,7 +39,7 @@ Ext.define("TR.store.transactions.OutdatedsStore", {
         },
         'note' ],
     proxy : {
-        url : 'rest/transaction//unfulfilled',
+        url : 'rest/transaction/unfulfilled',
         type : 'rest',
         reader : {
             type : 'json',

@@ -94,10 +94,6 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
                         callback : function(res) {
                             me.store.load();
                             me.getSelectionModel().deselectAll();
-                            me.down('button[name=edit]').disable();
-                            me.down('button[name=remove]').disable();
-                            me.down('button[name=down]').disable();
-                            me.down('button[name=up]').disable();
                         }
                     });
                 }
