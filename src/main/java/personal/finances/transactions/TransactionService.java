@@ -37,6 +37,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -369,6 +370,7 @@ public class TransactionService {
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
     @RequestMapping(value = "/remove", method = RequestMethod.POST)
     @Transactional(rollbackFor = Throwable.class)
     public ResponseEntity<Transaction> remove(@RequestParam Integer id, @RequestParam Long version) {
@@ -383,6 +385,22 @@ public class TransactionService {
         new TransactionPostDelete(em, transaction).updateRests();
 
         return new ResponseEntity<>(transaction, HttpStatus.OK);
+    }
+
+    @Secured
+    @RequestMapping("/unfulfilled")
+    @Transactional(rollbackFor = Throwable.class)
+    public ResponseEntity<List<Transaction>> unfulfilled() {
+        Date now = Date.from(Instant.from(LocalDate.now()));
+
+        List<Transaction> unfulfilled = em.createQuery(
+                "select t from Transaction t where t.transactionType = :transactionType" +
+                " and t.transactionDate <= :transactionDate", Transaction.class)
+                .setParameter("transactionType", TransactionType.PLANNED)
+                .setParameter("transactionDate", now)
+                .getResultList();
+
+        return new ResponseEntity<>(unfulfilled, HttpStatus.OK);
     }
 
     @Secured
