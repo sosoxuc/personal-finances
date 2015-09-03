@@ -1,26 +1,32 @@
 package personal.hr.employees;
 
+import static personal.utils.SqlUtils.SqlStringContaining.NONE;
+import static personal.utils.SqlUtils.SqlStringContaining.START;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import personal.ListPage;
 import personal.States;
 import personal.hr.positions.Position;
 import personal.hr.workplaces.Workplace;
 import personal.utils.SecurityUtils;
 import personal.utils.SqlUtils;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
-
-import static personal.utils.SqlUtils.SqlStringContaining.NONE;
-import static personal.utils.SqlUtils.SqlStringContaining.START;
 
 @RestController
 @RequestMapping("/hr/employee")

@@ -1,9 +1,9 @@
 package personal.finances.transactions;
 
+import javax.persistence.EntityManager;
+
 import personal.States;
 import personal.finances.transactions.rest.TransactionRestType;
-
-import javax.persistence.EntityManager;
 
 /**
  * Created by niko on 7/18/15.

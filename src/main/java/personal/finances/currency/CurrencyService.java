@@ -1,5 +1,13 @@
 package personal.finances.currency;
 
+import static personal.States.ACTIVE;
+import static personal.States.INACTIVE;
+
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
@@ -11,13 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import personal.security.Secured;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
-
-import static personal.States.ACTIVE;
-import static personal.States.INACTIVE;
 
 /**
  * Created by Niko on 7/11/15.

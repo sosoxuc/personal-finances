@@ -1,10 +1,10 @@
 package personal.utils;
 
+import static org.apache.commons.codec.binary.Hex.encodeHexString;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import static org.apache.commons.codec.binary.Hex.encodeHexString;
 
 public class SecurityUtils {
 

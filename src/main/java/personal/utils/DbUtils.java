@@ -1,8 +1,9 @@
 package personal.utils;
 
+import java.util.Map;
+
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import java.util.Map;
 
 public class DbUtils {
 
