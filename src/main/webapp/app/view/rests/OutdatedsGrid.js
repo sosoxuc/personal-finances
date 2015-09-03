@@ -63,33 +63,53 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
             header : LANG.ACCOUNT,
             dataIndex : 'accountName',
             flex : 1
+        }, {
+            xtype : 'actioncolumn',
+            header : 'Delete',
+            width : 50,
+            align : 'center',
+            items : [{
+                icon:'some_icon.png',
+                tooltip : 'Accept',
+                handler : function (grid, rowIndex, colIndex, item, e, record) {
+                    //do your delete record function here
+                },
+                scope : me
+            }, {
+                icon:'some_icon.png',
+                tooltip : 'Edit',
+                handler : function (grid, rowIndex, colIndex, item, e, record) {
+                    //do your delete record function here
+                },
+                scope : me
+            }, {
+                icon:'some_icon.png',
+                tooltip : 'Remove',
+                handler : function (grid, rowIndex, colIndex, item, e, record) {
+                    //do your delete record function here
+                },
+                scope : me
+            } ]
         } ];
 
         me.callParent(arguments);
 
-        function edit() {
-            var sel = me.getSelectionModel().getSelection();
-            if (sel.length == 0)
-                return;
-
+        function edit(id, version) {
             Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
                 edit : true,
-                data: sel[0].getData()
+                data: id
             }).show();
         }
 
-        function remove() {
-            var sel = me.getSelectionModel().getSelection();
-            if (sel.length == 0)
-                return;
+        function remove(id, version) {
             Ext.Msg.confirm(LANG.CONFIRM, LANG.CONFIRM_REMOVAL, function(ans) {
                 if (ans === 'yes') {
                     myRequest({
                         url : 'rest/transaction/remove',
                         params : {
-                            id : sel[0].get('id'),
-                            version : sel[0].get('version')
+                            id : id,
+                            version : version
                         },
                         callback : function(res) {
                             me.store.load();
