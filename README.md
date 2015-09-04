@@ -10,25 +10,25 @@
 ###Ecosystem
 - [ ] Local instalation
 - [ ] Cloud instalation
-- [ ] Multi-lingual
+- [x] Multi-lingual
 - [ ] Feedbacks
 - [x] [CI builds](https://travis-ci.org/sosoxuc/personal-finances)
-- [ ] Tests
+- [x] Tests
     - [x] [Must override interceptor which is disabled for now](https://github.com/sosoxuc/personal-finances/issues/1)
 - [x] Swagger API Docs
  
 ###Financial
-- [ ] Save transactions
-- [ ] List transactions
+- [x] Save transactions
+- [x] List transactions
     - [ ] Infinity scroll
 - [ ] Order transactions
-- [ ] Currencies support
+- [x] Currencies support
 - [ ] Currencies services
 - [ ] Operations support
-- [ ] Calculate rests
+- [x] Calculate rests
 - [ ] Projects, rests for projects
 - [ ] Turnovers
-- [ ] Normal plan
+- [x] Normal plan
 - [ ] Credit plan
 - [ ] Alerts
  
@@ -39,5 +39,5 @@
 - [ ] Integration with Other systems
  
 ###Reporting
-- [ ] Import data from excel
-- [ ] Export PDF, Excel
+- [x] Import data from excel
+- [x] Export PDF, Excel
