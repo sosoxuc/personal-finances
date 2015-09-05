@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import jxl.write.*;
+import jxl.write.Number;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,14 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jxl.Workbook;
 import jxl.format.UnderlineStyle;
-import jxl.write.Colour;
-import jxl.write.DateTime;
-import jxl.write.Label;
-import jxl.write.Number;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableFont;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
+import jxl.format.Colour;
 import personal.ListPage;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestType;
@@ -72,8 +67,8 @@ public class TransactionExport {
         wworkbook = Workbook.createWorkbook(outputStream);
         WritableSheet wsheet = wworkbook.createSheet("Transactions", 0);
 
-        String[] sheetHeaders = {"Date", "Project", "Destination", "Sum", "Currency", "Rest", "Currency", "Account"};
-        int[] sheetHeaderWidth = {10, 40, 50, 10, 10, 10, 10, 40};
+        String[] sheetHeaders = {"Date", "Project", "Destination", "Sum", "Currency", "Rest", "Currency", "Account", "User"};
+        int[] sheetHeaderWidth = {10, 40, 50, 10, 10, 10, 10, 40, 60};
             WritableFont headerFont = new WritableFont(WritableFont.createFont("Arial"),
                     WritableFont.DEFAULT_POINT_SIZE, WritableFont.BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.BLACK);
             WritableCellFormat headerCellFormats = new WritableCellFormat(headerFont);
@@ -90,19 +85,34 @@ public class TransactionExport {
 
         for (int i= 0; i < transactions.size(); i++) {
             Transaction transaction = transactions.get(i);
+            WritableFont cellFonts = null;
             if (transaction.direction.equals(Direction.OUT)) {
-                WritableFont cellFonts = new WritableFont(WritableFont.createFont("Arial"),
-                        WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.RED);
-                cellFormats = new WritableCellFormat(cellFonts);
+                if (TransactionType.PLANNED.equals(transaction.transactionType)){
+                    cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                            WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.DARK_RED);
+
+                    cellFormats = new WritableCellFormat(cellFonts);
+                } else {
+                    cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                            WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.RED);
+                    cellFormats = new WritableCellFormat(cellFonts);
+                }
             }
 
             if (transaction.direction.equals(Direction.IN)) {
-                WritableFont cellFonts = new WritableFont(WritableFont.createFont("Arial"),
-                        WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.GREEN);
-                cellFormats = new WritableCellFormat(cellFonts);
+                if (TransactionType.PLANNED.equals(transaction.transactionType)) {
+                    cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                            WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.DARK_GREEN);
+                    cellFormats = new WritableCellFormat(cellFonts);
+                } else {
+                    cellFonts = new WritableFont(WritableFont.createFont("Arial"),
+                            WritableFont.DEFAULT_POINT_SIZE, WritableFont.NO_BOLD, false, UnderlineStyle.NO_UNDERLINE, Colour.GREEN);
+                    cellFormats = new WritableCellFormat(cellFonts);
+                }
             }
 
-            DateTime date = new DateTime(0, i + 1, transaction.transactionDate, cellFormats);
+            WritableCellFormat dateFormat = new WritableCellFormat (cellFonts, new DateFormat(TransactionService.df.toPattern()));
+            DateTime date = new DateTime(0, i + 1, transaction.transactionDate, dateFormat);
             wsheet.addCell(date);
 
             Label project = new Label(1, i + 1, transaction.projectName, cellFormats);
@@ -130,6 +140,10 @@ public class TransactionExport {
 
             Label account = new Label(7, i + 1, transaction.accountName, cellFormats);
             wsheet.addCell(account);
+
+            Label user = new Label(8, i + 1, transaction.employeeFullName, cellFormats);
+            wsheet.addCell(user);
+
         }
 
         wworkbook.write();
