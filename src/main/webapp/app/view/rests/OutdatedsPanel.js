@@ -1,7 +1,7 @@
 Ext.define("TR.view.rests.OutdatedsPanel", {
     extend : "Ext.panel.Panel",
     defaultType : 'textfield',
-    title : LANG.CURRENT_RESTS,
+    title : LANG.ACCEPT_REJECT_TRANSACTIONS,
     buttonAlign : 'left',
     constructor : function(cfg) {
         cfg = cfg || {};

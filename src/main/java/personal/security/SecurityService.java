@@ -119,9 +119,8 @@ public class SecurityService {
     public ResponseEntity<Boolean> changePassword(@RequestParam String oldPass,
             @RequestParam String newPass, HttpSession session) {
 
-        Passport passport = (Passport) session
-                .getAttribute(SessionUtils.SESSION_DATA_KEY);
-        Employee employee = em.find(Employee.class, passport.getEmployee().id);
+        Passport passport = SessionUtils.getPassport();
+        Employee employee = em.find(Employee.class, passport.getEmployeeId());
 
         String oldPassHash = SecurityUtils
                 .sha512(oldPass + employee.passwordSalt);

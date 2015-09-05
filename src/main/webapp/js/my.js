@@ -1,7 +1,4 @@
 var tr = tr || {};
-//window.localStorage = window.localStorage || {};
-
-// loadExtCss();
 
 function log() {
 	if (document.all)
@@ -212,14 +209,18 @@ function myRequest(obj) {
 				if (typeof obj.callback == 'function')
 					obj.callback(res);
 			} else {
-				switch(response.status){
-				case 403:
-					logout();
-					break;
-				default:					
-					Ext.Msg.alert('Error', response.statusText);
-					break;
-				}
+			    if (obj.error) {
+			        obj.error(response)
+			    } else {
+			        switch(response.status){
+			        case 403:
+			            logout();
+			            break;
+			        default:					
+			            Ext.Msg.alert('Error', response.statusText);
+			        break;
+			        }
+			    }
 			}
 		}
 	};

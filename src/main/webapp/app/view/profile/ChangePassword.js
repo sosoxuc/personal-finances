@@ -1,7 +1,7 @@
 Ext.define("TR.view.profile.ChangePassword", {
     extend : "Ext.window.Window",
     modal : true,
-    width : 500,
+    width : 350,
     autoHeight: true,
     constructor : function(cfg) {
         cfg = cfg || {};
@@ -22,12 +22,15 @@ Ext.define("TR.view.profile.ChangePassword", {
             items : [{
                 name: 'oldPass',
                 fieldLabel : LANG.OLD_PASSWORD,
+                isEng : true
             },{
                 name: 'newPass',
-                fieldLabel : LANG.NEW_PASSWORD,
+                fieldLabel : LANG.PASSWORD,
+                isEng : true
             },{
                 name: 'newPass2',
-                fieldLabel : LANG.NEW_PASSWORD2,
+                fieldLabel : LANG.PASSWORD2,
+                isEng : true
             }]
         });
 
@@ -46,12 +49,20 @@ Ext.define("TR.view.profile.ChangePassword", {
             
             var values = form.getForm().getValues();
             
+            if (values.newPass != values.newPass2) {
+                Ext.toast(LANG.PASSWORDS_DONT_MATCH);
+                return;
+            }
+            
             myRequest({
                 url : 'rest/security/password/change',
                 params : values,
                 callback : function() {
                     me.close();
-                    Ext.toast("Password change successful");
+                    Ext.toast(LANG.SUCCESSED);
+                },
+                error : function(response) {
+                    Ext.toast(LANG.INVALID_PASSWORD);
                 }
             });
         }
