@@ -107,7 +107,7 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
                     version : version
                 },
                 callback : function(res) {
-                    Ext.toast("Operation successed");
+                    Ext.toast(LANG.SUCCESSED);
                     me.store.load();
                     me.getSelectionModel().deselectAll();
                 }

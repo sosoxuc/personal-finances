@@ -195,7 +195,7 @@ Ext.define("TR.view.transactions.AddPlannedWindow", {
                 url : 'rest/transaction/create',
                 params : values,
                 callback : function() {
-                    Ext.toast("Operation successed");
+                    Ext.toast(LANG.SUCCESSED);
                     cfg.grid.store.load();
                     me.close();
                 }
@@ -212,7 +212,7 @@ Ext.define("TR.view.transactions.AddPlannedWindow", {
                 url : 'rest/transaction/create',
                 params : values,
                 callback : function() {
-                    Ext.toast("Operation successed");
+                    Ext.toast(LANG.SUCCESSED);
                     form.getForm().findField('amount').setValue('');
                     form.getForm().findField('note').setValue('');
                     form.getForm().findField('amount').focus(true, 10);
@@ -232,7 +232,7 @@ Ext.define("TR.view.transactions.AddPlannedWindow", {
                 url : 'rest/transaction/update',
                 params : values,
                 callback : function() {
-                    Ext.toast("Operation successed");
+                    Ext.toast(LANG.SUCCESSED);
                     cfg.grid.store.load();
                     me.close();
                 }

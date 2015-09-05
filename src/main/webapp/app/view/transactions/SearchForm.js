@@ -25,21 +25,21 @@ Ext.define("TR.view.transactions.SearchForm", {
             store: employeesStore,
             displayField: 'fullName',
             valueField: 'id',
-            multiSelect: true,
+            multiSelect: true
         });
         
         var ordinaryCheck = Ext.create('Ext.form.field.Checkbox', {
             xtype: 'checkbox',
             name: 'ordinary',
             submitValue: true,
-            fieldLabel : 'Ordinary',
+            fieldLabel : LANG.REAL
         });
         
         var plannedCheck = Ext.create('Ext.form.field.Checkbox', {
             xtype: 'checkbox',
             name: 'planned',
             submitValue: true,
-            fieldLabel : 'Planned',
+            fieldLabel : LANG.PLANNED
         });
         
         var currenciesCombo = Ext.create('Ext.form.field.ComboBox', {
@@ -109,13 +109,13 @@ Ext.define("TR.view.transactions.SearchForm", {
         var controls2 =  { 
             layout: 'vbox',
             xtype: 'fieldcontainer',
-            items: [currenciesCombo, accountsCombo, ordinaryCheck]
+            items: [currenciesCombo, accountsCombo, ordinaryCheck, plannedCheck]
         };
         
         var controls3 =  { 
             layout: 'vbox',
             xtype: 'fieldcontainer',
-            items: [projectsCombo, directionCombo, plannedCheck]
+            items: [projectsCombo, directionCombo]
         };
         
         
