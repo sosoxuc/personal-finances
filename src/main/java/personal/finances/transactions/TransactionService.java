@@ -19,6 +19,7 @@ import personal.States;
 import personal.UploadResponse;
 import personal.finances.accounts.Account;
 import personal.finances.currency.Currency;
+import personal.finances.operations.Operation;
 import personal.finances.projects.Project;
 import personal.finances.transactions.rest.TransactionRest;
 import personal.finances.transactions.rest.TransactionRestCalculator;
@@ -37,7 +38,6 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -86,9 +86,14 @@ public class TransactionService {
                 period = Period.ofWeeks(intervalTypeValue);
             }
 
+            //save operation
+            Operation operation = new Operation(new Date());
+            em.persist(operation);
+
+            //save transactions
             LocalDate newDate = localDateFrom;
             ResponseEntity<Transaction> transactionResponseEntity =
-                    create(amount, projectId, dateFrom, note, direction, accountId, currencyId, null, Boolean.TRUE);
+                    create(amount, projectId, dateFrom, note, direction, accountId, currencyId, null, operation.id, Boolean.TRUE);
             if (transactionResponseEntity.getStatusCode().equals(HttpStatus.OK)) {
                 List<Transaction> addedTransactions = new ArrayList<>();
                 addedTransactions.add(transactionResponseEntity.getBody());
@@ -96,7 +101,7 @@ public class TransactionService {
                 while ( ! (newDate = newDate.plus(period)).isAfter(localDateTo)) {
                     ResponseEntity<Transaction> resp =
                             create(amount, projectId, newDate.format(DateTimeFormatter.ofPattern(df.toPattern())),
-                                   note, direction, accountId, currencyId, null, Boolean.TRUE);
+                                   note, direction, accountId, currencyId, null, operation.id, Boolean.TRUE);
                     if (resp.getStatusCode().equals(HttpStatus.OK)) {
                         addedTransactions.add(resp.getBody());
                         continue;
@@ -124,6 +129,7 @@ public class TransactionService {
             @RequestParam Integer accountId,
             @RequestParam Integer currencyId,
             @RequestParam(required = false) Integer operationTypeId,
+            @RequestParam(required = false) Integer operationId,
             @RequestParam(required = false) boolean planned) throws ParseException {
         Transaction transaction = new Transaction();
         Date transactionDate = df.parse(date);
@@ -169,7 +175,18 @@ public class TransactionService {
             transaction.transactionOrder = 0;
         }
 
+        //set operation info
         transaction.operationTypeId = operationTypeId;
+
+        Operation operation;
+        if (operationId == null) {
+            operation = new Operation(new Date());
+            em.persist(operation);
+        } else {
+            operation = em.find(Operation.class,operationId);
+        }
+
+        transaction.operation = operation;
 
         //set rest
         List<TransactionRest> transactionRests = new TransactionRestCalculator(em, transaction).calculateRests();
@@ -346,11 +363,18 @@ public class TransactionService {
 
         ResponseEntity<Transaction> remove = remove(transactionId, transaction.version);
         if (remove.getStatusCode().equals(HttpStatus.OK)) {
+            Transaction body = remove.getBody();
             boolean planned = false;
             if (transaction.transactionType != null && transaction.transactionType.equals(TransactionType.PLANNED)){
                 planned = true;
             }
-            ResponseEntity<Transaction> created = create(amount, projectId, date, note, direction, accountId, currencyId, null, planned);
+
+            Integer operationId = null;
+            Operation operation = body.operation;
+            if (operation != null) {
+                operationId = operation.id;
+            }
+            ResponseEntity<Transaction> created = create(amount, projectId, date, note, direction, accountId, currencyId, null, operationId, planned);
 
             if (created.getStatusCode().equals(HttpStatus.OK)) {
                 return created;
@@ -567,8 +591,12 @@ public class TransactionService {
                 transaction.transactionNote = noteText;
             }
 
+            //save operation first
+            Operation operation = new Operation( "Excel import", new Date());
+            em.persist(operation);
+
             create(transaction.transactionAmount, transaction.projectId, dateText, noteText,
-                   transaction.direction, transaction.accountId, transaction.currencyId, null, false);
+                    transaction.direction, transaction.accountId, transaction.currencyId, null, operation.id, false);
         }
     }
 }

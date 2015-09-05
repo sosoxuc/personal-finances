@@ -7,6 +7,7 @@ import static personal.finances.transactions.Direction.OUT;
 
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -59,9 +60,12 @@ public class OperationService {
             @RequestParam BigDecimal amount,
             @RequestParam String note) throws ParseException {
 
-        transactions.create(amount, from, date, note, OUT, accountId, currencyId, PROJECT, false);
+        Operation operation = new Operation(new Date());
+        em.persist(operation);
 
-        transactions.create(amount, to, date, note, IN, accountId, currencyId, PROJECT, false);
+        transactions.create(amount, from, date, note, OUT, accountId, currencyId, PROJECT, operation.id, false);
+
+        transactions.create(amount, to, date, note, IN, accountId, currencyId, PROJECT, operation.id, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
@@ -78,9 +82,12 @@ public class OperationService {
             @RequestParam BigDecimal amount,
             @RequestParam String note) throws ParseException {
 
-        transactions.create(amount, projectId, date, note, OUT, from, currencyId, ACCOUNT, false);
+        Operation operation = new Operation(new Date());
+        em.persist(operation);
 
-        transactions.create(amount, projectId, date, note, IN, to, currencyId, ACCOUNT, false);
+        transactions.create(amount, projectId, date, note, OUT, from, currencyId, ACCOUNT, operation.id, false);
+
+        transactions.create(amount, projectId, date, note, IN, to, currencyId, ACCOUNT, operation.id, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
@@ -98,9 +105,12 @@ public class OperationService {
             @RequestParam Integer toCurrencyId,
             @RequestParam String note) throws ParseException {
 
-        transactions.create(fromAmount, projectId, date, note, OUT, accountId, fromCurrencyId, ACCOUNT, false);
+        Operation operation = new Operation(new Date());
+        em.persist(operation);
 
-        transactions.create(toAmount, projectId, date, note, IN, accountId, toCurrencyId, ACCOUNT, false);
+        transactions.create(fromAmount, projectId, date, note, OUT, accountId, fromCurrencyId, ACCOUNT, operation.id, false);
+
+        transactions.create(toAmount, projectId, date, note, IN, accountId, toCurrencyId, ACCOUNT, operation.id, false);
 
         return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
     }
