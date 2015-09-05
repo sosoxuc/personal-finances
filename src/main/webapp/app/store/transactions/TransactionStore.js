@@ -1,12 +1,10 @@
 Ext.define("TR.store.transactions.TransactionStore", {
-    extend : "Ext.data.Store",
+    extend : "Ext.data.BufferedStore",
     storeId : 'transactionsStore',
-    leadingBufferZone : 150,
-    sortable : false,
-    defaultSortable : false,
     buffered : true,
-    remoteSort : false,
+    leadingBufferZone : 50,
     pageSize : 50,
+    autoLoad : true,
     fields : [
         'id',
         'transactionAmount',
@@ -43,7 +41,8 @@ Ext.define("TR.store.transactions.TransactionStore", {
         type : 'rest',
         reader : {
             type : 'json',
-            rootProperty: 'list'
+            rootProperty : 'list',
+            totalProperty : 'count'
         },
         actionMethods: {
             read: 'POST'
