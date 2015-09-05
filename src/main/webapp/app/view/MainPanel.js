@@ -42,6 +42,22 @@ Ext.define('TR.view.MainPanel', {
             });
         });
         
+        var userAppearance = employee.appearance ? employee.appearance : Config.SYSTEM_APPEARANCE;
+
+        var appearanceMenu = [];
+        Ext.each(appearances, function(appearance){
+            appearanceMenu.push({
+                text: appearance.name,
+                xtype: 'menucheckitem',
+                group: 'appearance',
+                checked: appearance.name == userAppearance,
+                handler: function(){
+                    setAppearance(appearance.name);
+                }
+            });
+        });
+        
+        
         me.tbar = [{
             xtype : 'image',
             src : './images/icon.png',
@@ -60,7 +76,7 @@ Ext.define('TR.view.MainPanel', {
                 handler : changePassword
             }, {
                 text : LANG.APPEARENCE,
-                handler : logout
+                menu : appearanceMenu
             }, {
                 text : LANG.LANGUAGE,
                 menu : languageMenu
@@ -99,6 +115,19 @@ Ext.define('TR.view.MainPanel', {
                 method: 'POST',
                 params: {
                     language: code
+                },
+                callback: function(){
+                    location.href = '';
+                }
+            });
+        }
+        
+        function setAppearance(name){
+            myRequest({
+                url: 'rest/hr/employee/config/appearance/change',
+                method: 'POST',
+                params: {
+                    appearance: name
                 },
                 callback: function(){
                     location.href = '';

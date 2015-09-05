@@ -107,26 +107,6 @@ Ext.define('Ext.grid.Panel', {
 
 // end overrides //
 
-function loadExtCss() {
-	var theme = localStorage.theme || 'ext-all-neptune';
-	loadCss("http://extjs-public.googlecode.com/svn/tags/extjs-4.2.1/release/resources/css/" + theme + ".css");
-	if (theme === 'ext-all-neptune')
-		loadCss('./css/neptune.css');
-	else
-		loadCss('./css/classic.css');
-}
-
-function loadCss(url) {
-	// var link = document.createElement("link");
-	// link.setAttribute("rel", "stylesheet");
-	// link.setAttribute("href", url);
-	// link.setAttribute("type", "text/css");
-
-	var link = '<link href = "' + url + '" type="text/css" rel="stylesheet" />';
-	// document.getElementsByTagName('head')[0].appendChild(link);
-	document.write(link);
-}
-
 function monitorEvents(obj) {
 	Ext.util.Observable.capture(obj, function(evname, args) {
 		log(evname, [ args ]);

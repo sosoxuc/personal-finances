@@ -19,12 +19,27 @@ function loadPassport() {
         callback: function(data){
             if(data && data.valid){
                 passport = data
+                loadAppearance()
                 loadLanguage()
             }else{
                 location.href = 'login.html';
             }
         }
     });
+}
+
+function loadAppearance() {
+    var appearance = passport.employee.appearance;
+    var userAppearance = appearance ? appearance : Config.SYSTEM_APPEARANCE;
+    Ext.each(appearances, function(item){
+        if (item.name == userAppearance) {
+            var element=document.createElement("link")
+            element.setAttribute("rel", "stylesheet")
+            element.setAttribute("type", "text/css")
+            element.setAttribute("href", item.url)
+            document.getElementsByTagName("head")[0].appendChild(element)
+        }
+    })
 }
 
 function loadLanguage() {

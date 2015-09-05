@@ -114,14 +114,13 @@ public class EmployeeConfigService {
     public ResponseEntity<Boolean> changeAppearance(
             @RequestParam String appearance, HttpSession session) {
 
-        Passport passport = (Passport) session
-                .getAttribute(SessionUtils.SESSION_DATA_KEY);
-        Employee employee = em.find(Employee.class, passport.getEmployee().id);
+        Integer employeeId = SessionUtils.getEmployeeId();
+        Employee employee = em.find(Employee.class, employeeId);
 
         employee.appearance = appearance;
+        SessionUtils.getPassport().setEmployee(employee);
 
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
     @RequestMapping("/language/change")
@@ -134,7 +133,7 @@ public class EmployeeConfigService {
 
         employee.language = language;
         SessionUtils.getPassport().setEmployee(employee);
-        
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
