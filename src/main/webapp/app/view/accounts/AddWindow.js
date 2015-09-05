@@ -52,10 +52,10 @@ Ext.define("TR.view.accounts.AddWindow", {
             myRequest({
                 url : 'rest/account/create',
                 params : values,
-                callback : function(id) {
+                callback : function(data) {
                     if (cfg.combo) {
-                        cfg.combo.setValue(parseInt(id));
                         cfg.combo.store.load();
+                        cfg.combo.setValue(data.id);
                     }
                     if (cfg.grid) {
                         cfg.grid.store.load();

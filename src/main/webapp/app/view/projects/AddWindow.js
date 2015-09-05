@@ -48,10 +48,10 @@ Ext.define("TR.view.projects.AddWindow", {
             myRequest({
                 url : 'rest/project/create',
                 params : values,
-                callback : function(id) {
+                callback : function(data) {
                     if (cfg.combo) {
-                        cfg.combo.setValue(parseInt(id));
                         cfg.combo.store.load();
+                        cfg.combo.setValue(data.id);
                     }
                     if (cfg.grid) {
                         cfg.grid.store.load();
