@@ -83,7 +83,7 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
                 iconCls: 'x-tool-img x-tool-refresh action-icon',
                 tooltip : 'Edit',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
-                    edit(record.data.id, record.data.version);
+                    edit(record.data);
                 },
                 scope : me
             }, {
@@ -114,11 +114,11 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
             });
         }
         
-        function edit(id, version) {
+        function edit(data) {
             Ext.create('TR.view.transactions.AddWindow', {
                 grid : me,
                 edit : true,
-                data: id
+                data: data
             }).show();
         }
 
