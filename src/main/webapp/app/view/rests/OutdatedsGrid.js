@@ -73,21 +73,21 @@ Ext.define("TR.view.rests.OutdatedsGrid", {
             width : 100,
             align : 'center',
             items : [{
-                icon:'some_icon.png',
+                iconCls: 'x-tool-img x-tool-plus action-icon',
                 tooltip : 'Accept',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
                     approve(record.data.id, record.data.version);
                 },
                 scope : me
             }, {
-                icon:'some_icon.png',
+                iconCls: 'x-tool-img x-tool-refresh action-icon',
                 tooltip : 'Edit',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
                     edit(record.data.id, record.data.version);
                 },
                 scope : me
             }, {
-                icon:'some_icon.png',
+                iconCls : 'x-tool-img x-tool-close action-icon',
                 tooltip : 'Remove',
                 handler : function (grid, rowIndex, colIndex, item, e, record) {
                     remove(record.data.id, record.data.version);

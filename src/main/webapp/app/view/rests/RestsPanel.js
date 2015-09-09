@@ -17,15 +17,22 @@ Ext.define("TR.view.rests.RestsPanel", {
         
         function loadData(data){
             me.removeAll();
-            Ext.Array.forEach(data, function(item){
-                me.add({
-                    fieldLabel : item.resourceName,
-                    labelAlign : 'right',
-                    labelWidth : 150,
-                    value: item.transactionRest,
-                    readOnly: true
+            if (data) {
+                Ext.Array.forEach(data, function(item){
+                    me.add({
+                        fieldLabel : item.resourceName,
+                        labelAlign : 'right',
+                        labelWidth : 150,
+                        value: item.transactionRest,
+                        readOnly: true
+                    });
                 });
-            });
+            } else {
+                me.add({
+                    xtype : 'displayfield',
+                    value: 'NO_DATA'
+                });
+            }
             me.unmask();
         }
         

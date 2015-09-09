@@ -76,6 +76,7 @@ var LANG = {
     UPLOAD:         'Upload',
     UPLOADING:      'Uploading',
     UPLOAD_FILE:    'Upload file',
+    USER:           'User',
     USERNAME:       'User name',
     WEEK:           'Week',
     WORKPLACE:      'Workplace',

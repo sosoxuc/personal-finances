@@ -1,3 +1,8 @@
+.action-icon{
+	margin-left: 3px;
+	margin-right: 3px;
+}
+
 .x-grid-item-container>table{
 	width: 100% !important;
 }
